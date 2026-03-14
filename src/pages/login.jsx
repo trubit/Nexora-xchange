@@ -21,13 +21,15 @@ const Login = () => {
     password,
     setPassword,
     showPassword,
-    setShowPassword,
     success,
-    setSuccess,
     error,
     isLoading,
     handleLogin,
     togglePasswordVisibility,
+    needsVerification,
+    resendMessage,
+    isResending,
+    handleResendVerification,
   } = useLogin();
 
   return (
@@ -58,6 +60,24 @@ const Login = () => {
                 {error && (
                   <Alert variant="danger" dismissible>
                     {error}
+                  </Alert>
+                )}
+                {needsVerification && (
+                  <Alert variant="warning">
+                    Please verify your email before logging in.
+                    <div className="mt-3 d-grid gap-2">
+                      <Button
+                        variant="outline-light"
+                        size="sm"
+                        onClick={handleResendVerification}
+                        disabled={isResending}
+                      >
+                        {isResending ? "Sending..." : "Resend verification email"}
+                      </Button>
+                      {resendMessage ? (
+                        <div className="small text-dark">{resendMessage}</div>
+                      ) : null}
+                    </div>
                   </Alert>
                 )}
                 {success && <Alert variant="success">{success}</Alert>}

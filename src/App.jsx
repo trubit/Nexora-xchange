@@ -6,6 +6,7 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import ForgotPassword from "./pages/forgot-password";
 import Signup from "./pages/signup";
+import VerifyEmail from "./pages/verify-email";
 
 import Artbitrage from "./pages/arbitrage";
 import Subscription from "./pages/subscription";
@@ -36,6 +37,7 @@ const App = () => {
   const hideHeader = [
     "/login",
     "/signup",
+    "/verify-email",
     "/forgot-password",
     "/terms",
     "/Dashboard",
@@ -61,6 +63,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/Dashboard" element={<Dashborad />} />
         <Route path="/arbitrage" element={<Artbitrage />} />

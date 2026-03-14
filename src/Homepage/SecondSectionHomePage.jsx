@@ -1,18 +1,48 @@
 import { Container } from "react-bootstrap";
 import "../styles/SecondSectionHomePage.css";
 import { Link } from "react-router-dom";
-import TrusonBuySell from "../assets/truson-Buy-Sell.png";
-import TrusonFinCen from "../assets/truson-fin-cen.png";
-import TrusonPackage from "../assets/truson-package.png";
+import { useBlogPosts } from "../hooksJavascript/useBlogPosts";
 import TrusonXBot from "../assets/truson-x-bot.png";
 
+// Optional backend fetch (uncomment when ready)
+// import { useEffect, useState } from "react";
+
 const SecondSectionHomePage = () => {
-  const cards = [
-    { image: TrusonBuySell, link: "/GoldenBuySell" },
-    { image: TrusonFinCen, link: "/FinCen" },
-    { image: TrusonPackage, link: "/FreePackage" },
-    { image: TrusonXBot, link: "/Xgolden" },
-  ];
+  const { visiblePosts } = useBlogPosts();
+  const latestPosts = visiblePosts.slice(0, 4);
+
+  // Optional backend fetch (uncomment when ready)
+  // const [apiPosts, setApiPosts] = useState([]);
+  // const BLOGS_API_URL = `${
+  //   import.meta.env.VITE_TRUSON_API_URL
+  // }/api/blogs?limit=4&sort=-updatedAt`;
+  //
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //
+  //   const loadPosts = async () => {
+  //     try {
+  //       const response = await fetch(BLOGS_API_URL, {
+  //         signal: controller.signal,
+  //       });
+  //       if (!response.ok) {
+  //         return;
+  //       }
+  //       const data = await response.json();
+  //       const posts = Array.isArray(data?.posts) ? data.posts : data;
+  //       setApiPosts(Array.isArray(posts) ? posts.slice(0, 4) : []);
+  //     } catch (error) {
+  //       if (error.name !== "AbortError") {
+  //         // ignore fetch errors for now
+  //       }
+  //     }
+  //   };
+  //
+  //   loadPosts();
+  //   return () => controller.abort();
+  // }, []);
+  //
+  // const latestPosts = apiPosts.length ? apiPosts : visiblePosts.slice(0, 4);
 
   return (
     <div className="recent-updates-section">
@@ -22,21 +52,21 @@ const SecondSectionHomePage = () => {
           <h2 className="updates-title">Recent Updates</h2>
         </div>
 
-        {/* Horizontal scroll – only images */}
+        {/* Horizontal scroll - latest blog updates */}
         <div className="cards-container">
-          {cards.map((card, index) => (
-            <Link key={index} to={card.link} className="card-link-wrapper">
-              {" "}
-              {/*dynamic per card*/}
-              <div className="card-wrapper">
-                <img
-                  src={card.image}
-                  alt={`Update ${index + 1}`}
-                  className="card-image"
-                />
-              </div>
-            </Link>
-          ))}
+          {latestPosts.map((post, index) => {
+            const imageSource = post.image || TrusonXBot;
+            const imageAlt =
+              post.imageAlt || post.title || `Update ${index + 1}`;
+
+            return (
+              <Link key={post.id} to={post.link} className="card-link-wrapper">
+                <div className="card-wrapper">
+                  <img src={imageSource} alt={imageAlt} className="card-image" />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </Container>
     </div>

@@ -18,8 +18,7 @@ const Signup = () => {
     setShowPassword,
     showConfirmPassword,
     setShowConfirmPassword,
-    success,
-    setSuccess,
+    successMessage,
     isSubmitting,
     handleSubmit,
     errors,
@@ -54,9 +53,9 @@ const Signup = () => {
               </Alert>
             )}
 
-            {success && (
+            {successMessage && (
               <Alert variant="success" className="mb-4">
-                Registration successful! Redirecting to login in 3 second...
+                {successMessage}
               </Alert>
             )}
 

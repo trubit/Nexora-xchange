@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL =
+  import.meta.env.VITE_TRUSON_API_URL ||
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:5000";
+
 const useSignup = () => {
   const navigate = useNavigate();
 
@@ -13,22 +18,21 @@ const useSignup = () => {
   // UI states
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Auto-redirect after 3 seconds of success
+  // Auto-redirect after success
   useEffect(() => {
-    if (!success) return;
+    if (!successMessage) return;
     const timer = setTimeout(() => {
       navigate("/login");
     }, 3000);
-    setIsSubmitting(true);
 
     return () => clearTimeout(timer);
-  }, [success, navigate]);
+  }, [successMessage, navigate]);
 
   // Validate form
   const validateForm = () => {
@@ -62,7 +66,7 @@ const useSignup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    setSuccess(false);
+    setSuccessMessage("");
     setIsSubmitting(true);
 
     const validationErrors = validateForm();
@@ -73,11 +77,7 @@ const useSignup = () => {
     }
 
     try {
-      // ────────────────────────────────────────────────
-      // When backend is ready → uncomment this block
-      // ────────────────────────────────────────────────
-      /*
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -92,19 +92,14 @@ const useSignup = () => {
       if (!response.ok) {
         throw new Error(data.message || "Registration failed");
       }
-      */
 
-      // ────────────────────────────────────────────────
-      // Simulated success (remove when backend is connected)
-      // ────────────────────────────────────────────────
-      console.log("Signup successful (simulation):", {
-        email,
-        password,
-        referralId: referralId.trim() || "none",
-      });
-
-      // Show success and redirect
-      setSuccess(true);
+      setSuccessMessage(
+        "Registration successful! Check your email to verify before logging in. Redirecting to login..."
+      );
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setReferralId("");
     } catch (err) {
       setErrors({ general: err.message || "Registration failed" });
     } finally {
@@ -122,8 +117,7 @@ const useSignup = () => {
     setShowPassword,
     showConfirmPassword,
     setShowConfirmPassword,
-    success,
-    setSuccess,
+    successMessage,
     isSubmitting,
     handleSubmit,
     errors,
