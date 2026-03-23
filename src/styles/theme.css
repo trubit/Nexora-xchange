@@ -1,7 +1,14 @@
 /* Light mode (default if no class) */
 .light body,
 html.light {
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  background:
+    radial-gradient(circle at top left, #e0f2fe 0%, transparent 45%),
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(20, 184, 166, 0.18) 0%,
+      transparent 40%
+    ),
+    linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   color: #000000;
   min-height: 100vh;
 }
@@ -9,7 +16,18 @@ html.light {
 /* Dark mode */
 .dark body,
 html.dark {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(14, 116, 144, 0.35) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(245, 158, 11, 0.15) 0%,
+      transparent 35%
+    ),
+    linear-gradient(135deg, #0b1120 0%, #111827 100%);
   color: #f8fafc;
 }
 
@@ -25,7 +43,7 @@ html.dark {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
   color: #0f172a;
 }
 
@@ -70,6 +88,15 @@ html.dark {
 
 .light .main-login-background {
   color: #0f172a;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.92),
+    rgba(226, 232, 240, 0.6)
+  );
+  border: none;
 }
 
 .light .main-login-background h1,
@@ -88,6 +115,25 @@ html.dark {
 
 .dark .main-login-background {
   color: #f8fafc;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: linear-gradient(
+    130deg,
+    rgba(15, 23, 42, 0.9),
+    rgba(30, 41, 59, 0.7)
+  );
+  border: none;
+}
+
+.main-login-background::before,
+.main-login-background::after {
+  content: none;
+}
+
+.main-login-background > * {
+  position: relative;
+  z-index: 1;
 }
 
 .light .form-control::placeholder {
@@ -125,11 +171,14 @@ html.light #card-border .text-success {
 .btn-success {
   transition: all 0.3s ease;
   font-weight: 600;
+  background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
+  border: none;
+  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.25);
 }
 
 .dark .btn-success {
-  background: #10b981;
-  border-color: #059669;
+  background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
+  border: none;
 }
 
 /* Light mode fixes for auth forms that still use dark utility classes */

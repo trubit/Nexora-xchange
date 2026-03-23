@@ -10,6 +10,7 @@ const MainHeader = () => {
   return (
     <Navbar
       expanded={expanded}
+      onToggle={(nextExpanded) => setExpanded(nextExpanded)}
       collapseOnSelect
       bg="dark"
       sticky="top"

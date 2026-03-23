@@ -1,7 +1,7 @@
 const API_BASE_URL =
   import.meta.env.VITE_TRUSON_API_URL ||
   import.meta.env.VITE_API_URL ||
-  "http://localhost:5000";
+  "";
 
 const defaultHeaders = {
   "Content-Type": "application/json",
@@ -52,6 +52,13 @@ export const loginUser = (body) =>
   request("/api/auth/login", {
     method: "POST",
     body: JSON.stringify(body),
+  });
+
+// Log in or sign up with Google (ID token).
+export const googleAuth = (credential, extra = {}) =>
+  request("/api/auth/google", {
+    method: "POST",
+    body: JSON.stringify({ credential, ...extra }),
   });
 
 // Ask the backend to send a reset email.

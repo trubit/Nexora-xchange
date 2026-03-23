@@ -38,12 +38,6 @@
   font-weight: 600;
 }
 
-/* Ensure exact font and spacing */
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.4;
-}
-
 /* Make chart container fill space beautifully */
 .h-100 {
   height: 100% !important;

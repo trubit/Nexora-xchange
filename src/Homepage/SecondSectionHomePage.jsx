@@ -48,23 +48,48 @@ const SecondSectionHomePage = () => {
   return (
     <div className="recent-updates-section">
       <Container fluid="xxl">
-        <div className="text-center mb-5">
-          <p className="transform-text">TRANSFORM YOUR CRYPTO INVESTMENTS</p>
-          <h2 className="updates-title">Recent Updates</h2>
+        <div className="updates-header">
+          <div>
+            <p className="transform-text">TRANSFORM YOUR CRYPTO INVESTMENTS</p>
+            <h2 className="updates-title">Recent Updates</h2>
+            <p className="updates-subtitle">
+              Stay current with the latest product improvements, compliance
+              wins, and trading upgrades from TrusonXchanger.
+            </p>
+          </div>
+          <Link to="/Blogs" className="updates-link">
+            View all updates
+          </Link>
         </div>
 
-        {/* Horizontal scroll - latest blog updates */}
-        <div className="cards-container">
+        <div className="updates-grid">
           {latestPosts.map((post, index) => {
             const imageSource = post.image || TrusonXBot;
             const imageAlt =
               post.imageAlt || post.title || `Update ${index + 1}`;
 
             return (
-              <Link key={post.id} to={post.link} className="card-link-wrapper">
-                <div className="card-wrapper">
-                  <img src={imageSource} alt={imageAlt} className="card-image" />
+              <Link
+                key={post.id}
+                to={post.link}
+                className="updates-card"
+                style={{ "--card-image": `url(${imageSource})` }}
+              >
+                <div className="updates-card-media" aria-hidden="true">
+                  <span className="updates-tag">
+                    {post.tag || "Update"}
+                  </span>
                 </div>
+                <div className="updates-card-body">
+                  <h3 className="updates-card-title">{post.title}</h3>
+                  <p className="updates-card-description">
+                    {post.description}
+                  </p>
+                  <span className="updates-card-date">
+                    {post.date || "Latest update"}
+                  </span>
+                </div>
+                <span className="visually-hidden">{imageAlt}</span>
               </Link>
             );
           })}

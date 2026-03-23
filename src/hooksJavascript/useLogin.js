@@ -49,6 +49,7 @@ const useLogin = () => {
     success,
     setSuccess,
     error,
+    setError,
     isLoading,
     handleLogin,
     togglePasswordVisibility,

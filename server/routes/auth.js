@@ -1,5 +1,7 @@
 import express from "express";
 import {
+  googleAuth,
+  googleOAuthCallback,
   login,
   me,
   register,
@@ -19,6 +21,8 @@ const router = express.Router();
 // Signup + login endpoints.
 router.post("/register", registerLimiter, register);
 router.post("/login", loginLimiter, login);
+router.post("/google", loginLimiter, googleAuth);
+router.get("/google", googleOAuthCallback);
 // Step 1: request a reset link via email.
 router.post("/forgot-password", forgotPasswordLimiter, requestPasswordReset);
 // Step 2: reset password using the token from the email.

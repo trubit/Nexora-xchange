@@ -5,7 +5,7 @@
 }
 
 .blogs-hero {
-  padding: 3.5rem 0 4rem;
+  padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(3rem, 6vw, 4.5rem);
   background:
     radial-gradient(circle at 12% 8%, rgba(46, 226, 163, 0.12), transparent 45%),
     radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.08), transparent 45%),
@@ -16,6 +16,8 @@
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .blogs-action-button {
@@ -44,6 +46,14 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.blogs-grid-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 50px rgba(0, 0, 0, 0.4);
 }
 
 .blogs-grid-media {
@@ -209,7 +219,7 @@
 }
 
 .blogs-title {
-  font-size: 2.2rem;
+  font-size: clamp(1.7rem, 4vw, 2.2rem);
   line-height: 1.2;
   font-weight: 700;
   margin-bottom: 1rem;
@@ -286,6 +296,7 @@
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 1.8rem;
+  flex-wrap: wrap;
 }
 
 .blogs-form-title {
@@ -341,6 +352,14 @@
   border-radius: 12px;
   padding: 0.7rem 0.85rem;
   font-size: 0.95rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.blogs-field input:focus-visible,
+.blogs-field textarea:focus-visible {
+  outline: 2px solid rgba(47, 230, 164, 0.5);
+  outline-offset: 2px;
 }
 
 .blogs-field input:focus,
@@ -398,6 +417,10 @@
 }
 
 @media (max-width: 576px) {
+  .blogs-actions {
+    justify-content: flex-start;
+  }
+
   .blogs-grid {
     grid-template-columns: 1fr;
   }
@@ -409,6 +432,15 @@
   .blogs-form-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .blogs-form-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .blogs-form-select select {
+    width: 100%;
   }
 
   .blogs-form-grid {
@@ -429,5 +461,33 @@
 
   .blogs-card-body {
     padding: 1.6rem;
+  }
+
+  .blogs-form-actions {
+    flex-direction: column;
+  }
+
+  .blogs-form-actions .btn {
+    width: 100%;
+  }
+
+  .blogs-image-preview img {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .blogs-form {
+    padding: 1.2rem;
+  }
+
+  .blogs-form-title {
+    font-size: 1.4rem;
+  }
+
+  .blogs-form-subtitle {
+    font-size: 0.9rem;
   }
 }

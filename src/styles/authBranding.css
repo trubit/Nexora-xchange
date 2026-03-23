@@ -1,6 +1,13 @@
 .logo-setup {
   max-width: 380px;
   margin-top: 4.5rem;
+  text-align: left;
+}
+
+.auth-branding-container {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
 }
 
 .img-logo {
@@ -8,21 +15,82 @@
   height: auto;
   max-width: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.45));
+}
+
+@media (max-width: 991px) {
+  .auth-branding-container {
+    min-width: 280px;
+    max-width: 340px;
+    margin-bottom: 1rem;
+  }
+
+  .logo-setup {
+    margin-top: 1rem !important;
+  }
+
+  .img-logo {
+    width: 240px !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .welcome-message,
+  .welcome-messages {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .auth-branding-container {
+    min-width: auto;
+    max-width: 100%;
+  }
+
+  .logo-setup {
+    margin-top: 0.5rem;
+    padding: 0 1rem;
+  }
+
+  .img-logo {
+    width: 200px !important;
+  }
+
+  .login-text {
+    font-size: 1.6rem !important;
+  }
 }
 
 .welcome-message,
 .welcome-messages {
-  font-size: "0.9rem";
-  margin-top: -8rem;
+  font-size: 0.95rem;
+  margin-top: -6rem;
+  color: rgba(226, 232, 240, 0.75);
   /*color: white;*/
+}
+
+html.light .welcome-message,
+html.light .welcome-messages {
+  color: #0f172a;
 }
 
 .login-text {
   font-size: clamp(1.8rem, 4.5vw, 2.4rem);
   letter-spacing: -0.8px;
-  background: linear-gradient(90deg, #00d4ff, #00ff9d, #10b981);
+  background: linear-gradient(90deg, #22c55e, #16a34a, #10b981);
   background-clip: text;
   -webkit-text-fill-color: transparent;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+  .logo-setup {
+    margin-top: 2rem;
+    text-align: center;
+  }
+
+  .welcome-message,
+  .welcome-messages {
+    margin-top: 0;
+  }
 }
