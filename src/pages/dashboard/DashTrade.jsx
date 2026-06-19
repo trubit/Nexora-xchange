@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, Suspense, lazy } from "react";
 import { Navigate, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import {
   useCancelOrderMutation,
+  useCreateOCOOrderMutation,
   useCreateOrderMutation,
   useOpenOrdersQuery,
   useOrderHistoryQuery,
@@ -12,9 +13,15 @@ import { useMyWalletsQuery } from "../../hooks/queries/useWalletQueries";
 import { useSupportedAssets } from "../../hooks/queries/useAssetsQuery";
 import { useLiveMarketStore } from "../../store/liveMarketStore";
 import { useMarketSocket } from "../../hooks/useMarketSocket";
+import { useTradeMarketStateQuery, useTradingPairsQuery } from "../../hooks/queries/useTradeQueries";
+import { useTradeSocket } from "../../hooks/useTradeSocket";
 import DashNavbar from "../../Components/layout/DashNavbar";
 import DashSidebar from "../../Components/dashboard/DashSidebar";
 import "../../styles/dashboard.css";
+
+const AdvancedRealTimeChart = lazy(() =>
+  import("react-ts-tradingview-widgets").then((m) => ({ default: m.AdvancedRealTimeChart }))
+);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -163,6 +170,35 @@ const TickerBar = ({ symbol, tickers, assets }) => {
 
 // ── Order Form ────────────────────────────────────────────────────────────────
 
+// ── Order type configuration ───────────────────────────────────────────────────
+
+const ORDER_TYPES = [
+  { id: "limit",        label: "Limit",    icon: "bi-list-check"      },
+  { id: "market",       label: "Market",   icon: "bi-lightning-charge" },
+  { id: "stop_limit",   label: "Stop",     icon: "bi-shield-exclamation" },
+  { id: "oco",          label: "OCO",      icon: "bi-arrows-collapse"  },
+  { id: "trailing_stop",label: "Trailing", icon: "bi-arrow-repeat"     },
+];
+
+// ── Number input helper ────────────────────────────────────────────────────────
+
+const NumInput = ({ label, unit, value, onChange, placeholder = "0.00" }) => (
+  <div className="dt-field">
+    <div className="dt-flabel-row">
+      <label className="dt-flabel">{label}</label>
+      <span className="dt-flabel-unit">{unit}</span>
+    </div>
+    <input
+      type="number" className="dt-inp"
+      placeholder={placeholder} min="0" step="any"
+      value={value}
+      onChange={e => onChange(e.target.value)}
+    />
+  </div>
+);
+
+// ── Advanced OrderForm ─────────────────────────────────────────────────────────
+
 const OrderForm = ({ wallets, activeSymbol }) => {
   const pair = useMemo(() => {
     const m = activeSymbol.match(/^(.+?)(USDT|BTC|ETH)$/);
@@ -172,12 +208,17 @@ const OrderForm = ({ wallets, activeSymbol }) => {
   const quoteWallet = wallets.find(w => w.asset === pair.quote);
   const baseWallet  = wallets.find(w => w.asset === pair.base);
 
-  const [side,     setSide]     = useState("buy");
-  const [price,    setPrice]    = useState("");
-  const [amount,   setAmount]   = useState("");
-  const [feedback, setFeedback] = useState(null);
+  const [side,           setSide]          = useState("buy");
+  const [orderType,      setOrderType]     = useState("limit");
+  const [price,          setPrice]         = useState("");
+  const [amount,         setAmount]        = useState("");
+  const [stopPrice,      setStopPrice]     = useState("");
+  const [stopLimitPrice, setStopLimitPrice]= useState("");
+  const [trailPct,       setTrailPct]      = useState("");
+  const [feedback,       setFeedback]      = useState(null);
 
-  const mutation = useCreateOrderMutation();
+  const mutation    = useCreateOrderMutation();
+  const ocoMutation = useCreateOCOOrderMutation();
 
   const availableQuote = quoteWallet?.available ?? 0;
   const availableBase  = baseWallet?.available  ?? 0;
@@ -186,12 +227,20 @@ const OrderForm = ({ wallets, activeSymbol }) => {
 
   const numPrice  = parseFloat(price)  || 0;
   const numAmount = parseFloat(amount) || 0;
-  const total     = numPrice * numAmount;
+  const total     = orderType === "market" ? 0 : numPrice * numAmount;
+
+  const resetFields = () => {
+    setPrice(""); setAmount(""); setStopPrice(""); setStopLimitPrice(""); setTrailPct("");
+    setFeedback(null);
+  };
 
   const applyPct = (pct) => {
     if (side === "buy") {
-      if (!numPrice) return;
-      setAmount(fmtN((availableQuote * pct) / numPrice, 6));
+      // Market orders have no price to divide by — disable % shortcut for buys
+      if (orderType === "market") return;
+      const refPrice = numPrice || parseFloat(stopPrice) || 0;
+      if (!refPrice) return;
+      setAmount(fmtN((availableQuote * pct) / refPrice, 6));
     } else {
       setAmount(fmtN(availableBase * pct, 6));
     }
@@ -200,12 +249,50 @@ const OrderForm = ({ wallets, activeSymbol }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFeedback(null);
-    if (!numPrice  || numPrice  <= 0) { setFeedback({ t: "err", msg: "Enter a valid price."  }); return; }
-    if (!numAmount || numAmount <= 0) { setFeedback({ t: "err", msg: "Enter a valid amount." }); return; }
+
+    const numStop      = parseFloat(stopPrice)      || 0;
+    const numStopLimit = parseFloat(stopLimitPrice) || 0;
+    const numTrail     = parseFloat(trailPct)       || 0;
+
+    // Client-side validation
+    if (!numAmount || numAmount <= 0) {
+      setFeedback({ t: "err", msg: "Enter a valid amount." }); return;
+    }
+    if (orderType === "limit" && (!numPrice || numPrice <= 0)) {
+      setFeedback({ t: "err", msg: "Enter a valid limit price." }); return;
+    }
+    if (orderType === "stop_limit") {
+      if (!numStop || numStop <= 0)      { setFeedback({ t: "err", msg: "Enter a stop price." });       return; }
+      if (!numPrice || numPrice <= 0)    { setFeedback({ t: "err", msg: "Enter a limit price." });      return; }
+    }
+    if (orderType === "oco") {
+      if (!numPrice || numPrice <= 0)    { setFeedback({ t: "err", msg: "Enter the limit price." });     return; }
+      if (!numStop  || numStop  <= 0)    { setFeedback({ t: "err", msg: "Enter the stop price." });      return; }
+      if (!numStopLimit || numStopLimit <= 0) { setFeedback({ t: "err", msg: "Enter the stop-limit price." }); return; }
+    }
+    if (orderType === "trailing_stop") {
+      if (!numTrail || numTrail <= 0)    { setFeedback({ t: "err", msg: "Enter a trailing percentage." }); return; }
+    }
+
+    const payload = {
+      symbol:    activeSymbol,
+      side,
+      orderType,
+      amount:    numAmount,
+      ...(orderType !== "market" && orderType !== "trailing_stop" && { price: numPrice }),
+      ...((orderType === "stop_limit" || orderType === "oco") && { stopPrice: numStop }),
+      ...(orderType === "oco"          && { stopLimitPrice: numStopLimit }),
+      ...(orderType === "trailing_stop" && { trailPercent: numTrail }),
+    };
+
     try {
-      await mutation.mutateAsync({ symbol: activeSymbol, side, orderType: "limit", price: numPrice, amount: numAmount });
-      setFeedback({ t: "ok", msg: `${side.toUpperCase()} order placed successfully.` });
-      setPrice(""); setAmount("");
+      if (orderType === "oco") {
+        await ocoMutation.mutateAsync(payload);
+      } else {
+        await mutation.mutateAsync(payload);
+      }
+      setFeedback({ t: "ok", msg: `${orderType.replace("_", "-").toUpperCase()} ${side.toUpperCase()} order placed.` });
+      resetFields();
     } catch (err) {
       setFeedback({ t: "err", msg: err?.message || "Order failed. Please try again." });
     }
@@ -219,12 +306,28 @@ const OrderForm = ({ wallets, activeSymbol }) => {
       <div className="dt-side-tabs">
         <button
           className={`dt-side-tab${isBuy ? " dt-side-tab--buy" : ""}`}
-          onClick={() => { setSide("buy"); setFeedback(null); setAmount(""); }}
+          onClick={() => { setSide("buy"); resetFields(); }}
         >BUY</button>
         <button
           className={`dt-side-tab${!isBuy ? " dt-side-tab--sell" : ""}`}
-          onClick={() => { setSide("sell"); setFeedback(null); setAmount(""); }}
+          onClick={() => { setSide("sell"); resetFields(); }}
         >SELL</button>
+      </div>
+
+      {/* Order type selector */}
+      <div className="dt-order-types">
+        {ORDER_TYPES.map(ot => (
+          <button
+            key={ot.id}
+            type="button"
+            className={`dt-ot-btn${orderType === ot.id ? " dt-ot-btn--active" : ""}`}
+            onClick={() => { setOrderType(ot.id); resetFields(); }}
+            title={ot.label}
+          >
+            <i className={`bi ${ot.icon}`} />
+            <span>{ot.label}</span>
+          </button>
+        ))}
       </div>
 
       {/* Feedback */}
@@ -236,53 +339,90 @@ const OrderForm = ({ wallets, activeSymbol }) => {
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-        {/* Order type label */}
-        <div className="dt-type-row">
-          <span className="dt-type-label">LIMIT ORDER</span>
-        </div>
 
-        {/* Price */}
-        <div className="dt-field">
-          <div className="dt-flabel-row">
-            <label className="dt-flabel">Price</label>
-            <span className="dt-flabel-unit">{pair.quote}</span>
+        {/* ── LIMIT ── */}
+        {orderType === "limit" && <>
+          <NumInput label="Price" unit={pair.quote} value={price} onChange={v => { setPrice(v); setFeedback(null); }} />
+          <NumInput label="Amount" unit={pair.base} value={amount} onChange={v => { setAmount(v); setFeedback(null); }} placeholder="0.00000000" />
+        </>}
+
+        {/* ── MARKET ── */}
+        {orderType === "market" && <>
+          <div className="dt-market-note">
+            <i className="bi bi-info-circle" /> Order fills at the best available price.
           </div>
-          <input
-            type="number" className="dt-inp"
-            placeholder="0.00" min="0" step="any"
-            value={price} onChange={e => { setPrice(e.target.value); setFeedback(null); }}
-          />
-        </div>
+          <NumInput label="Amount" unit={pair.base} value={amount} onChange={v => { setAmount(v); setFeedback(null); }} placeholder="0.00000000" />
+        </>}
 
-        {/* Amount */}
-        <div className="dt-field">
-          <div className="dt-flabel-row">
-            <label className="dt-flabel">Amount</label>
-            <span className="dt-flabel-unit">{pair.base}</span>
+        {/* ── STOP-LIMIT ── */}
+        {orderType === "stop_limit" && <>
+          <div className="dt-order-hint">
+            When the market hits the <b>Stop Price</b>, a limit order is placed at the <b>Limit Price</b>.
           </div>
-          <input
-            type="number" className="dt-inp"
-            placeholder="0.00000000" min="0" step="any"
-            value={amount} onChange={e => { setAmount(e.target.value); setFeedback(null); }}
-          />
-        </div>
+          <NumInput label="Stop Price" unit={pair.quote} value={stopPrice} onChange={v => { setStopPrice(v); setFeedback(null); }} />
+          <NumInput label="Limit Price" unit={pair.quote} value={price} onChange={v => { setPrice(v); setFeedback(null); }} />
+          <NumInput label="Amount" unit={pair.base} value={amount} onChange={v => { setAmount(v); setFeedback(null); }} placeholder="0.00000000" />
+        </>}
 
-        {/* Percentage buttons */}
-        <div className="dt-pct-row">
-          {[0.25, 0.5, 0.75, 1].map((p, i) => (
-            <button key={i} type="button" className="dt-pct-btn" onClick={() => applyPct(p)}>
-              {p === 1 ? "MAX" : `${p * 100}%`}
-            </button>
-          ))}
-        </div>
+        {/* ── OCO ── */}
+        {orderType === "oco" && <>
+          <div className="dt-order-hint">
+            Places two orders simultaneously. When one fills, the other is automatically cancelled.
+          </div>
+          <NumInput
+            label={side === "sell" ? "Take-Profit Price" : "Limit Price"}
+            unit={pair.quote} value={price}
+            onChange={v => { setPrice(v); setFeedback(null); }}
+          />
+          <NumInput label="Stop Price" unit={pair.quote} value={stopPrice} onChange={v => { setStopPrice(v); setFeedback(null); }} />
+          <NumInput label="Stop-Limit Price" unit={pair.quote} value={stopLimitPrice} onChange={v => { setStopLimitPrice(v); setFeedback(null); }} />
+          <NumInput label="Amount" unit={pair.base} value={amount} onChange={v => { setAmount(v); setFeedback(null); }} placeholder="0.00000000" />
+        </>}
+
+        {/* ── TRAILING STOP ── */}
+        {orderType === "trailing_stop" && <>
+          <div className="dt-order-hint">
+            The stop price automatically follows the market by the trail %. Order triggers when price reverses by that amount.
+          </div>
+          <div className="dt-field">
+            <div className="dt-flabel-row">
+              <label className="dt-flabel">Trail %</label>
+              <span className="dt-flabel-unit">%</span>
+            </div>
+            <div className="dt-trail-row">
+              <input
+                type="number" className="dt-inp dt-inp--trail"
+                placeholder="e.g. 1.5" min="0.01" max="20" step="0.01"
+                value={trailPct} onChange={e => { setTrailPct(e.target.value); setFeedback(null); }}
+              />
+              <div className="dt-trail-presets">
+                {[0.5, 1, 2, 5].map(p => (
+                  <button key={p} type="button" className="dt-pct-btn" onClick={() => setTrailPct(String(p))}>
+                    {p}%
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <NumInput label="Amount" unit={pair.base} value={amount} onChange={v => { setAmount(v); setFeedback(null); }} placeholder="0.00000000" />
+        </>}
+
+        {/* Percentage buttons (shared, except trailing has its own) */}
+        {orderType !== "trailing_stop" && (
+          <div className="dt-pct-row">
+            {[0.25, 0.5, 0.75, 1].map((p, i) => (
+              <button key={i} type="button" className="dt-pct-btn" onClick={() => applyPct(p)}>
+                {p === 1 ? "MAX" : `${p * 100}%`}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Available + Total */}
         <div className="dt-form-info">
           <div className="dt-form-info-row">
             <span className="dt-form-info-label">Available</span>
-            <span className="dt-form-info-val">
-              <b>{fmtN(available, 4)}</b> {availAsset}
-            </span>
+            <span className="dt-form-info-val"><b>{fmtN(available, 4)}</b> {availAsset}</span>
           </div>
           {total > 0 && (
             <div className="dt-form-info-row">
@@ -296,9 +436,9 @@ const OrderForm = ({ wallets, activeSymbol }) => {
         <button
           type="submit"
           className={`dt-submit dt-submit--${side}`}
-          disabled={mutation.isPending}
+          disabled={mutation.isPending || ocoMutation.isPending}
         >
-          {mutation.isPending
+          {(mutation.isPending || ocoMutation.isPending)
             ? <><i className="bi bi-hourglass-split" /> Placing…</>
             : <>{isBuy ? "BUY" : "SELL"} {pair.base}</>}
         </button>
@@ -475,6 +615,143 @@ const OrderHistory = ({ symbol }) => {
   );
 };
 
+// ── Chart ─────────────────────────────────────────────────────────────────────
+
+const DtChart = ({ symbol }) => (
+  <div className="dt-chart-wrap">
+    <div className="dt-chart-inner">
+      <Suspense fallback={
+        <div className="dt-chart-loading">
+          <i className="bi bi-graph-up-arrow" />
+          <span>Loading chart…</span>
+        </div>
+      }>
+        <AdvancedRealTimeChart
+          symbol={symbol}
+          theme="dark"
+          autosize
+          interval="15"
+          timezone="Etc/UTC"
+          style="1"
+          locale="en"
+          enable_publishing={false}
+          hide_side_toolbar={true}
+          allow_symbol_change={false}
+          container_id={`dtchart_${symbol}`}
+        />
+      </Suspense>
+    </div>
+  </div>
+);
+
+// ── Order Book ────────────────────────────────────────────────────────────────
+
+const DtOrderBook = ({ marketState, symbol }) => {
+  const bids = marketState?.orderBook?.bids ?? [];
+  const asks = marketState?.orderBook?.asks ?? [];
+  const ticker = marketState?.ticker || {};
+  const lastPrice = ticker.lastPrice ?? ticker.price ?? 0;
+
+  const maxTotal = useMemo(() => {
+    const all = [...bids.slice(0, 12), ...asks.slice(0, 12)];
+    return Math.max(...all.map(l => {
+      const p = Array.isArray(l) ? Number(l[0]) : Number(l.price);
+      const a = Array.isArray(l) ? Number(l[1]) : Number(l.amount);
+      return p * a;
+    }), 1);
+  }, [bids, asks]);
+
+  const renderLevel = (level, side, idx) => {
+    const price  = Array.isArray(level) ? Number(level[0]) : Number(level.price);
+    const amount = Array.isArray(level) ? Number(level[1]) : Number(level.amount);
+    const total  = price * amount;
+    const barPct = Math.min(100, (total / maxTotal) * 100);
+
+    return (
+      <div key={`${side}-${idx}`} className={`dt-book-row dt-book-row--${side}`}>
+        <div className="dt-book-bar" style={{
+          width: `${barPct}%`,
+          background: side === "ask" ? "rgba(246,70,93,0.08)" : "rgba(14,203,129,0.08)",
+        }} />
+        <span className={`dt-book-price ${side === "ask" ? "dt-dn" : "dt-up"}`}>
+          {fmtN(price, 4)}
+        </span>
+        <span className="dt-book-amount">{fmtN(amount, 4)}</span>
+        <span className="dt-book-total">{fmtN(total, 2)}</span>
+      </div>
+    );
+  };
+
+  const pair = symbol.match(QUOTE_RE) || [];
+  const quote = pair[2] || "USDT";
+
+  return (
+    <div className="dt-book-panel">
+      <div className="dt-panel-head">Order Book</div>
+      <div className="dt-book-cols">
+        <span className={`dt-book-col-hd ${""}`}>Price ({quote})</span>
+        <span className="dt-book-col-hd">Amount</span>
+        <span className="dt-book-col-hd">Total</span>
+      </div>
+
+      <div className="dt-book-asks">
+        {asks.length === 0
+          ? <div className="dt-book-empty">No asks</div>
+          : asks.slice(0, 10).reverse().map((l, i) => renderLevel(l, "ask", i))}
+      </div>
+
+      <div className="dt-book-spread">
+        <span className="dt-book-last" style={{ color: Number(ticker.priceChangePct ?? 0) >= 0 ? "#0ecb81" : "#f6465d" }}>
+          {lastPrice ? fmtN(lastPrice, 4) : "—"}
+        </span>
+        <span className="dt-book-spread-label">Last Price</span>
+      </div>
+
+      <div className="dt-book-bids">
+        {bids.length === 0
+          ? <div className="dt-book-empty">No bids</div>
+          : bids.slice(0, 10).map((l, i) => renderLevel(l, "bid", i))}
+      </div>
+    </div>
+  );
+};
+
+// ── Market Trades ─────────────────────────────────────────────────────────────
+
+const DtMarketTrades = ({ marketState }) => {
+  const trades = marketState?.recentTrades ?? [];
+
+  const fmtTime = (ts) => {
+    try { return new Date(ts).toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" }); }
+    catch { return "—"; }
+  };
+
+  return (
+    <div className="dt-mtrades-panel">
+      <div className="dt-panel-head">Market Trades</div>
+      <div className="dt-mtrades-cols">
+        <span className="dt-mtrades-col-hd">Price</span>
+        <span className="dt-mtrades-col-hd">Amount</span>
+        <span className="dt-mtrades-col-hd">Time</span>
+      </div>
+      <div className="dt-mtrades-list">
+        {trades.length === 0 ? (
+          <div className="dt-book-empty">No trades yet</div>
+        ) : trades.slice(0, 20).map((t, i) => {
+          const isBuy = (t.side || t.takerSide) === "buy";
+          return (
+            <div key={i} className="dt-mtrade-row">
+              <span className={isBuy ? "dt-up" : "dt-dn"}>{fmtN(t.price, 4)}</span>
+              <span className="dt-mtrade-amount">{fmtN(t.amount ?? t.quantity, 4)}</span>
+              <span className="dt-mtrade-time">{fmtTime(t.timestamp ?? t.executedAt ?? t.createdAt)}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 // ── Main DashTrade Page ───────────────────────────────────────────────────────
 
 const DashTrade = () => {
@@ -488,33 +765,29 @@ const DashTrade = () => {
     searchParams.get("pair") || "BTCUSDT"
   );
 
-  const { data: wallets = [] } = useMyWalletsQuery(true);
-  const { data: assets  = [] } = useSupportedAssets();
+  const { data: wallets    = [] } = useMyWalletsQuery(true);
+  const { data: assets     = [] } = useSupportedAssets();
+  const { data: rawPairs   = [] } = useTradingPairsQuery();
   const tickers = useLiveMarketStore(s => s.tickers);
+
+  const { data: marketState } = useTradeMarketStateQuery(activeSymbol);
 
   useOrderSocket({ enabled: isAuthenticated });
   useMarketSocket();
+  useTradeSocket({ symbol: activeSymbol, isAuthenticated });
 
-  // Build trading pairs from supported assets
+  // Build trading pairs from the backend's authoritative pairs list.
+  // Using rawPairs (from /api/trades/pairs) ensures the frontend only
+  // shows symbols that validateOrderInput will accept.
   const pairs = useMemo(() => {
-    const list = [];
-    for (const a of assets) {
-      if (STABLES.has(a.symbol)) continue;
-      for (const q of QUOTE_ASSETS) {
-        if (a.symbol === q) continue;
-        if (!assets.find(x => x.symbol === q)) continue;
-        list.push({ symbol: `${a.symbol}${q}`, base: a.symbol, quote: q, baseName: a.name });
-      }
-    }
-    // Sort: USDT pairs first, then BTC, then ETH; alphabetical within each group
-    list.sort((a, b) => {
-      const qa = QUOTE_ASSETS.indexOf(a.quote);
-      const qb = QUOTE_ASSETS.indexOf(b.quote);
-      if (qa !== qb) return qa - qb;
-      return a.base.localeCompare(b.base);
-    });
-    return list;
-  }, [assets]);
+    const assetMap = Object.fromEntries(assets.map(a => [a.symbol, a]));
+    return rawPairs.map(p => ({
+      symbol:   p.symbol,
+      base:     p.baseAsset,
+      quote:    p.quoteAsset,
+      baseName: assetMap[p.baseAsset]?.name ?? p.baseAsset,
+    }));
+  }, [rawPairs, assets]);
 
   // ── Auth guard ────────────────────────────────────────────────────────────
   const tok = localStorage.getItem("token");
@@ -553,23 +826,32 @@ const DashTrade = () => {
           {/* Ticker bar */}
           <TickerBar symbol={activeSymbol} tickers={tickers} assets={assets} />
 
-          {/* Main content */}
-          <div className="dt-layout">
+          {/* ── 3-column Binance-style trading grid ── */}
+          <div className="dt-trading-grid">
 
-            {/* Left column — pairs + form */}
-            <div className="dt-left-col">
+            {/* Column 1 — pairs list */}
+            <div className="dt-col-pairs">
               <PairSelector
                 pairs={pairs}
                 activeSymbol={activeSymbol}
                 onSelect={setActiveSymbol}
               />
-              <OrderForm wallets={wallets} activeSymbol={activeSymbol} />
             </div>
 
-            {/* Right column — orders */}
-            <div className="dt-right-col">
-              <OpenOrders  symbol={activeSymbol} />
-              <OrderHistory symbol={activeSymbol} />
+            {/* Column 2 — chart + order tables */}
+            <div className="dt-col-center">
+              <DtChart symbol={activeSymbol} />
+              <div className="dt-bottom-panels">
+                <OpenOrders  symbol={activeSymbol} />
+                <OrderHistory symbol={activeSymbol} />
+              </div>
+            </div>
+
+            {/* Column 3 — order book + market trades + order form */}
+            <div className="dt-col-right">
+              <DtOrderBook marketState={marketState} symbol={activeSymbol} />
+              <DtMarketTrades marketState={marketState} />
+              <OrderForm wallets={wallets} activeSymbol={activeSymbol} />
             </div>
 
           </div>

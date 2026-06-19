@@ -38,6 +38,13 @@ import dashboardRoutes from "./routes/dashboard.js";
 import engineRoutes from "./routes/engine.js";
 import marketDataRoutes from "./routes/marketData.js";
 import notificationRoutes from "./routes/notifications.js";
+import fiatRoutes from "./routes/fiat.js";
+import liquidityRoutes from "./routes/liquidity.js";
+import riskRoutes from "./routes/risk.js";
+import { requireNotFrozen } from "./middleware/riskCheck.js";
+import { startLiquidityEngine, stopLiquidityEngine } from "./services/liquidityService.js";
+import { startConditionalProcessor, stopConditionalProcessor } from "./services/conditionalOrderService.js";
+import { getLiveTicker } from "./services/tradeService.js";
 import { setupTradeSocketServer } from "./socket/socketServer.js";
 import { notificationService } from "./notifications/NotificationService.js";
 import { MatchingEngine } from "./engine/MatchingEngine.js";
@@ -149,7 +156,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/coins", coinsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/trades", tradesRoutes);
-app.use("/api/orders", ordersRoutes);
+app.use("/api/orders", requireNotFrozen, ordersRoutes);
 app.use("/api/subscriptions", subscriptionsRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/wallets", walletsRoutes);
@@ -162,6 +169,9 @@ app.use("/api/currency", currencyRoutes);
 app.use("/api/engine", engineRoutes);
 app.use("/api/market-data", marketDataRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/fiat",          fiatRoutes);
+app.use("/api/liquidity",     liquidityRoutes);
+app.use("/api/risk",          riskRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -196,6 +206,21 @@ const startServer = async () => {
       logger.warn({ err: err.message }, "TrusonCoin seed skipped.");
     }
 
+    // Promote super-admin emails to admin role if their accounts already exist.
+    try {
+      const superAdminEmails = (process.env.SUPER_ADMIN_EMAILS || "trustezika831@gmail.com")
+        .split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+      const result = await User.updateMany(
+        { email: { $in: superAdminEmails }, role: { $ne: "admin" } },
+        { $set: { role: "admin" } },
+      );
+      if (result.modifiedCount > 0) {
+        logger.info(`[SEED] Promoted ${result.modifiedCount} account(s) to admin.`);
+      }
+    } catch (err) {
+      logger.warn({ err: err.message }, "[SEED] Admin promotion skipped.");
+    }
+
     // Initialize in-process matching engine (uses main DB + Redis + Socket.IO)
     try {
       const tradeExecutor = new TradeExecutor({ publisher: mePublisher });
@@ -203,8 +228,24 @@ const startServer = async () => {
       await matchingEngine.hydrate(Order);
       matchingEngine.start();
       app.locals.matchingEngine = matchingEngine;
+      global.__matchingEngine   = matchingEngine; // accessible from tradeService OCO placement
     } catch (err) {
       logger.error({ err: err.message }, "[ME] Matching engine failed to start — trading continues without matching.");
+    }
+
+    // Start the liquidity engine (market-maker bot that keeps order books populated)
+    try {
+      await startLiquidityEngine();
+    } catch (err) {
+      logger.error({ err: err.message }, "[LIQUIDITY] Engine failed to start — markets will have no bot liquidity.");
+    }
+
+    // Start the conditional order processor (stop-loss, take-profit, trailing stops, OCO)
+    try {
+      const engine = app.locals.matchingEngine;
+      startConditionalProcessor(getLiveTicker, engine);
+    } catch (err) {
+      logger.error({ err: err.message }, "[COND] Conditional processor failed to start.");
     }
 
     // Initialize market data service (subscribes to trade_events, builds price/candle state)
@@ -250,6 +291,8 @@ const startServer = async () => {
 
       try {
         await closeHttpServer(httpServer);
+        stopLiquidityEngine();
+        stopConditionalProcessor();
         await Promise.allSettled([
           notificationService.stop(),
           closeQueues(),

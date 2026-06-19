@@ -13,6 +13,12 @@ export const ordersApi = {
       { retries: 0 }
     ),
 
+  createOCOOrder: (payload) =>
+    requestWithRetry(
+      { method: "post", url: "/api/orders/oco", data: payload },
+      { retries: 0 }
+    ),
+
   cancelOrder: (orderId) =>
     requestWithRetry(
       { method: "post", url: `/api/orders/${orderId}/cancel` },

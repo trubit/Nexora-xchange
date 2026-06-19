@@ -38,5 +38,12 @@ export const queryKeys = {
     list:        (params = {}) => ["notifications", "list", params],
     unreadCount: ["notifications", "unread-count"],
   },
+  fiat: {
+    wallet:       ["fiat", "wallet"],
+    bankAccounts: ["fiat", "bank-accounts"],
+    transactions: (params = {}) => ["fiat", "transactions", params],
+    transaction:  (txId)         => ["fiat", "transaction", txId],
+    feePreview:   (currency, amount) => ["fiat", "fee-preview", currency, amount],
+  },
 };
 

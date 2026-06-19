@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import NotFound from "../pages/NotFound";
 import MainLayout from "../layouts/MainLayout";
 
 const BlogDetail = lazy(() => import("../pages/blogs/blog-detail"));
@@ -41,8 +42,11 @@ const DashArbitrage = lazy(() => import("../pages/dashboard/DashArbitrage"));
 const DashSubscription = lazy(() => import("../pages/dashboard/DashSubscription"));
 const DashContact = lazy(() => import("../pages/dashboard/DashContact"));
 const Wallet = lazy(() => import("../pages/wallet"));
-const Markets = lazy(() => import("../pages/markets"));
+const Markets           = lazy(() => import("../pages/markets"));
 const DashNotifications = lazy(() => import("../pages/dashboard/DashNotifications"));
+const DashProfile       = lazy(() => import("../pages/dashboard/DashProfile"));
+const DashP2P           = lazy(() => import("../pages/dashboard/DashP2P"));
+const DashFiatWallet    = lazy(() => import("../pages/dashboard/DashFiatWallet"));
 
 const RouteLoader = () => (
   <div className="container py-4 text-center">Loading page...</div>
@@ -98,6 +102,11 @@ const AppRoutes = () => (
         <Route path="/markets" element={<Navigate to="/Dashboard/markets" replace />} />
         <Route path="/Dashboard/markets" element={<Markets />} />
         <Route path="/Dashboard/notifications" element={<DashNotifications />} />
+        <Route path="/Dashboard/profile"       element={<DashProfile />} />
+        <Route path="/Dashboard/p2p"           element={<DashP2P />} />
+        <Route path="/Dashboard/fiat"          element={<DashFiatWallet />} />
+        {/* Catch-all: 404 */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   </MainLayout>

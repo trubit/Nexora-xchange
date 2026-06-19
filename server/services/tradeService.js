@@ -2,6 +2,7 @@ import Order from "../models/Order.js";
 import Trade from "../models/Trade.js";
 import Wallet from "../models/Wallet.js";
 import { PAIRS } from "../config/supportedAssets.js";
+import { checkAndRecordTrade } from "./riskService.js";
 
 const marketStats = new Map(
   PAIRS.map((pair) => [
@@ -91,47 +92,60 @@ const getOrCreateWallet = async (userId, asset) => {
   return wallet;
 };
 
+const CONDITIONAL_TYPES = new Set(["stop_limit", "stop_market", "trailing_stop"]);
+const ALL_ORDER_TYPES   = new Set(["market", "limit", "stop_limit", "stop_market", "trailing_stop", "oco"]);
+
+const badInput = (msg) => Object.assign(new Error(msg), { statusCode: 400 });
+
 const validateOrderInput = (input) => {
-  const symbol = String(input.symbol || "").toUpperCase();
-  const side = String(input.side || "").toLowerCase();
+  const symbol    = String(input.symbol    || "").toUpperCase();
+  const side      = String(input.side      || "").toLowerCase();
   const orderType = String(input.orderType || "limit").toLowerCase();
-  const amount = normalizeNumber(input.amount);
-  const price = normalizeNumber(input.price);
+  const amount    = normalizeNumber(input.amount);
+  const price     = normalizeNumber(input.price);
+  const stopPrice = normalizeNumber(input.stopPrice);
+  const trailPct  = normalizeNumber(input.trailPercent);
 
   const pair = getPairBySymbol(symbol);
-  if (!pair) {
-    const error = new Error("Unsupported trading pair.");
-    error.statusCode = 400;
-    throw error;
+  if (!pair) throw badInput("Unsupported trading pair.");
+  if (!["buy", "sell"].includes(side)) throw badInput("Invalid side. Use buy or sell.");
+  if (!ALL_ORDER_TYPES.has(orderType))  throw badInput("Invalid order type.");
+  if (!Number.isFinite(amount) || amount <= 0) throw badInput("Amount must be greater than zero.");
+
+  if (orderType === "limit") {
+    if (!Number.isFinite(price) || price <= 0) throw badInput("Limit price must be greater than zero.");
   }
-  if (!["buy", "sell"].includes(side)) {
-    const error = new Error("Invalid side. Use buy or sell.");
-    error.statusCode = 400;
-    throw error;
+
+  if (orderType === "stop_limit") {
+    if (!Number.isFinite(stopPrice) || stopPrice <= 0) throw badInput("Stop price is required for stop-limit orders.");
+    if (!Number.isFinite(price)     || price     <= 0) throw badInput("Limit price is required for stop-limit orders.");
   }
-  if (!["market", "limit"].includes(orderType)) {
-    const error = new Error("Invalid order type. Use market or limit.");
-    error.statusCode = 400;
-    throw error;
+
+  if (orderType === "stop_market") {
+    if (!Number.isFinite(stopPrice) || stopPrice <= 0) throw badInput("Stop price is required for stop-market orders.");
   }
-  if (!Number.isFinite(amount) || amount <= 0) {
-    const error = new Error("Amount must be greater than zero.");
-    error.statusCode = 400;
-    throw error;
+
+  if (orderType === "trailing_stop") {
+    if (!Number.isFinite(trailPct) || trailPct <= 0 || trailPct > 20)
+      throw badInput("Trail percent must be between 0.01 and 20.");
   }
-  if (orderType === "limit" && (!Number.isFinite(price) || price <= 0)) {
-    const error = new Error("Limit price must be greater than zero.");
-    error.statusCode = 400;
-    throw error;
+
+  if (orderType === "oco") {
+    if (!Number.isFinite(price)     || price     <= 0) throw badInput("Limit price is required for OCO orders.");
+    if (!Number.isFinite(stopPrice) || stopPrice <= 0) throw badInput("Stop price is required for OCO orders.");
+    const stopLimitPrice = normalizeNumber(input.stopLimitPrice);
+    if (!Number.isFinite(stopLimitPrice) || stopLimitPrice <= 0)
+      throw badInput("Stop-limit price is required for OCO orders.");
   }
 
   return {
-    symbol,
-    side,
-    orderType,
-    amount: round(amount, 8),
-    price: Number.isFinite(price) ? round(price, 8) : null,
-    pair,
+    symbol, side, orderType, pair,
+    amount:       round(amount,    8),
+    price:        Number.isFinite(price)     ? round(price,     8) : null,
+    stopPrice:    Number.isFinite(stopPrice) ? round(stopPrice, 8) : null,
+    trailPercent: Number.isFinite(trailPct)  ? round(trailPct,  4) : null,
+    stopLimitPrice: Number.isFinite(normalizeNumber(input.stopLimitPrice))
+      ? round(normalizeNumber(input.stopLimitPrice), 8) : null,
   };
 };
 
@@ -360,6 +374,9 @@ const buildSyntheticTrades = (symbol, lastPrice, count = 40) => {
 
 export const getTradingPairs = async () => buildPairsWithTicker();
 
+// Exposed so the liquidity engine can read live prices without a full market state fetch
+export const getLiveTicker = (symbol) => getTicker(String(symbol).toUpperCase());
+
 export const getPublicMarketState = async (symbol) => {
   const selectedPair = getPairBySymbol(symbol) || PAIRS[0];
   const selectedSymbol = selectedPair.symbol;
@@ -417,7 +434,17 @@ export const getUserMarketState = async (userId, symbol) => {
 };
 
 export const placeSpotOrder = async (userId, input) => {
-  const normalized = validateOrderInput(input);
+  await checkAndRecordTrade(userId);
+  const normalized  = validateOrderInput(input);
+
+  // Route conditional and OCO orders to their own handlers
+  if (CONDITIONAL_TYPES.has(normalized.orderType)) {
+    return placeConditionalOrder(userId, normalized);
+  }
+  if (normalized.orderType === "oco") {
+    return placeOCOOrder(userId, normalized);
+  }
+
   const ticker = getTicker(normalized.symbol);
   const marketPrice = ticker?.lastPrice || normalized.pair.price;
 
@@ -492,9 +519,15 @@ export const placeSpotOrder = async (userId, input) => {
   let spentPriceVolume = 0;
   let totalFillAmount = 0;
 
+  // In production, skip self-trades (wash trading prevention).
+  // In development, allow self-trading so a single test account can fill orders.
+  // Block self-trades unless explicitly running in development mode.
+  // Defaults to blocked when NODE_ENV is unset, staging, or production.
+  const blockSelfTrade = process.env.NODE_ENV !== "development";
+
   for (const maker of makers) {
     if (takerOrder.remainingAmount <= 0) break;
-    if (String(maker.user) === String(takerOrder.user)) continue;
+    if (blockSelfTrade && String(maker.user) === String(takerOrder.user)) continue;
 
     const fillAmount = round(Math.min(takerOrder.remainingAmount, maker.remainingAmount), 8);
     if (fillAmount <= 0) continue;
@@ -573,6 +606,14 @@ export const placeSpotOrder = async (userId, input) => {
 
   await takerOrder.save();
 
+  // If this order is one leg of an OCO and it filled, cancel the partner
+  if (takerOrder.status === "filled" && takerOrder.linkedOrderId) {
+    const { cancelOCOPartnerOrder } = await import("./conditionalOrderService.js");
+    cancelOCOPartnerOrder(takerOrder.linkedOrderId).catch((err) =>
+      console.error("[OCO] Post-fill partner cancel failed for", String(takerOrder.linkedOrderId), err.message)
+    );
+  }
+
   const marketState = await getUserMarketState(userId, takerOrder.symbol);
   return {
     order: takerOrder,
@@ -581,40 +622,193 @@ export const placeSpotOrder = async (userId, input) => {
   };
 };
 
+// ── Conditional order placement ───────────────────────────────────────────────
+
+const placeConditionalOrder = async (userId, normalized) => {
+  const { symbol, side, orderType, amount, price, stopPrice, trailPercent, pair } = normalized;
+
+  const ticker      = getTicker(symbol);
+  const lastPrice   = ticker?.lastPrice || pair.price;
+
+  // Sell stops trigger when price falls to/below stopPrice; buy stops when price rises to/above
+  const triggerCondition = side === "sell" ? "lte" : "gte";
+
+  // Lock funds immediately (same as a limit order would)
+  const wallets = {
+    [pair.baseAsset]:  await getOrCreateWallet(userId, pair.baseAsset),
+    [pair.quoteAsset]: await getOrCreateWallet(userId, pair.quoteAsset),
+  };
+
+  const reservePrice = price ?? stopPrice ?? lastPrice;
+  await reserveForLimitOrder(
+    { side, amount, price: reservePrice, baseAsset: pair.baseAsset, quoteAsset: pair.quoteAsset },
+    wallets,
+  );
+
+  const order = await Order.create({
+    user:             userId,
+    symbol,
+    baseAsset:        pair.baseAsset,
+    quoteAsset:       pair.quoteAsset,
+    side,
+    orderType,
+    price:            price ?? null,
+    stopPrice:        stopPrice ?? null,
+    trailPercent:     trailPercent ?? null,
+    peakPrice:        lastPrice, // trailing stop starts tracking from current price
+    triggerCondition,
+    amount,
+    remainingAmount:  amount,
+    filledAmount:     0,
+    averagePrice:     0,
+    status:           "pending_trigger",
+  });
+
+  const marketState = await getUserMarketState(userId, symbol);
+  return { order, fills: [], marketState };
+};
+
+// ── OCO order placement ───────────────────────────────────────────────────────
+
+export const placeOCOOrder = async (userId, normalized) => {
+  const { symbol, side, amount, price, stopPrice, stopLimitPrice, pair } = normalized;
+  // checkAndRecordTrade is already called by placeSpotOrder before routing here — no double-call
+
+  const ticker    = getTicker(symbol);
+  const lastPrice = ticker?.lastPrice || pair.price;
+
+  if (side === "sell" && price <= lastPrice) {
+    throw badInput("For a sell OCO, the limit price must be above the current market price.");
+  }
+  if (side === "buy"  && price >= lastPrice) {
+    throw badInput("For a buy OCO, the limit price must be below the current market price.");
+  }
+
+  const wallets = {
+    [pair.baseAsset]:  await getOrCreateWallet(userId, pair.baseAsset),
+    [pair.quoteAsset]: await getOrCreateWallet(userId, pair.quoteAsset),
+  };
+
+  await reserveForLimitOrder(
+    { side, amount, price, baseAsset: pair.baseAsset, quoteAsset: pair.quoteAsset },
+    wallets,
+  );
+
+  // Create both legs and wire them. On any failure: release locked funds and cancel legA.
+  let legA = null;
+  try {
+    legA = await Order.create({
+      user: userId, symbol,
+      baseAsset: pair.baseAsset, quoteAsset: pair.quoteAsset,
+      side, orderType: "oco",
+      price, stopPrice: null,
+      amount, remainingAmount: amount,
+      filledAmount: 0, averagePrice: 0,
+      linkedFundsHeld: true,
+      status: "open",
+    });
+
+    const legB = await Order.create({
+      user: userId, symbol,
+      baseAsset: pair.baseAsset, quoteAsset: pair.quoteAsset,
+      side, orderType: "oco",
+      price: stopLimitPrice, stopPrice,
+      triggerCondition: side === "sell" ? "lte" : "gte",
+      amount, remainingAmount: amount,
+      filledAmount: 0, averagePrice: 0,
+      linkedOrderId: legA._id,
+      linkedFundsHeld: false,
+      status: "pending_trigger",
+    });
+
+    await Order.findByIdAndUpdate(legA._id, { $set: { linkedOrderId: legB._id } });
+
+    // Feed Leg A (the live limit order) into the matching engine
+    const me = global.__matchingEngine;
+    if (me?.running) {
+      await me.processOrder({
+        orderId: String(legA._id), userId: String(userId),
+        symbol, side, price, amount,
+      });
+    }
+
+    const marketState = await getUserMarketState(userId, symbol);
+    return { order: legA, linkedOrder: legB, fills: [], marketState };
+
+  } catch (err) {
+    // Rollback: release the locked funds and mark legA cancelled so it can't fill
+    try {
+      if (side === "buy") {
+        const release = round(amount * price, 8);
+        wallets[pair.quoteAsset].locked    = round(clamp(wallets[pair.quoteAsset].locked    - release, 0, Infinity), 8);
+        wallets[pair.quoteAsset].available = round(wallets[pair.quoteAsset].available + release, 8);
+        await wallets[pair.quoteAsset].save();
+      } else {
+        wallets[pair.baseAsset].locked    = round(clamp(wallets[pair.baseAsset].locked    - amount,  0, Infinity), 8);
+        wallets[pair.baseAsset].available = round(wallets[pair.baseAsset].available + amount, 8);
+        await wallets[pair.baseAsset].save();
+      }
+    } catch (walletErr) {
+      console.error("[OCO] Fund release on rollback failed:", walletErr.message);
+    }
+    if (legA) {
+      await Order.findByIdAndUpdate(legA._id, { $set: { status: "cancelled", remainingAmount: 0 } }).catch(() => {});
+    }
+    throw err;
+  }
+};
+
+// ── Cancel (handles all statuses including pending_trigger) ───────────────────
+
 export const cancelUserOrder = async (userId, orderId) => {
   const order = await Order.findOne({
     _id: orderId,
     user: userId,
-    status: { $in: ["open", "partially_filled"] },
+    status: { $in: ["open", "partially_filled", "pending_trigger"] },
   });
 
   if (!order) {
-    const error = new Error("Open order not found.");
+    const error = new Error("Cancellable order not found.");
     error.statusCode = 404;
     throw error;
   }
 
-  const baseWallet = await getOrCreateWallet(order.user, order.baseAsset);
-  const quoteWallet = await getOrCreateWallet(order.user, order.quoteAsset);
+  // Release locked funds only if this order holds them
+  if (order.linkedFundsHeld !== false) {
+    const baseWallet  = await getOrCreateWallet(order.user, order.baseAsset);
+    const quoteWallet = await getOrCreateWallet(order.user, order.quoteAsset);
 
-  if (order.side === "buy") {
-    const releaseAmount = round(order.remainingAmount * order.price, 8);
-    quoteWallet.locked = round(clamp(quoteWallet.locked - releaseAmount, 0, Number.MAX_VALUE), 8);
-    quoteWallet.available = round(quoteWallet.available + releaseAmount, 8);
-  } else {
-    const releaseAmount = round(order.remainingAmount, 8);
-    baseWallet.locked = round(clamp(baseWallet.locked - releaseAmount, 0, Number.MAX_VALUE), 8);
-    baseWallet.available = round(baseWallet.available + releaseAmount, 8);
+    if (order.side === "buy") {
+      // peakPrice holds the lastPrice used for reservation in trailing_stop (price and stopPrice may be null)
+      const releasePrice  = order.price ?? order.stopPrice ?? order.peakPrice ?? 0;
+      const releaseAmount = round(order.remainingAmount * releasePrice, 8);
+      quoteWallet.locked    = round(clamp(quoteWallet.locked    - releaseAmount, 0, Infinity), 8);
+      quoteWallet.available = round(quoteWallet.available + releaseAmount, 8);
+    } else {
+      const releaseAmount = round(order.remainingAmount, 8);
+      baseWallet.locked    = round(clamp(baseWallet.locked    - releaseAmount, 0, Infinity), 8);
+      baseWallet.available = round(baseWallet.available + releaseAmount, 8);
+    }
+
+    await Promise.all([baseWallet.save(), quoteWallet.save()]);
   }
-
-  await Promise.all([baseWallet.save(), quoteWallet.save()]);
 
   order.status = "cancelled";
   order.remainingAmount = 0;
   await order.save();
 
+  // If this was an OCO, cancel the partner leg and return it so the controller can emit its socket event
+  let cancelledPartner = null;
+  if (order.linkedOrderId) {
+    const { cancelOCOPartnerOrder } = await import("./conditionalOrderService.js");
+    cancelledPartner = await cancelOCOPartnerOrder(order.linkedOrderId).catch((err) => {
+      console.error("[OCO] Partner cancel failed for order", String(order.linkedOrderId), err.message);
+      return null;
+    });
+  }
+
   const marketState = await getUserMarketState(userId, order.symbol);
-  return { order, marketState };
+  return { order, cancelledPartner, marketState };
 };
 
 export const jitterTickerPrices = () => {

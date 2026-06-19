@@ -1,17 +1,20 @@
 import { useLocation } from "react-router-dom";
 import MainHeader from "../Components/layout/main-header";
 
-const HIDE_HEADER_ROUTES = [
+// Exact paths that suppress the public header
+const HIDE_EXACT = new Set([
   "/login",
   "/signup",
   "/forgot-password",
   "/reset-password",
+  "/verify-email",
   "/terms",
   "/Dashboard",
   "/Blogs",
   "/blog",
   "/BlogUpdate",
   "/Support",
+  "/wallet",
   "/Dashboard/trade",
   "/Dashboard/spot",
   "/Dashboard/futures",
@@ -20,14 +23,22 @@ const HIDE_HEADER_ROUTES = [
   "/Dashboard/contact",
   "/Dashboard/markets",
   "/Dashboard/notifications",
-  "/wallet",
-];
+  "/Dashboard/profile",
+  "/Dashboard/p2p",
+  "/Dashboard/fiat",
+]);
+
+// Path prefixes that suppress the header for ALL sub-paths
+const HIDE_PREFIXES = ["/Dashboard/", "/blogs/"];
 
 const MainLayout = ({ children }) => {
   const location = useLocation();
+  // Normalize trailing slash so "/Dashboard/" matches "/Dashboard"
+  const path = location.pathname.replace(/\/+$/, "") || "/";
+
   const hideHeader =
-    HIDE_HEADER_ROUTES.includes(location.pathname) ||
-    location.pathname.startsWith("/blogs/");
+    HIDE_EXACT.has(path) ||
+    HIDE_PREFIXES.some((prefix) => path.startsWith(prefix));
 
   return (
     <>

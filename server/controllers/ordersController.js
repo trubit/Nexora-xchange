@@ -1,5 +1,5 @@
 import Order from "../models/Order.js";
-import { cancelUserOrder, placeSpotOrder } from "../services/tradeService.js";
+import { cancelUserOrder, placeOCOOrder, placeSpotOrder } from "../services/tradeService.js";
 import {
   emitOrderCancelled,
   emitOrderCreated,
@@ -43,9 +43,10 @@ export const createOrder = async (req, res) => {
     amount:  order.amount,
   });
 
-  // Feed directly to the in-process matching engine (no Redis round-trip needed).
+  // Only feed orders that are immediately active — conditional orders
+  // (status: "pending_trigger") must wait for the conditional processor to trigger them.
   const engine = req.app?.locals?.matchingEngine;
-  if (engine?.running) {
+  if (engine?.running && order.status === "open") {
     setImmediate(() =>
       engine.processOrder({
         orderId: order.id,
@@ -64,9 +65,13 @@ export const createOrder = async (req, res) => {
 // POST /api/orders/:id/cancel
 export const cancelOrder = async (req, res) => {
   const result = await cancelUserOrder(req.user.id, req.params.id);
-  const { order, marketState } = result;
+  const { order, cancelledPartner, marketState } = result;
 
   emitOrderCancelled(req.user.id, { order });
+  // Emit socket event for the OCO partner leg so the UI sees it cancelled immediately
+  if (cancelledPartner) {
+    emitOrderCancelled(req.user.id, { order: cancelledPartner });
+  }
 
   notificationService.notifyOrder(req.user.id, {
     action: "cancelled", symbol: order.symbol, side: order.side, price: order.price, amount: order.amount,
@@ -90,14 +95,28 @@ export const cancelOrder = async (req, res) => {
     );
   }
 
-  res.json({ order, marketState });
+  res.json({ order, cancelledPartner, marketState });
+};
+
+// POST /api/orders/oco
+export const createOCOOrder = async (req, res) => {
+  const result = await placeOCOOrder(req.user.id, req.body);
+  const { order, linkedOrder, fills, marketState } = result;
+  emitOrderCreated(req.user.id, { order, fills });
+  notificationService.notifyOrder(req.user.id, {
+    action: "created", symbol: order.symbol, side: order.side,
+    price: order.price, amount: order.amount,
+  }).catch(() => {});
+  const pub = req.app?.locals?.tradePublisher;
+  if (pub) await pub.publishOrderEvent(order.symbol, "order_update", { order, fills });
+  res.status(201).json({ order, linkedOrder, fills, marketState });
 };
 
 // GET /api/orders
 export const getOpenOrders = async (req, res) => {
   const filter = {
     user:   req.user.id,
-    status: { $in: ["open", "partially_filled"] },
+    status: { $in: ["open", "partially_filled", "pending_trigger"] },
   };
   if (req.query.symbol) filter.symbol = String(req.query.symbol).toUpperCase();
 

@@ -20,20 +20,29 @@ export const useOrderHistoryQuery = (params = {}, enabled = true) =>
     staleTime: 20_000,
   });
 
+const invalidateOrderCaches = (qc, symbol) => {
+  qc.invalidateQueries({ queryKey: queryKeys.orders.open({}) });
+  qc.invalidateQueries({ queryKey: queryKeys.wallet.myWallets });
+  qc.invalidateQueries({ queryKey: queryKeys.dashboard.summary });
+  if (symbol) {
+    qc.invalidateQueries({ queryKey: queryKeys.trade.myMarketState(symbol) });
+    qc.invalidateQueries({ queryKey: queryKeys.trade.marketState(symbol) });
+  }
+};
+
 export const useCreateOrderMutation = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (payload) => ordersApi.createOrder(payload),
-    onSuccess: (data, variables) => {
-      const symbol = variables?.symbol;
-      qc.invalidateQueries({ queryKey: queryKeys.orders.open({}) });
-      qc.invalidateQueries({ queryKey: queryKeys.wallet.myWallets });
-      qc.invalidateQueries({ queryKey: queryKeys.dashboard.summary });
-      if (symbol) {
-        qc.invalidateQueries({ queryKey: queryKeys.trade.myMarketState(symbol) });
-        qc.invalidateQueries({ queryKey: queryKeys.trade.marketState(symbol) });
-      }
-    },
+    onSuccess: (data, variables) => invalidateOrderCaches(qc, variables?.symbol),
+  });
+};
+
+export const useCreateOCOOrderMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload) => ordersApi.createOCOOrder(payload),
+    onSuccess: (data, variables) => invalidateOrderCaches(qc, variables?.symbol),
   });
 };
 

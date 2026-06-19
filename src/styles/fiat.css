@@ -1,0 +1,732 @@
+/* ── Fiat Wallet — .fw- prefix ──────────────────────────────────────────────── */
+
+/* Page shell */
+.fw-page {
+  min-height: 100vh;
+  background: #0b0e11;
+  color: #eaecef;
+}
+
+.fw-main {
+  padding: 1.5rem 1.75rem;
+  max-width: 1200px;
+}
+
+.fw-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #eaecef;
+  margin: 0 0 0.25rem;
+}
+
+.fw-subhead {
+  font-size: 0.82rem;
+  color: #848e9c;
+  margin: 0 0 1.75rem;
+}
+
+/* ── Balance cards ──────────────────────────────────────────────────────────── */
+
+.fw-balances {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.fw-bal-card {
+  background: #1e2329;
+  border: 1px solid #2b3139;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.fw-bal-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.fw-bal-card--active,
+.fw-bal-card:hover {
+  border-color: #f0b90b;
+  box-shadow: 0 0 0 1px rgba(240, 185, 11, 0.15);
+}
+
+.fw-bal-card--active::before {
+  background: #f0b90b;
+}
+
+.fw-bal-flag {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.fw-bal-label {
+  font-size: 0.78rem;
+  color: #848e9c;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.fw-bal-amount {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #eaecef;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.fw-bal-symbol {
+  font-size: 1rem;
+  color: #848e9c;
+  margin-right: 2px;
+}
+
+.fw-bal-frozen {
+  font-size: 0.72rem;
+  color: #f6465d;
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Action row ─────────────────────────────────────────────────────────────── */
+
+.fw-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.fw-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.35rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s, box-shadow 0.15s;
+}
+
+.fw-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.fw-btn--primary {
+  background: #f0b90b;
+  color: #1e2026;
+}
+
+.fw-btn--primary:hover:not(:disabled) {
+  box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.25);
+}
+
+.fw-btn--outline {
+  background: rgba(240, 185, 11, 0.1);
+  color: #f0b90b;
+  border: 1px solid rgba(240, 185, 11, 0.3);
+}
+
+.fw-btn--outline:hover:not(:disabled) {
+  background: rgba(240, 185, 11, 0.18);
+}
+
+.fw-btn--danger {
+  background: rgba(246, 70, 93, 0.12);
+  color: #f6465d;
+  border: 1px solid rgba(246, 70, 93, 0.25);
+}
+
+.fw-btn--danger:hover:not(:disabled) {
+  background: rgba(246, 70, 93, 0.2);
+}
+
+.fw-btn--ghost {
+  background: transparent;
+  color: #848e9c;
+  border: 1px solid #2b3139;
+}
+
+.fw-btn--ghost:hover:not(:disabled) {
+  border-color: #474d57;
+  color: #eaecef;
+}
+
+.fw-btn--sm {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.78rem;
+}
+
+/* ── Panel (deposit / withdraw) ─────────────────────────────────────────────── */
+
+.fw-panel {
+  background: #1e2329;
+  border: 1px solid #2b3139;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.75rem;
+  animation: fw-slide-in 0.18s ease;
+}
+
+@keyframes fw-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fw-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.fw-panel-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #eaecef;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fw-panel-close {
+  background: none;
+  border: none;
+  color: #848e9c;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: color 0.12s;
+}
+
+.fw-panel-close:hover {
+  color: #eaecef;
+}
+
+/* ── Form fields ─────────────────────────────────────────────────────────────── */
+
+.fw-field {
+  margin-bottom: 1rem;
+}
+
+.fw-field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #848e9c;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.fw-field input,
+.fw-field select {
+  width: 100%;
+  background: #0b0e11;
+  border: 1px solid #2b3139;
+  border-radius: 8px;
+  color: #eaecef;
+  font-size: 0.92rem;
+  padding: 0.65rem 0.9rem;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+  box-sizing: border-box;
+}
+
+.fw-field input:focus,
+.fw-field select:focus {
+  border-color: #f0b90b;
+}
+
+.fw-field select option {
+  background: #1e2329;
+}
+
+.fw-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.fw-fee-note {
+  font-size: 0.78rem;
+  color: #848e9c;
+  margin-top: 0.4rem;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.fw-fee-note b {
+  color: #f0b90b;
+}
+
+/* ── Deposit instruction card ────────────────────────────────────────────────── */
+
+.fw-deposit-card {
+  background: #0b0e11;
+  border: 1px solid rgba(240, 185, 11, 0.25);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+}
+
+.fw-deposit-card h4 {
+  font-size: 0.85rem;
+  color: #f0b90b;
+  font-weight: 700;
+  margin: 0 0 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.fw-deposit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.55rem;
+}
+
+.fw-deposit-row:last-child {
+  margin-bottom: 0;
+}
+
+.fw-deposit-key {
+  font-size: 0.75rem;
+  color: #848e9c;
+  font-weight: 600;
+  min-width: 120px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding-top: 1px;
+}
+
+.fw-deposit-val {
+  font-size: 0.88rem;
+  color: #eaecef;
+  font-weight: 500;
+  text-align: right;
+  word-break: break-all;
+}
+
+.fw-deposit-val--amount {
+  color: #f0b90b;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.fw-deposit-note {
+  font-size: 0.78rem;
+  color: #848e9c;
+  margin: 0.85rem 0 0;
+  padding: 0.65rem 0.85rem;
+  background: rgba(240, 185, 11, 0.06);
+  border-radius: 7px;
+  border: 1px solid rgba(240, 185, 11, 0.15);
+  line-height: 1.5;
+}
+
+.fw-deposit-expires {
+  font-size: 0.72rem;
+  color: #f6465d;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Alert ───────────────────────────────────────────────────────────────────── */
+
+.fw-alert {
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.83rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.45;
+}
+
+.fw-alert--ok {
+  background: rgba(14, 203, 129, 0.1);
+  color: #0ecb81;
+  border: 1px solid rgba(14, 203, 129, 0.2);
+}
+
+.fw-alert--err {
+  background: rgba(246, 70, 93, 0.1);
+  color: #f6465d;
+  border: 1px solid rgba(246, 70, 93, 0.2);
+}
+
+.fw-alert--info {
+  background: rgba(240, 185, 11, 0.07);
+  color: #f0b90b;
+  border: 1px solid rgba(240, 185, 11, 0.2);
+}
+
+/* ── Section header ──────────────────────────────────────────────────────────── */
+
+.fw-section {
+  margin-bottom: 1.75rem;
+}
+
+.fw-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.fw-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #eaecef;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* ── Bank account cards ──────────────────────────────────────────────────────── */
+
+.fw-banks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.85rem;
+}
+
+.fw-bank-card {
+  background: #1e2329;
+  border: 1px solid #2b3139;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  position: relative;
+  transition: border-color 0.15s;
+}
+
+.fw-bank-card--primary {
+  border-color: rgba(240, 185, 11, 0.4);
+}
+
+.fw-bank-badge {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  background: rgba(240, 185, 11, 0.12);
+  color: #f0b90b;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(240, 185, 11, 0.25);
+}
+
+.fw-bank-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #eaecef;
+  margin-bottom: 0.2rem;
+}
+
+.fw-bank-acct {
+  font-size: 0.8rem;
+  color: #848e9c;
+  margin-bottom: 0.55rem;
+  font-family: monospace;
+}
+
+.fw-bank-currency {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(240, 185, 11, 0.08);
+  color: #f0b90b;
+  border: 1px solid rgba(240, 185, 11, 0.2);
+  margin-bottom: 0.65rem;
+}
+
+.fw-bank-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fw-bank-status--verified { color: #0ecb81; }
+.fw-bank-status--pending  { color: #f0b90b; }
+.fw-bank-status--rejected { color: #f6465d; }
+
+.fw-bank-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+/* ── Add bank account modal / inline form ────────────────────────────────────── */
+
+.fw-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fw-fade-in 0.15s ease;
+}
+
+@keyframes fw-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fw-modal {
+  background: #1e2329;
+  border: 1px solid #2b3139;
+  border-radius: 14px;
+  padding: 1.75rem;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fw-modal-in 0.18s ease;
+}
+
+@keyframes fw-modal-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.fw-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.fw-modal-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #eaecef;
+}
+
+/* ── Transaction table ───────────────────────────────────────────────────────── */
+
+.fw-tx-filters {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.fw-tx-filters select {
+  background: #1e2329;
+  border: 1px solid #2b3139;
+  border-radius: 7px;
+  color: #eaecef;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.75rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  min-width: 110px;
+}
+
+.fw-tx-filters select:focus {
+  border-color: #f0b90b;
+}
+
+.fw-tx-table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #2b3139;
+}
+
+.fw-tx-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.fw-tx-table thead tr {
+  background: #1e2329;
+  border-bottom: 1px solid #2b3139;
+}
+
+.fw-tx-table th {
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #848e9c;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fw-tx-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #1a1e23;
+  color: #eaecef;
+  white-space: nowrap;
+}
+
+.fw-tx-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.fw-tx-table tbody tr:hover td {
+  background: rgba(240, 185, 11, 0.04);
+}
+
+.fw-tx-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.fw-tx-dir--credit { color: #0ecb81; }
+.fw-tx-dir--debit  { color: #f6465d; }
+
+.fw-tx-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+
+.fw-tx-status--completed  { background: rgba(14, 203, 129, 0.1);  color: #0ecb81; }
+.fw-tx-status--pending    { background: rgba(240, 185, 11, 0.1);  color: #f0b90b; }
+.fw-tx-status--processing { background: rgba(102, 160, 247, 0.1); color: #66a0f7; }
+.fw-tx-status--failed     { background: rgba(246, 70, 93, 0.1);   color: #f6465d; }
+.fw-tx-status--cancelled  { background: rgba(132, 142, 156, 0.1); color: #848e9c; }
+.fw-tx-status--reversed   { background: rgba(246, 70, 93, 0.08);  color: #f6465d; }
+
+.fw-tx-amount {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.fw-tx-ref {
+  font-size: 0.73rem;
+  color: #848e9c;
+  font-family: monospace;
+}
+
+/* ── Pagination ───────────────────────────────────────────────────────────────── */
+
+.fw-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.fw-page-btn {
+  background: #1e2329;
+  border: 1px solid #2b3139;
+  color: #eaecef;
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+
+.fw-page-btn:hover:not(:disabled) {
+  border-color: #f0b90b;
+  color: #f0b90b;
+}
+
+.fw-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.fw-page-info {
+  font-size: 0.78rem;
+  color: #848e9c;
+}
+
+/* ── Empty / skeleton states ─────────────────────────────────────────────────── */
+
+.fw-empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #848e9c;
+  font-size: 0.85rem;
+}
+
+.fw-empty i {
+  display: block;
+  font-size: 2.25rem;
+  margin-bottom: 0.6rem;
+  color: #2b3139;
+}
+
+.fw-skeleton {
+  background: linear-gradient(90deg, #1e2329 25%, #2b3139 50%, #1e2329 75%);
+  background-size: 200% 100%;
+  animation: fw-shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+
+@keyframes fw-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .fw-balances { grid-template-columns: repeat(3, 1fr); }
+  .fw-main { padding: 1.25rem 1.25rem; }
+}
+
+@media (max-width: 768px) {
+  .fw-balances { grid-template-columns: 1fr; }
+  .fw-field-row { grid-template-columns: 1fr; }
+  .fw-banks-grid { grid-template-columns: 1fr; }
+  .fw-main { padding: 1rem; }
+  .fw-tx-table { font-size: 0.75rem; }
+  .fw-tx-table th,
+  .fw-tx-table td { padding: 0.55rem 0.65rem; }
+}

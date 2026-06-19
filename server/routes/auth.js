@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  changePassword,
   googleAuth,
   googleOAuthCallback,
   googleOAuthStart,
@@ -41,5 +42,6 @@ router.post("/reset-password", resetPasswordLimiter, resetPassword);
 router.post("/verify-email", verifyEmail);
 router.get("/verify-email", verifyEmail);
 router.get("/me", requireAuth, me);
+router.post("/change-password", requireAuth, changePassword);
 
 export default router;

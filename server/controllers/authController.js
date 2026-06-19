@@ -5,6 +5,7 @@ import User from "../models/User.js";
 import { signToken } from "../utils/jwt.js";
 import { sendEmail } from "../utils/email.js";
 import { clearAuthAnomaly, logAuthAnomaly } from "../middleware/security.js";
+import { recordLogin } from "../services/riskService.js";
 
 // Password rule: minimum 8 characters with upper, lower, number, and symbol.
 const PASSWORD_POLICY =
@@ -144,6 +145,23 @@ const buildGoogleErrorRedirect = (frontendUrl, reason, description = "") => {
   }
   return `${frontendUrl}/login?${params.toString()}`;
 };
+// Emails that always get admin role — stored lowercase, comma-separated in env.
+// Falls back to the hardcoded owner email if env var is not set.
+const SUPER_ADMIN_EMAILS = new Set(
+  (process.env.SUPER_ADMIN_EMAILS || "trustezika831@gmail.com")
+    .split(",").map((e) => e.trim().toLowerCase()).filter(Boolean)
+);
+
+// If the user's email is in the super-admin list, promote them to admin.
+// Returns true when a DB write was needed.
+const promoteIfSuperAdmin = async (user) => {
+  if (!SUPER_ADMIN_EMAILS.has((user.email || "").toLowerCase())) return false;
+  if (user.role === "admin") return false;
+  await User.findByIdAndUpdate(user._id, { $set: { role: "admin" } });
+  user.role = "admin";
+  return true;
+};
+
 // Remove sensitive fields before sending user data to the client.
 const toSafeUser = (user) => (user ? user.toJSON() : null);
 // Normalize inputs to avoid case and whitespace issues.
@@ -386,9 +404,12 @@ export const login = async (req, res) => {
     return res.status(401).json({ message: "Invalid credentials." });
   }
 
-  // Credentials are valid; issue a token.
+  // Credentials are valid; promote to admin if this is the super-admin email.
   clearAuthAnomaly(req);
+  await promoteIfSuperAdmin(user);
   const token = signToken({ sub: user.id, role: user.role });
+  // Fire-and-forget: record IP, detect anomalies, update risk profile
+  recordLogin(user._id, req.ip, req.headers["user-agent"]).catch(() => {});
   return res.json({ user: toSafeUser(user), token });
 };
 
@@ -418,8 +439,9 @@ export const googleAuth = async (req, res) => {
     const payload = ticket.getPayload();
     const user = await upsertGoogleUser(payload, referralId, req);
 
-    // Success: issue a JWT.
+    // Success: promote to admin if super-admin email, then issue a JWT.
     clearAuthAnomaly(req);
+    await promoteIfSuperAdmin(user);
     const token = signToken({ sub: user.id, role: user.role });
     return res.json({ user: toSafeUser(user), token });
   } catch (error) {
@@ -565,6 +587,7 @@ export const googleOAuthCallback = async (req, res) => {
     const payload = ticket.getPayload();
     const user = await upsertGoogleUser(payload, referralId, req);
     clearAuthAnomaly(req);
+    await promoteIfSuperAdmin(user);
     const token = signToken({ sub: user.id, role: user.role });
 
     if (mode === "signup") {
@@ -681,6 +704,42 @@ const upsertGoogleUser = async (payload, referralId, req) => {
 // Return the currently authenticated user.
 export const me = async (req, res) => {
   return res.json({ user: toSafeUser(req.user) });
+};
+
+// Change password: verify current password then set a new one (authenticated).
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ message: "Current password and new password are required." });
+  }
+
+  if (!PASSWORD_POLICY.test(newPassword)) {
+    return res.status(400).json({
+      message: "New password must be at least 8 characters and include upper/lower case letters, a number, and a symbol.",
+    });
+  }
+
+  // Reload the user with the password hash so we can verify.
+  const user = await User.findById(req.user._id).select("+passwordHash");
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  // Google-only accounts have no local password.
+  if (user.authProvider === "google" && !user.passwordHash) {
+    return res.status(400).json({ message: "This account uses Google sign-in and has no local password to change." });
+  }
+
+  const matches = await bcrypt.compare(currentPassword, user.passwordHash || "");
+  if (!matches) {
+    return res.status(401).json({ message: "Current password is incorrect." });
+  }
+
+  user.passwordHash = await bcrypt.hash(newPassword, HASH_ROUNDS);
+  await user.save();
+
+  return res.json({ message: "Password changed successfully." });
 };
 
 // Step 1: send a password reset link to the user's email.

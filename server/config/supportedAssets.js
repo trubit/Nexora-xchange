@@ -35,15 +35,23 @@ export const ASSETS = {
 export const QUOTE_ASSETS = ["USDT", "BTC", "ETH"];
 
 /**
+ * Pure stablecoins that can only appear on the right side of a pair.
+ * BTC and ETH are also quote assets but CAN be base assets (BTCUSDT, ETHUSDT, ETHBTC).
+ */
+const BASE_ASSET_EXCLUSIONS = new Set(["USDT", "USDC"]);
+
+/**
  * Auto-generated trading pairs.
- * Every non-quote asset is paired with each quote asset.
+ * All assets except pure stablecoins can be on the left side.
+ * All QUOTE_ASSETS (USDT, BTC, ETH) can be on the right side.
+ * Self-pairings (BTC/BTC) are skipped automatically.
  */
 export const PAIRS = (() => {
   const pairs = [];
   for (const [sym, meta] of Object.entries(ASSETS)) {
-    if (QUOTE_ASSETS.includes(sym)) continue;
+    if (BASE_ASSET_EXCLUSIONS.has(sym)) continue; // stablecoins never on the left
     for (const quote of QUOTE_ASSETS) {
-      if (sym === quote) continue;
+      if (sym === quote) continue; // no self-pairing
       const quotePrice =
         quote === "USDT" ? meta.price :
         quote === "BTC"  ? (meta.price / ASSETS.BTC.price) :
