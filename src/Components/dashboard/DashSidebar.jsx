@@ -1,71 +1,167 @@
 import { Link, useLocation } from "react-router-dom";
+import { useAuthStore } from "../../store/authStore";
+
+const NAV = [
+  {
+    section: "Overview",
+    items: [
+      { to: "/Dashboard",           icon: "bi-grid-1x2-fill",        label: "Dashboard" },
+    ],
+  },
+  {
+    section: "Trading",
+    items: [
+      { to: "/Dashboard/trade",     icon: "bi-graph-up-arrow",       label: "Trade" },
+      { to: "/Dashboard/spot",      icon: "bi-currency-exchange",    label: "Spot" },
+      { to: "/Dashboard/futures",   icon: "bi-lightning-charge-fill",label: "Futures" },
+      { to: "/Dashboard/arbitrage", icon: "bi-shuffle",              label: "Arbitrage" },
+    ],
+  },
+  {
+    section: "Finance",
+    items: [
+      { to: "/wallet",              icon: "bi-wallet2",              label: "Crypto Wallet" },
+      { to: "/Dashboard/fiat",      icon: "bi-cash-stack",           label: "Fiat Wallet" },
+      { to: "/Dashboard/markets",   icon: "bi-bar-chart-line-fill",  label: "Markets" },
+    ],
+  },
+  {
+    section: "Insights",
+    items: [
+      { to: "/Dashboard/analytics", icon: "bi-stars",             label: "Analytics"       },
+      { to: "/Dashboard/security",  icon: "bi-shield-fill-check", label: "Security Center" },
+    ],
+  },
+  {
+    section: "Exchange",
+    items: [
+      { to: "/Dashboard/p2p",       icon: "bi-people-fill",          label: "P2P" },
+    ],
+  },
+  {
+    section: "Account",
+    items: [
+      { to: "/Dashboard/notifications", icon: "bi-bell-fill",        label: "Notifications" },
+      { to: "/Dashboard/profile",   icon: "bi-person-circle",        label: "Profile" },
+      { to: "/Dashboard/subscription", icon: "bi-star-fill",         label: "Subscription" },
+      { to: "/Support",             icon: "bi-headset",              label: "Support" },
+      { to: "/Dashboard/contact",   icon: "bi-envelope",             label: "Contact" },
+    ],
+  },
+];
 
 const DashSidebar = ({ open, onClose, onLogout }) => {
   const { pathname } = useLocation();
+  const user = useAuthStore((s) => s.user);
 
-  const active = (to) => (pathname === to ? " dash-sidebar-link--active" : "");
+  const isActive = (to) => pathname === to;
+
+  const initials = (email) => {
+    if (!email) return "U";
+    const parts = email.split("@")[0].split(/[._-]/);
+    return parts.slice(0, 2).map((p) => p[0]?.toUpperCase() || "").join("") || "U";
+  };
 
   return (
     <>
-      {open && <div className="dash-overlay" onClick={onClose} />}
-      <aside className={`dash-sidebar${open ? " dash-sidebar--open" : ""}`}>
-        <div className="dash-sidebar-inner">
+      {/* Backdrop overlay */}
+      <div
+        className={`dsb-overlay${open ? " dsb-overlay--visible" : ""}`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
-          <p className="dash-sidebar-section">Overview</p>
-          <Link to="/Dashboard" className={`dash-sidebar-link${active("/Dashboard")}`} onClick={onClose}>
-            <i className="bi bi-grid-1x2-fill" /> Dashboard
-          </Link>
+      {/* Sidebar panel */}
+      <aside className={`dsb-panel${open ? " dsb-panel--open" : ""}`} aria-label="Navigation">
 
-          <p className="dash-sidebar-section">Trading</p>
-          <Link to="/Dashboard/trade" className={`dash-sidebar-link${active("/Dashboard/trade")}`} onClick={onClose}>
-            <i className="bi bi-graph-up-arrow" /> Trade
-          </Link>
-          <Link to="/Dashboard/spot" className={`dash-sidebar-link${active("/Dashboard/spot")}`} onClick={onClose}>
-            <i className="bi bi-currency-exchange" /> Spot
-          </Link>
-          <Link to="/Dashboard/futures" className={`dash-sidebar-link${active("/Dashboard/futures")}`} onClick={onClose}>
-            <i className="bi bi-lightning-charge-fill" /> Futures
-          </Link>
-          <Link to="/Dashboard/arbitrage" className={`dash-sidebar-link${active("/Dashboard/arbitrage")}`} onClick={onClose}>
-            <i className="bi bi-shuffle" /> Arbitrage
-          </Link>
+        {/* Gold top accent bar */}
+        <div className="dsb-accent-bar" />
 
-          <p className="dash-sidebar-section">Finance</p>
-          <Link to="/wallet" className={`dash-sidebar-link${active("/wallet")}`} onClick={onClose}>
-            <i className="bi bi-wallet2" /> Crypto Wallet
-          </Link>
-          <Link to="/Dashboard/fiat" className={`dash-sidebar-link${active("/Dashboard/fiat")}`} onClick={onClose}>
-            <i className="bi bi-cash-stack" /> Fiat Wallet
-          </Link>
-          <Link to="/Dashboard/markets" className={`dash-sidebar-link${active("/Dashboard/markets")}`} onClick={onClose}>
-            <i className="bi bi-bar-chart-line-fill" /> Markets
-          </Link>
-
-          <p className="dash-sidebar-section">Exchange</p>
-          <Link to="/Dashboard/p2p" className={`dash-sidebar-link${active("/Dashboard/p2p")}`} onClick={onClose}>
-            <i className="bi bi-people-fill" /> P2P
-          </Link>
-
-          <p className="dash-sidebar-section">Account</p>
-          <Link to="/Dashboard/notifications" className={`dash-sidebar-link${active("/Dashboard/notifications")}`} onClick={onClose}>
-            <i className="bi bi-bell-fill" /> Notifications
-          </Link>
-          <Link to="/Dashboard/profile" className={`dash-sidebar-link${active("/Dashboard/profile")}`} onClick={onClose}>
-            <i className="bi bi-person-circle" /> Profile
-          </Link>
-          <Link to="/Dashboard/subscription" className={`dash-sidebar-link${active("/Dashboard/subscription")}`} onClick={onClose}>
-            <i className="bi bi-star-fill" /> Subscription
-          </Link>
-          <Link to="/Support" className={`dash-sidebar-link${active("/Support")}`} onClick={onClose}>
-            <i className="bi bi-headset" /> Support
-          </Link>
-          <Link to="/Dashboard/contact" className={`dash-sidebar-link${active("/Dashboard/contact")}`} onClick={onClose}>
-            <i className="bi bi-envelope" /> Contact
-          </Link>
-
-          <button className="dash-sidebar-link dash-sidebar-logout" onClick={onLogout}>
-            <i className="bi bi-box-arrow-right" /> Logout
+        {/* Header — user info */}
+        <div className="dsb-header">
+          <div className="dsb-avatar">
+            {user?.avatarUrl
+              ? <img src={user.avatarUrl} alt="avatar"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+                  onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextSibling.style.display = ""; }}
+                />
+              : null}
+            <span style={user?.avatarUrl ? { display: "none" } : {}}>{initials(user?.email)}</span>
+          </div>
+          <div className="dsb-header-info">
+            <span className="dsb-header-name">
+              {user?.name || user?.email?.split("@")[0] || "Trader"}
+            </span>
+            <span className="dsb-header-email">{user?.email || "—"}</span>
+            {user?.uid && (
+              <span className="dsb-header-uid">
+                <i className="bi bi-fingerprint" /> UID: {user.uid}
+              </span>
+            )}
+          </div>
+          <button className="dsb-close-btn" onClick={onClose} aria-label="Close menu">
+            <i className="bi bi-x-lg" />
           </button>
+        </div>
+
+        {/* Brand strip */}
+        <div className="dsb-brand-strip">
+          <span className="dsb-brand-main">TRUSONX</span>
+          <span className="dsb-brand-sub">CHANGER</span>
+          <span className="dsb-brand-dot" />
+        </div>
+
+        {/* Nav groups */}
+        <nav className="dsb-nav">
+          {NAV.map((group) => (
+            <div key={group.section} className="dsb-group">
+              <p className="dsb-section-label">{group.section}</p>
+              {group.items.map(({ to, icon, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={onClose}
+                  className={`dsb-link${isActive(to) ? " dsb-link--active" : ""}`}
+                >
+                  <span className="dsb-link-icon">
+                    <i className={`bi ${icon}`} />
+                  </span>
+                  <span className="dsb-link-label">{label}</span>
+                  {isActive(to) && <span className="dsb-link-pip" />}
+                </Link>
+              ))}
+            </div>
+          ))}
+
+          {/* Admin section — only for admin users */}
+          {user?.role === "admin" && (
+            <div className="dsb-group dsb-group--admin">
+              <p className="dsb-section-label" style={{ color: "rgba(240,185,11,0.55)" }}>Admin</p>
+              <Link
+                to="/admin"
+                onClick={onClose}
+                className={`dsb-link dsb-link--gold${isActive("/admin") ? " dsb-link--active" : ""}`}
+              >
+                <span className="dsb-link-icon">
+                  <i className="bi bi-shield-fill-check" />
+                </span>
+                <span className="dsb-link-label">Admin Panel</span>
+                <span className="dsb-admin-badge">ADMIN</span>
+              </Link>
+            </div>
+          )}
+        </nav>
+
+        {/* Footer — logout */}
+        <div className="dsb-footer">
+          <div className="dsb-footer-divider" />
+          <button className="dsb-logout" onClick={onLogout}>
+            <span className="dsb-link-icon">
+              <i className="bi bi-box-arrow-right" />
+            </span>
+            <span className="dsb-link-label">Sign Out</span>
+          </button>
+          <p className="dsb-footer-copy">TrusonXchanger © {new Date().getFullYear()}</p>
         </div>
       </aside>
     </>

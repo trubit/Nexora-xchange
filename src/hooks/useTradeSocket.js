@@ -24,7 +24,7 @@ export const useTradeSocket = ({ symbol, isAuthenticated }) => {
     setStatus("connecting");
 
     const socket = io(getSocketUrl(), {
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionDelay: 1_000,
       reconnectionDelayMax: 20_000,

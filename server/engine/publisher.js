@@ -1,7 +1,7 @@
 import { redisClients } from "../config/redis.js";
 
-const TRADE_CHANNEL     = "trade_events";
-const ORDERBOOK_CHANNEL = "orderbook_events";
+export const TRADE_CHANNEL     = process.env.REDIS_TRADE_CHANNEL     ?? "trade_events";
+export const ORDERBOOK_CHANNEL = process.env.REDIS_ORDERBOOK_CHANNEL ?? "orderbook_events";
 
 export const mePublisher = {
   async publishTrade(payload) {

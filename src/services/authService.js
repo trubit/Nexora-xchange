@@ -33,4 +33,12 @@ export const authService = {
     const { data } = await httpClient.get("/api/auth/me");
     return data;
   },
+  exchangeOAuthCode: async (code) => {
+    const { data } = await httpClient.get(`/api/auth/oauth/token?code=${encodeURIComponent(code)}`);
+    return data;
+  },
+  logout: async () => {
+    const { data } = await httpClient.post("/api/auth/logout");
+    return data;
+  },
 };

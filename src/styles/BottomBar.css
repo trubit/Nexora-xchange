@@ -68,3 +68,20 @@
     max-width: 80%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .tx-bottom-bar {
+  background: rgba(255,255,255,0.97);
+  border-top: 1px solid #eaecef;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+}
+html.light .tx-bottom-bar .tx-bb-glow-line { display: none; }
+html.light .tx-bb-link { color: #707a8a; }
+html.light .tx-bb-link:hover,
+html.light .tx-bb-link.active { color: #f0b90b; }
+html.light .tx-bb-link-label { color: #b7bdc6; }
+html.light .tx-bb-link:hover .tx-bb-link-label,
+html.light .tx-bb-link.active .tx-bb-link-label { color: #f0b90b; }

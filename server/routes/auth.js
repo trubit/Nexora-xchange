@@ -1,16 +1,20 @@
 import express from "express";
 import {
   changePassword,
+  exchangeOAuthCode,
   googleAuth,
   googleOAuthCallback,
   googleOAuthStart,
   login,
+  logout,
   me,
   register,
   resendEmailVerification,
+  resendEmailVerificationMe,
   requestPasswordReset,
   resetPassword,
   verifyEmail,
+  uploadAvatar,
 } from "../controllers/authController.js";
 import { requireAuth } from "../middleware/auth.js";
 import {
@@ -29,6 +33,7 @@ router.post("/login", loginLimiter, login);
 router.post("/google", loginLimiter, googleAuth);
 router.get("/google/start", googleOAuthStart);
 router.get("/google", googleOAuthCallback);
+router.get("/oauth/token", exchangeOAuthCode);
 router.post(
   "/verify-email/resend",
   resendVerificationLimiter,
@@ -42,6 +47,9 @@ router.post("/reset-password", resetPasswordLimiter, resetPassword);
 router.post("/verify-email", verifyEmail);
 router.get("/verify-email", verifyEmail);
 router.get("/me", requireAuth, me);
+router.post("/logout", requireAuth, logout);
+router.post("/verify-email/resend-me", requireAuth, resendVerificationLimiter, resendEmailVerificationMe);
+router.post("/avatar", requireAuth, uploadAvatar);
 router.post("/change-password", requireAuth, changePassword);
 
 export default router;

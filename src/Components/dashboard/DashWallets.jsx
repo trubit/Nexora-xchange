@@ -1,6 +1,7 @@
 import { Button } from "react-bootstrap";
 import { EmptyState, Skeleton } from "./DashShared";
 import { fmtCrypto, fmtUsd } from "./dashUtils";
+import CoinLogo from "../common/CoinLogo";
 
 const DashWallets = ({ isLoading, wallets, onRefetch, onTrade }) => (
   <>
@@ -43,9 +44,7 @@ const DashWallets = ({ isLoading, wallets, onRefetch, onTrade }) => (
               <tr key={w._id}>
                 <td>
                   <div className="dash-asset-coin">
-                    <div className="dash-asset-icon">
-                      {(w.asset || "?").slice(0, 3)}
-                    </div>
+                    <CoinLogo symbol={w.asset || "?"} size={36} />
                     <div>
                       <div className="dash-asset-name">{w.asset}</div>
                       <div className="dash-asset-full">{w.assetName || w.asset}</div>

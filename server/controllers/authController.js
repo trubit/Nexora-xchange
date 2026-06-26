@@ -1,11 +1,88 @@
 ﻿import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import path from "path";
+import fs from "fs";
+import multer from "multer";
 import { OAuth2Client } from "google-auth-library";
 import User from "../models/User.js";
-import { signToken } from "../utils/jwt.js";
+import { signToken, revokeToken } from "../utils/jwt.js";
 import { sendEmail } from "../utils/email.js";
 import { clearAuthAnomaly, logAuthAnomaly } from "../middleware/security.js";
 import { recordLogin } from "../services/riskService.js";
+import { auditAuth } from "../services/auditService.js";
+import { createSession, isNewDevice } from "../services/securityService.js";
+
+// ── Avatar upload ─────────────────────────────────────────────────────────────
+import { AVATAR_DIR, deleteUploadedFile } from "../config/uploads.js";
+
+// ── OAuth one-time code store ──────────────────────────────────────────────────
+// Stores short-lived codes for the Google redirect flow so the JWT never appears
+// in the URL (and therefore never lands in server logs or browser history).
+const _oauthCodes = new Map(); // code → { token, expiresAt }
+const _storeOAuthCode = (token) => {
+  const code = crypto.randomUUID();
+  _oauthCodes.set(code, { token, expiresAt: Date.now() + 60_000 }); // 60 s TTL
+  // Evict expired codes lazily on each write to keep the map small
+  for (const [k, v] of _oauthCodes) {
+    if (Date.now() > v.expiresAt) _oauthCodes.delete(k);
+  }
+  return code;
+};
+export const exchangeOAuthCode = (req, res) => {
+  const { code } = req.query;
+  if (!code) return res.status(400).json({ message: "Code required." });
+  const entry = _oauthCodes.get(String(code));
+  if (!entry || Date.now() > entry.expiresAt) {
+    _oauthCodes.delete(String(code));
+    return res.status(400).json({ message: "Invalid or expired code." });
+  }
+  // Keep the code in the map until it expires (60 s TTL) so React StrictMode's
+  // double-effect invocation can re-exchange the same code without failing.
+  return res.json({ token: entry.token });
+};
+
+const avatarUploader = multer({
+  storage: multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, AVATAR_DIR),
+    filename: (req, _file, cb) => {
+      const ext = ".jpg";
+      cb(null, `avatar_${req.user.id}_${Date.now()}${ext}`);
+    },
+  }),
+  fileFilter: (_req, file, cb) => {
+    if (/^image\/(jpeg|jpg|png|webp|gif)$/.test(file.mimetype)) cb(null, true);
+    else cb(new Error("Only jpg, png, webp or gif images are allowed."));
+  },
+  limits: { fileSize: 3 * 1024 * 1024 }, // 3 MB
+}).single("avatar");
+
+export const uploadAvatar = (req, res, next) => {
+  avatarUploader(req, res, async (err) => {
+    if (err) {
+      const msg = err.code === "LIMIT_FILE_SIZE"
+        ? "Image is too large. Max size is 3 MB."
+        : /^(ENOENT|EACCES|EPERM|ENOTDIR|EMFILE)/.test(err.code || "")
+          ? "File storage unavailable. Please try again."
+          : err.message;
+      return res.status(400).json({ message: msg });
+    }
+    if (!req.file) return res.status(400).json({ message: "No file received." });
+    try {
+      const url = `/uploads/avatars/${req.file.filename}`;
+      const existing = await User.findById(req.user.id).select("avatarUrl").lean();
+      const user = await User.findByIdAndUpdate(
+        req.user.id,
+        { avatarUrl: url },
+        { new: true },
+      );
+      // Delete old avatar only after the DB update succeeds
+      if (existing?.avatarUrl) deleteUploadedFile(existing.avatarUrl);
+      return res.json({ avatarUrl: url, user: toSafeUser(user) });
+    } catch (e) {
+      next(e);
+    }
+  });
+};
 
 // Password rule: minimum 8 characters with upper, lower, number, and symbol.
 const PASSWORD_POLICY =
@@ -23,6 +100,16 @@ const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const PUBLIC_FRONTEND_URL = process.env.PUBLIC_FRONTEND_URL || "";
 // Allowed frontend origins (comma-separated), shared with CORS config.
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "";
+// Generate a unique 8-digit UID (retries on collision).
+const generateUid = async () => {
+  for (let i = 0; i < 10; i++) {
+    const uid = String(Math.floor(10000000 + Math.random() * 90000000));
+    const exists = await User.exists({ uid });
+    if (!exists) return uid;
+  }
+  throw new Error("UID generation failed — retry later.");
+};
+
 // Google OAuth client ID (must match the one used on the frontend).
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 // Google OAuth client secret + redirect URI (required for auth-code callback flow).
@@ -146,9 +233,9 @@ const buildGoogleErrorRedirect = (frontendUrl, reason, description = "") => {
   return `${frontendUrl}/login?${params.toString()}`;
 };
 // Emails that always get admin role — stored lowercase, comma-separated in env.
-// Falls back to the hardcoded owner email if env var is not set.
+// No hardcoded fallback: leave SUPER_ADMIN_EMAILS unset to disable auto-promotion.
 const SUPER_ADMIN_EMAILS = new Set(
-  (process.env.SUPER_ADMIN_EMAILS || "trustezika831@gmail.com")
+  (process.env.SUPER_ADMIN_EMAILS || "")
     .split(",").map((e) => e.trim().toLowerCase()).filter(Boolean)
 );
 
@@ -280,6 +367,7 @@ export const register = async (req, res) => {
   const { code, codeHash, expires } = createEmailVerifyCode();
 
   // Create a new user.
+  const uid = await generateUid();
   const user = await User.create({
     name: cleanedName,
     email: normalizedEmail,
@@ -290,6 +378,7 @@ export const register = async (req, res) => {
     emailVerified: false,
     emailVerifyCodeHash: codeHash,
     emailVerifyCodeExpires: expires,
+    uid,
   });
 
   void sendEmailVerificationEmail(user, code).catch((error) => {
@@ -401,16 +490,35 @@ export const login = async (req, res) => {
   const matches = await bcrypt.compare(password, user.passwordHash);
   if (!matches) {
     logAuthAnomaly(req, "invalid-password");
+    auditAuth(req, "LOGIN_FAILED", {
+      severity: "warning",
+      metadata: { reason: "invalid-password" },
+      userId: user._id, userEmail: user.email,
+    });
     return res.status(401).json({ message: "Invalid credentials." });
   }
 
   // Credentials are valid; promote to admin if this is the super-admin email.
   clearAuthAnomaly(req);
   await promoteIfSuperAdmin(user);
-  const token = signToken({ sub: user.id, role: user.role });
-  // Fire-and-forget: record IP, detect anomalies, update risk profile
+
+  // Create device session + detect new device
+  const [sessionId, newDevice] = await Promise.all([
+    createSession(req, user._id),
+    isNewDevice(user._id, req),
+  ]);
+
+  const token = signToken({ sub: user.id, role: user.role, sessionId });
   recordLogin(user._id, req.ip, req.headers["user-agent"]).catch(() => {});
-  return res.json({ user: toSafeUser(user), token });
+
+  // Immutable audit entry
+  auditAuth({ ...req, sessionId }, "LOGIN_SUCCESS", {
+    severity: newDevice ? "warning" : "info",
+    metadata: { newDevice, ip: req.ip || req.socket?.remoteAddress },
+    userId: user._id, userEmail: user.email,
+  });
+
+  return res.json({ user: toSafeUser(user), token, sessionId });
 };
 
 // Google login/signup: verify the ID token and create or link a user.
@@ -594,8 +702,11 @@ export const googleOAuthCallback = async (req, res) => {
       return res.redirect(`${frontendUrl}/login?google=signup_success`);
     }
 
+    // Use a short-lived one-time code instead of putting the JWT in the URL
+    // (URL tokens leak into server logs, browser history, and Referer headers).
+    const oauthCode = _storeOAuthCode(token);
     return res.redirect(
-      `${frontendUrl}/login?token=${encodeURIComponent(token)}&redirect=${encodeURIComponent("/Dashboard")}`,
+      `${frontendUrl}/login?code=${encodeURIComponent(oauthCode)}&redirect=${encodeURIComponent("/Dashboard")}`,
     );
   } catch (error) {
     console.error(
@@ -650,6 +761,7 @@ const upsertGoogleUser = async (payload, referralId, req) => {
 
   // If no user exists, create a new Google user.
   if (!user) {
+    const uid = await generateUid();
     user = await User.create({
       name: normalizeText(payload?.name),
       email: normalizedEmail,
@@ -658,6 +770,7 @@ const upsertGoogleUser = async (payload, referralId, req) => {
       avatarUrl: payload?.picture || "",
       referralId: cleanedReferral,
       emailVerified: true,
+      uid,
     });
     return user;
   }
@@ -703,10 +816,24 @@ const upsertGoogleUser = async (payload, referralId, req) => {
 };
 // Return the currently authenticated user.
 export const me = async (req, res) => {
-  return res.json({ user: toSafeUser(req.user) });
+  let user = req.user;
+  // Backfill: assign a UID to any existing user who doesn't have one yet.
+  if (!user.uid) {
+    try {
+      const uid = await generateUid();
+      user = await User.findByIdAndUpdate(user._id, { uid }, { new: true });
+    } catch { /* non-fatal — user still gets a response */ }
+  }
+  return res.json({ user: toSafeUser(user) });
 };
 
 // Change password: verify current password then set a new one (authenticated).
+export const logout = async (req, res) => {
+  // req.decoded is set by requireAuth — revoke this specific token
+  await revokeToken(req.decoded, "logout").catch(() => {});
+  return res.json({ message: "Logged out successfully." });
+};
+
 export const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
@@ -736,7 +863,10 @@ export const changePassword = async (req, res) => {
     return res.status(401).json({ message: "Current password is incorrect." });
   }
 
-  user.passwordHash = await bcrypt.hash(newPassword, HASH_ROUNDS);
+  user.passwordHash      = await bcrypt.hash(newPassword, HASH_ROUNDS);
+  // Stamp the change time — requireAuth rejects any token issued before this moment,
+  // invalidating all sessions on all devices without needing to enumerate them.
+  user.passwordChangedAt = new Date();
   await user.save();
 
   return res.json({ message: "Password changed successfully." });
@@ -878,5 +1008,25 @@ export const verifyEmail = async (req, res) => {
 
   clearAuthAnomaly(req);
   return res.json({ message: "Email verified successfully." });
+};
+
+// POST /api/auth/verify-email/resend-me — authenticated; resends code to logged-in user's email.
+export const resendEmailVerificationMe = async (req, res) => {
+  const user = req.user;
+
+  if (user.emailVerified === true) {
+    return res.json({ message: "Your email is already verified." });
+  }
+
+  const { code, codeHash, expires } = createEmailVerifyCode();
+  user.emailVerifyCodeHash    = codeHash;
+  user.emailVerifyCodeExpires = expires;
+  await user.save();
+
+  void sendEmailVerificationEmail(user, code).catch((err) => {
+    console.error("Email verification send failed:", err?.message || err);
+  });
+
+  return res.json({ message: "Verification code sent. Check your inbox." });
 };
 

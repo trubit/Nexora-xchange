@@ -315,3 +315,49 @@
     font-size: 0.72rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .tx-login-page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef0f4 100%);
+}
+html.light .tx-login-card {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+}
+html.light .tx-login-title { color: #1e2329; }
+html.light .tx-login-sub   { color: #707a8a; }
+html.light .tx-login-label { color: #474d57; }
+
+html.light .tx-login-inp {
+  background: #f5f7fa;
+  border-color: #d9dde0;
+  color: #1e2329;
+}
+html.light .tx-login-inp:focus {
+  border-color: #00d6a0;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0,214,160,0.1);
+}
+html.light .tx-login-inp::placeholder { color: #b7bdc6; }
+html.light .tx-login-inp-ico { color: #b7bdc6; }
+html.light .tx-login-inp-wrap:focus-within .tx-login-inp-ico { color: #00d6a0; }
+
+html.light .tx-login-btn-primary {
+  background: linear-gradient(135deg, #00d6a0 0%, #00b886 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,214,160,0.3);
+}
+html.light .tx-login-btn-primary:hover { box-shadow: 0 6px 20px rgba(0,214,160,0.4); }
+
+html.light .tx-login-divider { color: #b7bdc6; }
+html.light .tx-login-divider::before,
+html.light .tx-login-divider::after { background: #eaecef; }
+
+html.light .tx-login-link { color: #00a872; }
+html.light .tx-login-link:hover { color: #007d58; }
+html.light .tx-login-forgot { color: #707a8a; }
+html.light .tx-login-forgot:hover { color: #00a872; }

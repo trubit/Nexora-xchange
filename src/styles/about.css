@@ -558,3 +558,41 @@
     line-height: 1.6;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light {
+  --about-bg: #f5f7fa;
+  --about-surface: #ffffff;
+  --about-surface-soft: #f0f2f5;
+  --about-border: rgba(0,0,0,0.09);
+  --about-text: #1e2329;
+  --about-muted: #707a8a;
+}
+
+html.light .about-hero { background: linear-gradient(135deg, #f0f2f5 0%, #e8eaee 100%); }
+html.light .about-hero__headline { color: #1e2329; }
+html.light .about-hero__sub { color: #474d57; }
+
+html.light .about-highlight__card {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+html.light .about-highlight__card p { color: #474d57; }
+
+html.light .about-stat-val   { color: #1e2329; }
+html.light .about-stat-label { color: #707a8a; }
+
+html.light .about-section { background: #fafafa; }
+html.light .about-section-title { color: #1e2329; }
+html.light .about-section-sub   { color: #474d57; }
+
+html.light .about-team-card {
+  background: #ffffff;
+  border-color: #eaecef;
+}
+html.light .about-team-name   { color: #1e2329; }
+html.light .about-team-role   { color: #707a8a; }

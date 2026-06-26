@@ -12,4 +12,16 @@ export const walletApi = {
 
   withdraw: (payload) =>
     requestWithRetry({ method: "post", url: "/api/wallets/withdraw", data: payload }, { retries: 0 }),
+
+  lookupByUid: (uid) =>
+    requestWithRetry({ method: "get", url: `/api/transfer/lookup/${uid}` }),
+
+  internalTransfer: (payload) =>
+    requestWithRetry({ method: "post", url: "/api/transfer/internal", data: payload }, { retries: 0 }),
+
+  getDepositAddress: (asset, network) =>
+    requestWithRetry({ method: "get", url: "/api/blockchain/deposit-address", params: { asset, network } }),
+
+  getBlockchainChains: () =>
+    requestWithRetry({ method: "get", url: "/api/blockchain/chains" }),
 };

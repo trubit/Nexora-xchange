@@ -64,3 +64,48 @@
   object-fit: contain;
   margin-top: -1rem;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .home-page,
+html.light .recent-updates-section,
+html.light .live-crypto-section,
+html.light .features-section,
+html.light .exchanges-section,
+html.light .crypto-journey-section {
+  background: #f5f7fa;
+}
+
+html.light .hero-title,
+html.light .updates-title,
+html.light .features-title,
+html.light .section-title { color: #1e2329; }
+
+html.light .hero-subtitle,
+html.light .updates-subtitle,
+html.light .features-sub,
+html.light .section-sub { color: #474d57; }
+
+html.light .updates-card {
+  background: #ffffff;
+  border-color: #eaecef;
+}
+html.light .updates-card:hover { border-color: rgba(0,214,160,0.35); }
+html.light .updates-card-title { color: #1e2329; }
+html.light .updates-card-description { color: #474d57; }
+html.light .updates-card-date { color: #b7bdc6; }
+
+html.light .hero-secondary.btn {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.1);
+  color: #474d57;
+}
+
+html.light .features-card {
+  background: #ffffff;
+  border-color: #eaecef;
+}
+html.light .features-card:hover { border-color: rgba(0,214,160,0.3); }
+html.light .features-card p { color: #474d57; }

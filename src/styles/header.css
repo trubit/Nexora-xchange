@@ -259,3 +259,36 @@
     min-height: 44px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .tx-main-header.navbar {
+  background: rgba(255,255,255,0.97) !important;
+  border-bottom: 1px solid #eaecef;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+html.light .tx-main-brand { color: #1e2329; }
+html.light .tx-main-brand:hover { color: #f0b90b; }
+html.light .tx-main-brand-mark { background: #f0b90b; color: #181a1e; }
+html.light .tx-main-brand-text { color: #1e2329; }
+html.light .tx-main-link.nav-link { color: #474d57; }
+html.light .tx-main-link.nav-link:hover,
+html.light .tx-main-link.nav-link.active { color: #f0b90b; }
+
+html.light .tx-main-actions > .btn.btn-dark {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.08);
+  color: #474d57;
+}
+html.light .tx-main-actions > .btn.btn-dark:hover { background: rgba(0,0,0,0.1); color: #1e2329; }
+
+html.light .tx-main-login-btn.btn {
+  background: transparent;
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .tx-main-login-btn.btn:hover { border-color: #f0b90b; color: #f0b90b; }
+
+html.light .tx-main-toggler.navbar-toggler { border-color: #eaecef; color: #474d57; }

@@ -34,9 +34,24 @@ export const queryKeys = {
   assets: {
     all: ["assets", "supported"],
   },
+  analytics: {
+    insights:  ["analytics", "insights"],
+    portfolio: ["analytics", "portfolio"],
+    pnl:       ["analytics", "pnl"],
+    activity:  ["analytics", "activity"],
+    market:    ["analytics", "market"],
+    patterns:  (symbol, interval = "1h") => ["analytics", "patterns", symbol, interval],
+  },
   notifications: {
     list:        (params = {}) => ["notifications", "list", params],
     unreadCount: ["notifications", "unread-count"],
+  },
+  transfer: {
+    lookup: (uid) => ["transfer", "lookup", uid],
+  },
+  blockchain: {
+    chains:        ["blockchain", "chains"],
+    depositAddress: (asset, network) => ["blockchain", "deposit-address", asset, network],
   },
   fiat: {
     wallet:       ["fiat", "wallet"],

@@ -121,18 +121,26 @@ apiClient.interceptors.response.use(
     const status = error?.response?.status;
     const isAuthRoute = String(original.url || "").includes("/api/auth/");
 
-    if (status === 401 && !original._retry && !isAuthRoute && getRefreshToken()) {
-      original._retry = true;
-      try {
-        refreshPromise = refreshPromise || refreshAccessToken();
-        const token = await refreshPromise;
-        refreshPromise = null;
-        original.headers.Authorization = `Bearer ${token}`;
-        return apiClient.request(original);
-      } catch (refreshError) {
-        refreshPromise = null;
+    if (status === 401 && !original._retry && !isAuthRoute) {
+      if (getRefreshToken()) {
+        original._retry = true;
+        try {
+          refreshPromise = refreshPromise || refreshAccessToken();
+          const token = await refreshPromise;
+          refreshPromise = null;
+          original.headers.Authorization = `Bearer ${token}`;
+          return apiClient.request(original);
+        } catch (refreshError) {
+          refreshPromise = null;
+          clearSession();
+          window.dispatchEvent(new Event("auth:session-expired"));
+          return Promise.reject(normalizeError(refreshError));
+        }
+      } else {
+        // No refresh token — token is invalid (e.g. server restarted with new JWT secret).
+        // Clear the stale session so the user is redirected to login.
         clearSession();
-        return Promise.reject(normalizeError(refreshError));
+        window.dispatchEvent(new Event("auth:session-expired"));
       }
     }
 

@@ -6,13 +6,13 @@
   "keywords": [
     "trusonxhanger"
   ],
-  "homepage": "https://github.com/trubit/my-react-project#readme",
+  "homepage": "https://github.com/trubit/Trusonxchanger#readme",
   "bugs": {
-    "url": "https://github.com/trubit/my-react-project/issues"
+    "url": "https://github.com/trubit/Trusonxchanger/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trubit/my-react-project.git"
+    "url": "git+https://github.com/trubit/Trusonxchanger.git"
   },
   "license": "ISC",
   "author": "truson",
@@ -25,10 +25,12 @@
     "preview": "vite preview",
     "server": "node server/index.js",
     "server:dev": "nodemon server/index.js",
-    "dev:full": "concurrently -n \"vite,server\" -c \"cyan,green\" \"npm run dev\" \"npm run server:dev\"",
+    "start": "concurrently -k -n \"CLIENT,SERVER\" -c \"cyan,green\" \"npm run dev\" \"npm run server:dev\"",
+    "reset": "powershell -ExecutionPolicy Bypass -File kill-and-start.ps1",
     "docker:prod": "docker compose -f docker-compose.production.yml up --build"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
     "@tanstack/react-query": "^5.100.9",
     "@tanstack/react-query-devtools": "^5.100.10",
     "axios": "^1.13.4",
@@ -55,6 +57,7 @@
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
     "prom-client": "^15.1.3",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
     "react-bootstrap-icons": "^1.11.6",

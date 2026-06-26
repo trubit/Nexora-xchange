@@ -26,10 +26,11 @@ const HIDE_EXACT = new Set([
   "/Dashboard/profile",
   "/Dashboard/p2p",
   "/Dashboard/fiat",
+  "/admin",
 ]);
 
 // Path prefixes that suppress the header for ALL sub-paths
-const HIDE_PREFIXES = ["/Dashboard/", "/blogs/"];
+const HIDE_PREFIXES = ["/Dashboard/", "/blogs/", "/admin"];
 
 const MainLayout = ({ children }) => {
   const location = useLocation();

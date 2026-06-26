@@ -170,7 +170,7 @@ export const checkFrozen = async (userId) => {
   const profile = await RiskProfile.findOne({ user: userId }).select("frozen frozenReason").lean();
   if (profile?.frozen) {
     throw err(
-      `Your account has been frozen. Reason: ${profile.frozenReason || "contact support"}. Please reach out to support@trusonxchanger.com.`,
+      `Your account has been frozen. Reason: ${profile.frozenReason || "contact support"}. Please reach out to ${process.env.SUPPORT_EMAIL || "support@trusonxchanger.com"}.`,
       403,
     );
   }

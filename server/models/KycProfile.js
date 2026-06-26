@@ -1,24 +1,38 @@
 import mongoose from "mongoose";
 
-// KYC profile data for a user.
 const KycProfileSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
-    level: { type: String, default: "basic" },
+    documentType: {
+      type: String,
+      enum: ["passport", "national_id", "drivers_license"],
+      default: "passport",
+    },
+    personalInfo: {
+      firstName:   { type: String, default: "" },
+      lastName:    { type: String, default: "" },
+      dateOfBirth: { type: String, default: "" },
+      nationality: { type: String, default: "" },
+      country:     { type: String, default: "" },
+      address:     { type: String, default: "" },
+      city:        { type: String, default: "" },
+      postalCode:  { type: String, default: "" },
+      phone:       { type: String, default: "" },
+    },
     documents: [
       {
-        type: { type: String, default: "" },
-        url: { type: String, default: "" },
+        side:       { type: String, enum: ["front", "back", "selfie"], required: true },
+        url:        { type: String, required: true },
         uploadedAt: { type: Date, default: Date.now },
       },
     ],
-    submittedAt: { type: Date, default: Date.now },
-    reviewedAt: { type: Date },
+    submittedAt:  { type: Date },
+    reviewedAt:   { type: Date },
     reviewerNote: { type: String, default: "" },
   },
   { timestamps: true }
@@ -33,7 +47,4 @@ KycProfileSchema.set("toJSON", {
   },
 });
 
-const KycProfile = mongoose.model("KycProfile", KycProfileSchema);
-
-export default KycProfile; 
-
+export default mongoose.model("KycProfile", KycProfileSchema);

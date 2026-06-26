@@ -11,11 +11,14 @@ export const notFound = (req, res, _next) => {
 export const errorHandler = (err, req, res, _next) => {
   void _next;
   const isMulterError = err?.name === "MulterError";
-  const status = err.statusCode || (isMulterError ? 400 : 500);
+  const isFileSystemError = /^(ENOENT|EACCES|EPERM|ENOTDIR|EMFILE)/.test(err.code || "");
+  const status = err.statusCode || (isMulterError || isFileSystemError ? 400 : 500);
   const message =
     isMulterError && err.code === "LIMIT_FILE_SIZE"
       ? "Image is too large. Max size is 3 MB."
-      : err.message || "Server error.";
+      : isFileSystemError
+        ? "File storage error. Please try again."
+        : err.message || "Server error.";
   req.log?.error?.(
     { err, status, requestId: req.requestId },
     "Request failed.",

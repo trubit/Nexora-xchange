@@ -479,3 +479,37 @@
     height: 240px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .blog-detail-page { background: #fafafa; color: #1e2329; }
+html.light .blog-detail-title { color: #1e2329; }
+html.light .blog-detail-meta  { color: #707a8a; }
+html.light .blog-detail-body  { color: #1e2329; }
+html.light .blog-detail-body p { color: #474d57; }
+html.light .blog-detail-body h2,
+html.light .blog-detail-body h3 { color: #1e2329; }
+html.light .blog-detail-body blockquote {
+  border-left-color: #00d6a0;
+  background: rgba(0,214,160,0.05);
+  color: #474d57;
+}
+html.light .blog-detail-body code {
+  background: #f0f1f2;
+  color: #1e2329;
+}
+html.light .blog-detail-body pre {
+  background: #f5f7fa;
+  border-color: #eaecef;
+}
+
+html.light .blog-sidebar-widget {
+  background: #ffffff;
+  border-color: #eaecef;
+}
+html.light .blog-sidebar-title { color: #1e2329; border-bottom-color: #eaecef; }
+html.light .blog-related-item:hover { background: rgba(0,0,0,0.02); }
+html.light .blog-related-title { color: #1e2329; }
+html.light .blog-related-date  { color: #b7bdc6; }

@@ -30,7 +30,7 @@ const transporter = mailerConfigured
     )
   : null;
 
-const SUPPORT_INBOX = "trusonxchanger@gmail.com";
+const SUPPORT_INBOX = process.env.SUPPORT_EMAIL || "trusonxchanger@gmail.com";
 
 export const CONTACT_RECEIVER =
   process.env.CONTACT_RECEIVER ||

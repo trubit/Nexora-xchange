@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { useDashboardQuery } from "../hooks/queries/useDashboardQuery";
@@ -8,7 +8,50 @@ import { useMarketSocket } from "../hooks/useMarketSocket";
 import DashNavbar from "../Components/layout/DashNavbar";
 import DashSidebar from "../Components/dashboard/DashSidebar";
 import { KycBadge } from "../Components/dashboard/DashShared";
+import CoinLogo from "../Components/common/CoinLogo";
 import "../styles/dashboard.css";
+
+// ── Live price ticker bar ─────────────────────────────────────────────────────
+
+const TICKER_COINS = ["BTC","ETH","BNB","SOL","XRP","ADA","DOGE","AVAX","LINK","DOT","MATIC","UNI","ATOM","NEAR","TRUSON"];
+
+const TickerBar = ({ tickers }) => {
+  const fmtPx = (n) => {
+    if (!n) return "—";
+    if (n >= 1000) return n.toLocaleString("en-US", { maximumFractionDigits: 2 });
+    if (n >= 1)    return Number(n).toFixed(4);
+    return Number(n).toFixed(6);
+  };
+
+  const items = TICKER_COINS.map(sym => {
+    const t = tickers?.[`${sym}USDT`] || {};
+    return { sym, price: t.lastPrice, chg: t.priceChangePct };
+  }).filter(i => i.price);
+
+  if (!items.length) return null;
+
+  const doubled = [...items, ...items]; // duplicate for seamless loop
+
+  return (
+    <div className="bnx-ticker" title="Hover to pause">
+      <div className="bnx-ticker-track">
+        {doubled.map((item, idx) => {
+          const isUp = (item.chg ?? 0) >= 0;
+          return (
+            <span key={idx} className="bnx-ticker-item">
+              <CoinLogo symbol={item.sym} size={18} />
+              <span className="bnx-ticker-sym">{item.sym}</span>
+              <span className="bnx-ticker-px">${fmtPx(item.price)}</span>
+              <span className={`bnx-ticker-chg ${isUp ? "bnx-ticker-up" : "bnx-ticker-dn"}`}>
+                {isUp ? "▲" : "▼"}{Math.abs(item.chg ?? 0).toFixed(2)}%
+              </span>
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -30,37 +73,8 @@ const greeting  = () => {
   return "Good evening";
 };
 
-// ── Coin colors ───────────────────────────────────────────────────────────────
-
-const COIN_CLR = {
-  BTC:"#f7931a", ETH:"#627eea", USDT:"#26a17b", USDC:"#2775ca",
-  BNB:"#f3ba2f", SOL:"#9945ff", XRP:"#00aae4", ADA:"#0066ff",
-  DOGE:"#c5a66a", AVAX:"#e84142", LINK:"#2a5ada", DOT:"#e6007a",
-  MATIC:"#8247e5", TRX:"#ef0027", LTC:"#bfbbbb", UNI:"#ff007a",
-  ATOM:"#6f7fb5", NEAR:"#00c1de", ARB:"#28a0f0", OP:"#ff0420",
-  TRUSON:"#f0b90b",
-};
-const CLR_PALETTE = ["#f7931a","#627eea","#26a17b","#2775ca","#f3ba2f","#9945ff","#00aae4","#e84142","#0066ff","#c5a66a","#ff6b35","#4ecdc4","#f0b90b","#45b7d1"];
-const coinColor = (sym) => {
-  if (COIN_CLR[sym]) return COIN_CLR[sym];
-  const h = [...(sym || "X")].reduce((a, c) => a + c.charCodeAt(0), 0);
-  return CLR_PALETTE[h % CLR_PALETTE.length];
-};
-
-// ── CoinBadge ─────────────────────────────────────────────────────────────────
-
-const CoinBadge = ({ symbol, size = 36 }) => {
-  const c = coinColor(symbol);
-  return (
-    <span className="db-coin-badge" style={{
-      width: size, height: size, minWidth: size,
-      background: `${c}1a`, border: `1.5px solid ${c}40`,
-      color: c, fontSize: size < 30 ? "0.58rem" : "0.66rem",
-    }}>
-      {(symbol || "?").slice(0, 4)}
-    </span>
-  );
-};
+// CoinBadge → now delegates to CoinLogo (shows real logo when available)
+const CoinBadge = ({ symbol, size = 36 }) => <CoinLogo symbol={symbol} size={size} />;
 
 // ── Shimmer skeleton ──────────────────────────────────────────────────────────
 
@@ -86,10 +100,30 @@ const ConnBadge = ({ status }) => {
   );
 };
 
+// ── UID copy chip ─────────────────────────────────────────────────────────────
+
+const UidChip = ({ uid }) => {
+  const [copied, setCopied] = useState(false);
+  if (!uid) return null;
+  const copy = () => {
+    navigator.clipboard.writeText(uid).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+  return (
+    <button className="db-uid-chip" onClick={copy} title="Copy UID">
+      <i className="bi bi-fingerprint" />
+      <span>UID&nbsp;<b>{uid}</b></span>
+      <i className={`bi bi-${copied ? "check2" : "copy"}`} style={{ opacity: 0.7 }} />
+    </button>
+  );
+};
+
 // ── Welcome bar ───────────────────────────────────────────────────────────────
 
 const WelcomeBar = ({ user, socketStatus, isLoading }) => {
-  const name = user?.firstName || user?.email?.split("@")[0] || "Trader";
+  const name = user?.firstName || user?.name || user?.email?.split("@")[0] || "Trader";
   const since = user?.createdAt
     ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })
     : null;
@@ -108,6 +142,7 @@ const WelcomeBar = ({ user, socketStatus, isLoading }) => {
             <div className="db-welcome-meta">
               <KycBadge status={user?.kycStatus} />
               {since && <span className="db-since">Member since {since}</span>}
+              <UidChip uid={user?.uid} />
             </div>
           </>
         )}
@@ -124,23 +159,26 @@ const WelcomeBar = ({ user, socketStatus, isLoading }) => {
 
 // ── Portfolio hero card ───────────────────────────────────────────────────────
 
-const PortfolioHero = ({ portfolio, wallets, isLoading, onNavigate }) => {
+const PortfolioHero = ({ portfolio, wallets, isLoading, onNavigate, tickers }) => {
   const [hidden, setHidden] = useState(false);
   const total   = portfolio?.totalBalanceUsdt ?? 0;
   const wCount  = portfolio?.walletCount      ?? wallets.length;
   const orders  = portfolio?.openOrdersCount  ?? 0;
 
+  // BTC equivalent
+  const btcPrice = tickers?.["BTCUSDT"]?.lastPrice ?? 0;
+  const btcEquiv = btcPrice > 0 ? (total / btcPrice).toFixed(6) : null;
+
   return (
     <div className="db-hero">
       <div className="db-hero-glow" />
-
       <div className="db-hero-inner">
         {/* Left — balance */}
         <div className="db-hero-left">
           <div className="db-hero-label">
-            Total Portfolio Balance
+            <span>Total Portfolio Balance</span>
             <button className="db-icon-btn" onClick={() => setHidden(v => !v)}
-              title={hidden ? "Show" : "Hide"}>
+              title={hidden ? "Show balance" : "Hide balance"}>
               <i className={`bi bi-eye${hidden ? "" : "-slash"}`} />
             </button>
           </div>
@@ -154,7 +192,12 @@ const PortfolioHero = ({ portfolio, wallets, isLoading, onNavigate }) => {
           )}
 
           <div className="db-hero-sub">
-            {isLoading ? <Shimmer h={13} w={190} /> : "Estimated value across all assets"}
+            {isLoading ? <Shimmer h={14} w={220} /> : (
+              <span>
+                {btcEquiv ? `≈ ${btcEquiv} BTC` : "Estimated value across all assets"}
+                {btcEquiv && <span style={{ color: "#474d57", marginLeft: 8 }}>· across all assets</span>}
+              </span>
+            )}
           </div>
 
           <div className="db-hero-actions">
@@ -163,6 +206,9 @@ const PortfolioHero = ({ portfolio, wallets, isLoading, onNavigate }) => {
             </Link>
             <Link to="/wallet" className="db-ha">
               <i className="bi bi-arrow-up-circle-fill" />Withdraw
+            </Link>
+            <Link to="/wallet" className="db-ha">
+              <i className="bi bi-arrow-left-right" />Transfer
             </Link>
             <Link to="/Dashboard/trade" className="db-ha">
               <i className="bi bi-bar-chart-line-fill" />Trade
@@ -176,13 +222,16 @@ const PortfolioHero = ({ portfolio, wallets, isLoading, onNavigate }) => {
         {/* Right — key metrics */}
         <div className="db-hero-metrics">
           {[
-            { label: "Total Assets",  val: wCount,            unit: "wallets",    color: "#e6edf3" },
-            { label: "Open Orders",   val: orders,            unit: "pending",    color: orders > 0 ? "#f0b90b" : "#474d57" },
+            { label: "Total Assets",  val: wCount,            unit: "wallets",    color: "#eaecef", icon: "bi-wallet2" },
+            { label: "Open Orders",   val: orders,            unit: "active",     color: orders > 0 ? "#f0b90b" : "#474d57", icon: "bi-clock-fill" },
           ].map(m => (
             <div key={m.label} className="db-hmetric">
-              <div className="db-hmetric-label">{m.label}</div>
+              <div className="db-hmetric-label">
+                <i className={`bi ${m.icon}`} style={{ marginRight: 4, opacity: 0.5 }} />
+                {m.label}
+              </div>
               {isLoading
-                ? <Shimmer h={28} w={80} mb={4} />
+                ? <Shimmer h={32} w={80} mb={4} />
                 : <div className="db-hmetric-val" style={{ color: m.color }}>{m.val}</div>}
               <div className="db-hmetric-unit">{m.unit}</div>
             </div>
@@ -456,20 +505,27 @@ const RecentTransactions = ({ transactions, isLoading }) => (
     ) : (
       <div className="db-tx-list">
         {transactions.map(tx => {
-          const isCredit = tx.type === "deposit" || tx.type === "trade_buy";
-          const iconCfg  = {
-            deposit:    { icon: "bi-arrow-down-circle-fill", bg: "rgba(14,203,129,0.12)", color: "#0ecb81" },
-            withdrawal: { icon: "bi-arrow-up-circle-fill",   bg: "rgba(246,70,93,0.12)",  color: "#f6465d" },
-            trade:      { icon: "bi-bar-chart-line-fill",    bg: "rgba(96,165,250,0.12)", color: "#60a5fa" },
-          }[tx.type] || { icon: "bi-arrow-left-right",       bg: "rgba(132,142,156,0.12)",color: "#848e9c" };
+          const isTransfer = tx.type === "transfer";
+          const isIn       = isTransfer ? tx.direction === "in" : tx.type === "deposit" || tx.type === "trade_buy";
+          const isCredit   = isIn;
+
+          const iconCfg = isTransfer
+            ? isIn
+              ? { icon: "bi-send-fill",            bg: "rgba(240,185,11,0.12)",  color: "#f0b90b", label: "Received" }
+              : { icon: "bi-send-fill",            bg: "rgba(240,185,11,0.12)",  color: "#f0b90b", label: "Sent" }
+            : {
+                deposit:    { icon: "bi-arrow-down-circle-fill", bg: "rgba(14,203,129,0.12)", color: "#0ecb81", label: "Deposit"    },
+                withdrawal: { icon: "bi-arrow-up-circle-fill",   bg: "rgba(246,70,93,0.12)",  color: "#f6465d", label: "Withdrawal" },
+                trade:      { icon: "bi-bar-chart-line-fill",    bg: "rgba(96,165,250,0.12)", color: "#60a5fa", label: "Trade"      },
+              }[tx.type] || { icon: "bi-arrow-left-right", bg: "rgba(132,142,156,0.12)", color: "#848e9c", label: tx.type || "—" };
 
           return (
             <div key={tx._id} className="db-tx-item">
               <div className="db-tx-ico" style={{ background: iconCfg.bg, color: iconCfg.color }}>
-                <i className={`bi ${iconCfg.icon}`} />
+                <i className={`bi ${iconCfg.icon}`} style={isTransfer && !isIn ? { transform: "scaleX(-1)" } : {}} />
               </div>
               <div className="db-tx-info">
-                <div className="db-tx-type">{tx.type ? tx.type.charAt(0).toUpperCase() + tx.type.slice(1) : "—"}</div>
+                <div className="db-tx-type">{iconCfg.label}</div>
                 <div className="db-tx-date">{fmtDate(tx.createdAt)}</div>
               </div>
               <div className="db-tx-right">
@@ -490,7 +546,8 @@ const RecentTransactions = ({ transactions, isLoading }) => (
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user: authUser, logout, isAuthenticated } = useAuthStore();
+  const { user: authUser, logout, isAuthenticated, refreshUser } = useAuthStore();
+  useEffect(() => { refreshUser(); }, []);
 
   // ── All hooks before any conditional return ───────────────────────────────
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -520,6 +577,9 @@ const Dashboard = () => {
         connectionStatus={socketStatus}
       />
 
+      {/* Live price ticker */}
+      <TickerBar tickers={tickers} />
+
       <div className="dash-body">
         <DashSidebar
           open={sidebarOpen}
@@ -547,6 +607,7 @@ const Dashboard = () => {
             wallets={wallets}
             isLoading={isLoading}
             onNavigate={navigate}
+            tickers={tickers}
           />
 
           {/* Stat cards */}

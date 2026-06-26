@@ -35,6 +35,8 @@ const UserSchema = new mongoose.Schema(
     emailVerifyCodeExpires: { type: Date },
     // Authorization role for access control.
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    // Set whenever the password changes — any token issued before this moment is rejected.
+    passwordChangedAt: { type: Date },
     // Contact phone is required for local (email/password) account creation.
     phone: {
       type: String,
@@ -43,6 +45,8 @@ const UserSchema = new mongoose.Schema(
         return this.authProvider === "local";
       },
     },
+    // Unique numeric UID shown to the user (8 digits, like Bybit/Bitget).
+    uid: { type: String, unique: true, sparse: true, index: true },
     // Referral code used during signup (optional).
     referralId: { type: String, default: "" },
     // Account status controls whether user can log in.

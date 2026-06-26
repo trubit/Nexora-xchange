@@ -13,7 +13,7 @@ router.get("/latest", async (req, res) => {
       return res.json(cached);
     }
 
-    const url = `https://api.frankfurter.app/latest?from=${encodeURIComponent(from)}`;
+    const url = `https://api.frankfurter.dev/v1/latest?from=${encodeURIComponent(from)}`;
     const response = await axios.get(url, { timeout: 10000 });
     await cacheSet(cacheKey, response.data, 300);
     return res.json(response.data);

@@ -20,7 +20,7 @@ export const useNotificationSocket = ({ enabled = true } = {}) => {
     if (!token) return;
 
     const socket = io(getSocketUrl(), {
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnectionDelay:    2000,
       reconnectionAttempts: 10,
     });

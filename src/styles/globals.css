@@ -1,4 +1,60 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700&display=swap");
+
+/* ── Binance Promax Design Tokens ──────────────────────────────────────────
+   Dark mode is the default (:root = dark).
+   html.light overrides switch to the Binance light palette.
+   ──────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bnx-bg:        #0b0e11;
+  --bnx-surface:   #1e2026;
+  --bnx-surface2:  #2b2f36;
+  --bnx-nav-bg:    #181a20;
+
+  /* Borders */
+  --bnx-border:    #2b2f36;
+  --bnx-border2:   #363c45;
+
+  /* Text */
+  --bnx-text:      #eaecef;
+  --bnx-text2:     #b7bdc6;
+  --bnx-text3:     #848e9c;
+  --bnx-text4:     #474d57;
+
+  /* Brand */
+  --bnx-gold:      #f0b90b;
+  --bnx-gold2:     #f8d33a;
+  --bnx-green:     #0ecb81;
+  --bnx-red:       #f6465d;
+
+  /* Misc */
+  --bnx-shadow:    0 8px 32px rgba(0,0,0,0.45);
+  --bnx-radius:    12px;
+  --bnx-nav-h:     64px;
+}
+
+/* Light mode palette — Binance exact */
+html.light {
+  --bnx-bg:        #fafafa;
+  --bnx-surface:   #ffffff;
+  --bnx-surface2:  #f0f1f2;
+  --bnx-nav-bg:    #ffffff;
+
+  --bnx-border:    #eaecef;
+  --bnx-border2:   #d9dde0;
+
+  --bnx-text:      #1e2329;
+  --bnx-text2:     #474d57;
+  --bnx-text3:     #707a8a;
+  --bnx-text4:     #b7bdc6;
+
+  --bnx-gold:      #f0b90b;
+  --bnx-gold2:     #e8a000;
+  --bnx-green:     #02c076;
+  --bnx-red:       #f6465d;
+
+  --bnx-shadow:    0 4px 20px rgba(0,0,0,0.1);
+}
 
 *,
 *::before,
@@ -13,8 +69,11 @@ html {
 
 body {
   margin: 0;
-  font-family: "Manrope", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Inter", "Manrope", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
+  background: var(--bnx-bg);
+  color: var(--bnx-text);
+  transition: background 0.2s, color 0.2s;
 }
 
 img,

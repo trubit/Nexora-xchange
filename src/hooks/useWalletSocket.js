@@ -17,7 +17,7 @@ export const useWalletSocket = ({ enabled = false } = {}) => {
     if (!token) return;
 
     const socket = io(getSocketUrl(), {
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnectionDelay: 2000,
       reconnectionAttempts: 5,
     });

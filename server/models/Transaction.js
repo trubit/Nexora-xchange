@@ -22,6 +22,10 @@ const TransactionSchema = new mongoose.Schema(
     txHash: { type: String, default: "" },
     network: { type: String, default: "" },
     address: { type: String, default: "" },
+    // For internal UID transfers: the other party.
+    counterpartyId:  { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    counterpartyUid: { type: String, default: "" },
+    direction: { type: String, enum: ["in", "out", ""], default: "" },
     // Ledger foundation: record balance before/after every mutation.
     balanceBefore: { type: Number, default: 0 },
     balanceAfter:  { type: Number, default: 0 },

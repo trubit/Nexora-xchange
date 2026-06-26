@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { authService } from "../services/authService";
+import { requestWithRetry } from "../api/client";
 
 const getStoredUser = () => {
   try {
@@ -11,7 +12,22 @@ const getStoredUser = () => {
 
 const hasSession = () => Boolean(localStorage.getItem("token") && getStoredUser());
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => {
+  // Listen for the API client's session-expired signal (JWT invalid, no refresh token).
+  // Force logout so the user is sent to the login page instead of hanging in a broken state.
+  if (typeof window !== "undefined") {
+    window.addEventListener("auth:session-expired", () => {
+      get().logout();
+      // Only redirect if the user is on a protected route (not already on login/signup/public pages).
+      const publicPaths = ["/login", "/signup", "/forgot-password", "/reset-password", "/verify-email"];
+      const onPublicPage = publicPaths.some((p) => window.location.pathname.startsWith(p));
+      if (!onPublicPage) {
+        window.location.href = "/login";
+      }
+    });
+  }
+
+  return {
   token: localStorage.getItem("token") || "",
   user: getStoredUser(),
   isAuthenticated: hasSession(),
@@ -92,7 +108,10 @@ export const useAuthStore = create((set) => ({
     });
   },
 
-  logout: () => {
+  logout: async () => {
+    // Tell the server to blacklist the current token before clearing local state.
+    // Fire-and-forget — even if the request fails, local session is still cleared.
+    authService.logout().catch(() => {});
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     set({
@@ -108,4 +127,18 @@ export const useAuthStore = create((set) => ({
   clearAuthMessages: () => {
     set({ error: "", successMessage: "", needsVerification: false });
   },
-}));
+
+  refreshUser: async () => {
+    if (!localStorage.getItem("token")) return;
+    try {
+      const data = await requestWithRetry({ method: "get", url: "/api/auth/me" });
+      const freshUser = data?.user;
+      if (!freshUser) return;
+      localStorage.setItem("user", JSON.stringify(freshUser));
+      set({ user: freshUser });
+    } catch {
+      // silently ignore — stale data is better than crashing
+    }
+  },
+  };
+});

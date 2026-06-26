@@ -3,16 +3,22 @@ import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import {
   useDepositMutation,
+  useDepositAddressQuery,
+  useAssetChainMap,
   useMyWalletsQuery,
   useWalletTransactionsQuery,
   useWithdrawMutation,
+  useInternalTransferMutation,
+  useUidLookupQuery,
 } from "../hooks/queries/useWalletQueries";
+import { QRCodeSVG } from "qrcode.react";
 import { useSupportedAssets } from "../hooks/queries/useAssetsQuery";
 import { useWalletSocket } from "../hooks/useWalletSocket";
 import { useMarketSocket } from "../hooks/useMarketSocket";
 import { useLiveMarketStore } from "../store/liveMarketStore";
 import DashNavbar from "../Components/layout/DashNavbar";
 import DashSidebar from "../Components/dashboard/DashSidebar";
+import CoinLogo from "../Components/common/CoinLogo";
 import "../styles/wallet.css";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -28,22 +34,6 @@ const fmtDate = (d) => { try { return new Date(d).toLocaleString([], { dateStyle
 const fmtCrypto = (n, dec = 6) =>
   Number.isFinite(+n) ? (+n).toFixed(Math.min(Math.max(dec, 2), 8)) : "—";
 
-// deterministic color per coin symbol
-const COIN_COLOR_MAP = {
-  BTC:"#f7931a", ETH:"#627eea", USDT:"#26a17b", USDC:"#2775ca",
-  BNB:"#f3ba2f", SOL:"#9945ff", XRP:"#00aae4", ADA:"#0066ff",
-  DOGE:"#c5a66a", AVAX:"#e84142", LINK:"#2a5ada", DOT:"#e6007a",
-  MATIC:"#8247e5", TRX:"#ef0027", LTC:"#bfbbbb", UNI:"#ff007a",
-  ATOM:"#6f7fb5", NEAR:"#00c1de", ARB:"#28a0f0", OP:"#ff0420",
-  TRUSON:"#f0b90b",
-};
-const PALETTE = ["#f7931a","#627eea","#26a17b","#2775ca","#f3ba2f","#9945ff","#00aae4","#e84142","#0066ff","#c5a66a","#ff6b35","#4ecdc4","#f0b90b","#45b7d1"];
-const getCoinColor = (sym) => {
-  if (COIN_COLOR_MAP[sym]) return COIN_COLOR_MAP[sym];
-  const h = [...(sym||"X")].reduce((a,c)=>a+c.charCodeAt(0),0);
-  return PALETTE[h % PALETTE.length];
-};
-
 const getLivePrice = (symbol, assetMap, tickers) => {
   if (symbol === "USDT" || symbol === "USDC") return 1;
   const t = tickers?.[`${symbol}USDT`];
@@ -56,25 +46,8 @@ const get24hChange = (symbol, tickers) => {
   return Number(tickers?.[`${symbol}USDT`]?.priceChangePct ?? 0);
 };
 
-// ── Coin Badge ────────────────────────────────────────────────────────────────
-
-const CoinBadge = ({ symbol, size = 36 }) => {
-  const color = getCoinColor(symbol);
-  return (
-    <span
-      className="wp-coin-badge"
-      style={{
-        width: size, height: size, minWidth: size,
-        background: `${color}1a`,
-        border: `1.5px solid ${color}40`,
-        color,
-        fontSize: size < 30 ? "0.58rem" : "0.68rem",
-      }}
-    >
-      {(symbol || "?").slice(0, 4)}
-    </span>
-  );
-};
+// CoinBadge → now delegates to CoinLogo (shows real logo when available)
+const CoinBadge = ({ symbol, size = 36 }) => <CoinLogo symbol={symbol} size={size} />;
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 
@@ -178,6 +151,9 @@ const PortfolioCard = ({ wallets, assetMap, tickers, loading, hidden, onToggleHi
         </button>
         <button className="wp-qa" onClick={() => onAction("withdraw")}>
           <i className="bi bi-arrow-up-circle-fill" />Withdraw
+        </button>
+        <button className="wp-qa wp-qa--transfer" onClick={() => onAction("transfer")}>
+          <i className="bi bi-send-fill" />Transfer
         </button>
         <Link to="/Dashboard/trade" className="wp-qa">
           <i className="bi bi-bar-chart-line-fill" />Trade
@@ -388,14 +364,82 @@ const AssetsTable = ({ wallets, assetMap, tickers, loading, hidden, onDeposit, o
   );
 };
 
+// ── On-chain deposit address panel ────────────────────────────────────────────
+const OnchainDeposit = ({ asset, chain }) => {
+  const [copied, setCopied] = useState(false);
+  const { data, isLoading, isError } = useDepositAddressQuery(asset, chain.network);
+
+  const copy = () => {
+    if (!data?.address) return;
+    navigator.clipboard.writeText(data.address).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  if (isLoading) return (
+    <div className="wp-dep-onchain">
+      <div className="wp-dep-qr-placeholder"><i className="bi bi-hourglass-split" /> Loading address…</div>
+    </div>
+  );
+
+  if (isError || !data?.address) return (
+    <div className="wp-alert wp-alert--err" style={{ marginTop: "1rem" }}>
+      <i className="bi bi-exclamation-circle-fill" />
+      Could not load deposit address. Make sure the blockchain layer is running.
+    </div>
+  );
+
+  return (
+    <div className="wp-dep-onchain">
+      <div className="wp-dep-qr-wrap">
+        <QRCodeSVG value={data.address} size={168} level="M" />
+      </div>
+      <div className="wp-dep-addr-label">Your {asset} deposit address</div>
+      <div className="wp-dep-addr-box">
+        <span className="wp-dep-addr-text">{data.address}</span>
+        <button className="wp-dep-copy-btn" onClick={copy} title="Copy address">
+          <i className={`bi bi-${copied ? "check2" : "copy"}`} />
+          {copied ? " Copied!" : " Copy"}
+        </button>
+      </div>
+      <div className="wp-dep-info">
+        <div className="wp-dep-info-row">
+          <i className="bi bi-hdd-network" />
+          <span>Network: <b>{chain.label}</b></span>
+        </div>
+        <div className="wp-dep-info-row">
+          <i className="bi bi-shield-check" />
+          <span>Confirmations required: <b>{chain.confirmations}</b></span>
+        </div>
+      </div>
+      <div className="wp-notice wp-notice--warn">
+        <i className="bi bi-exclamation-triangle-fill" />
+        Only send <b>{asset}</b> on the <b>{chain.label}</b> network to this address.
+        Sending other tokens or using the wrong network may result in permanent loss.
+      </div>
+    </div>
+  );
+};
+
 // ── Deposit Modal ─────────────────────────────────────────────────────────────
 
 const DepositModal = ({ initialAsset, assets, onClose }) => {
-  const [asset, setAsset]   = useState(initialAsset || assets[0]?.symbol || "USDT");
-  const [amount, setAmount] = useState("");
-  const [fb, setFb]         = useState(null);
+  const [asset,   setAsset]   = useState(initialAsset || assets[0]?.symbol || "USDT");
+  const [network, setNetwork] = useState(null);
+  const [amount,  setAmount]  = useState("");
+  const [fb, setFb]           = useState(null);
   const mutation = useDepositMutation();
-  const meta = assets.find(a => a.symbol === asset) || {};
+
+  // Dynamic map from backend: { ETH: [{network,label,confirmations}], USDT: [...], ... }
+  const { data: assetChainMap = {} } = useAssetChainMap();
+  const chains = assetChainMap[asset] ?? [];
+
+  // When asset changes, auto-select the network if there's only one option
+  useEffect(() => {
+    setNetwork(chains.length === 1 ? chains[0] : null);
+    setFb(null);
+  }, [asset, chains.length]);
 
   useEffect(() => {
     const fn = (e) => e.key === "Escape" && onClose();
@@ -416,6 +460,8 @@ const DepositModal = ({ initialAsset, assets, onClose }) => {
     }
   };
 
+  const isOnchain = chains.length > 0;
+
   return (
     <div className="wp-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="wp-modal" role="dialog" aria-modal="true" aria-label="Deposit">
@@ -428,43 +474,69 @@ const DepositModal = ({ initialAsset, assets, onClose }) => {
         </div>
 
         <div className="wp-modal-body">
-          {fb && (
-            <div className={`wp-alert wp-alert--${fb.t === "ok" ? "ok" : "err"}`}>
-              <i className={`bi bi-${fb.t === "ok" ? "check-circle-fill" : "exclamation-circle-fill"}`} />
-              {fb.msg}
-            </div>
+          <div className="wp-field">
+            <label className="wp-flabel">Asset</label>
+            <select className="wp-sel" value={asset} onChange={e => setAsset(e.target.value)}>
+              {assets.map(a => <option key={a.symbol} value={a.symbol}>{a.name} ({a.symbol})</option>)}
+            </select>
+          </div>
+
+          {isOnchain ? (
+            <>
+              {/* Network selector — only shown when asset is available on multiple chains */}
+              {chains.length > 1 && (
+                <div className="wp-field">
+                  <label className="wp-flabel">Network</label>
+                  <div className="wp-dep-net-grid">
+                    {chains.map(c => (
+                      <button
+                        key={c.network}
+                        type="button"
+                        className={`wp-dep-net-btn${network?.network === c.network ? " wp-dep-net-btn--active" : ""}`}
+                        onClick={() => setNetwork(c)}
+                      >
+                        {c.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {network
+                ? <OnchainDeposit asset={asset} chain={network} />
+                : (
+                  <div className="wp-notice" style={{ marginTop: "0.5rem" }}>
+                    <i className="bi bi-info-circle-fill" />
+                    Select a network above to get your deposit address.
+                  </div>
+                )
+              }
+            </>
+          ) : (
+            <>
+              {fb && (
+                <div className={`wp-alert wp-alert--${fb.t === "ok" ? "ok" : "err"}`}>
+                  <i className={`bi bi-${fb.t === "ok" ? "check-circle-fill" : "exclamation-circle-fill"}`} />
+                  {fb.msg}
+                </div>
+              )}
+              <form onSubmit={submit} noValidate>
+                <div className="wp-field">
+                  <label className="wp-flabel">Amount</label>
+                  <input type="number" className="wp-inp" placeholder="0.00" min="0" step="any"
+                    value={amount} onChange={e => setAmount(e.target.value)} required />
+                </div>
+                <div className="wp-notice">
+                  <i className="bi bi-info-circle-fill" />
+                  Simulated deposit — no real funds are transferred.
+                </div>
+                <button type="submit" className="wp-submit wp-submit--dep" disabled={mutation.isPending}>
+                  {mutation.isPending
+                    ? <><i className="bi bi-hourglass-split" /> Processing…</>
+                    : <><i className="bi bi-arrow-down-circle-fill" /> Deposit {asset}</>}
+                </button>
+              </form>
+            </>
           )}
-          <form onSubmit={submit} noValidate>
-            <div className="wp-field">
-              <label className="wp-flabel">Asset</label>
-              <select className="wp-sel" value={asset} onChange={e => { setAsset(e.target.value); setFb(null); }}>
-                {assets.map(a => <option key={a.symbol} value={a.symbol}>{a.name} ({a.symbol})</option>)}
-              </select>
-            </div>
-
-            {meta.network && (
-              <div className="wp-net-badge">
-                <i className="bi bi-hdd-network" /> Network: <b>{meta.network}</b>
-              </div>
-            )}
-
-            <div className="wp-field">
-              <label className="wp-flabel">Amount</label>
-              <input type="number" className="wp-inp" placeholder="0.00" min="0" step="any"
-                value={amount} onChange={e => setAmount(e.target.value)} required />
-            </div>
-
-            <div className="wp-notice">
-              <i className="bi bi-info-circle-fill" />
-              Simulated deposit — no real funds are transferred.
-            </div>
-
-            <button type="submit" className="wp-submit wp-submit--dep" disabled={mutation.isPending}>
-              {mutation.isPending
-                ? <><i className="bi bi-hourglass-split" /> Processing…</>
-                : <><i className="bi bi-arrow-down-circle-fill" /> Deposit {asset}</>}
-            </button>
-          </form>
         </div>
       </div>
     </div>
@@ -579,6 +651,204 @@ const WithdrawModal = ({ initialAsset, assets, wallets, assetMap, onClose }) => 
   );
 };
 
+// ── Transfer Modal (Internal by UID + External by address) ───────────────────
+
+const TransferModal = ({ assets, wallets, assetMap, onClose }) => {
+  const [tab,    setTab]    = useState("internal"); // "internal" | "external"
+  const [asset,  setAsset]  = useState(assets[0]?.symbol || "USDT");
+  const [amount, setAmount] = useState("");
+  const [fb,     setFb]     = useState(null);
+
+  // Internal
+  const [uid, setUid] = useState("");
+  const { data: recipient, isFetching: looking, error: lookupErr } = useUidLookupQuery(uid.trim());
+  const internalMutation = useInternalTransferMutation();
+
+  // External
+  const [address, setAddress] = useState("");
+  const externalMutation = useWithdrawMutation();
+
+  const wallet = wallets.find(w => w.asset === asset);
+  const avail  = wallet?.available ?? 0;
+  const dec    = assetMap[asset]?.decimals ?? 6;
+  const meta   = assetMap[asset] || {};
+
+  useEffect(() => {
+    const fn = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", fn);
+    return () => document.removeEventListener("keydown", fn);
+  }, [onClose]);
+
+  const switchTab = (t) => { setTab(t); setFb(null); setAmount(""); setUid(""); setAddress(""); };
+
+  const submitInternal = async (e) => {
+    e.preventDefault(); setFb(null);
+    const n = parseFloat(amount);
+    if (!uid.trim() || !/^\d{8}$/.test(uid.trim()))
+      return setFb({ t:"err", msg:"Enter a valid 8-digit UID." });
+    if (!recipient)
+      return setFb({ t:"err", msg:"Recipient not found. Check the UID." });
+    if (!n || n <= 0) return setFb({ t:"err", msg:"Enter a valid positive amount." });
+    if (n > avail)    return setFb({ t:"err", msg:`Insufficient balance. Available: ${fmtCrypto(avail, dec)} ${asset}` });
+    try {
+      await internalMutation.mutateAsync({ recipientUid: uid.trim(), asset, amount: n });
+      setFb({ t:"ok", msg:`${n} ${asset} sent to ${recipient.displayName} (UID ${uid.trim()}).` });
+      setAmount(""); setUid("");
+    } catch (err) {
+      setFb({ t:"err", msg: err?.response?.data?.message || err?.message || "Transfer failed." });
+    }
+  };
+
+  const submitExternal = async (e) => {
+    e.preventDefault(); setFb(null);
+    const n = parseFloat(amount);
+    if (!n || n <= 0) return setFb({ t:"err", msg:"Enter a valid positive amount." });
+    if (n > avail)    return setFb({ t:"err", msg:`Insufficient balance. Available: ${fmtCrypto(avail, dec)} ${asset}` });
+    if (!address.trim() || address.trim().length < 10)
+      return setFb({ t:"err", msg:"Enter a valid wallet address (min 10 characters)." });
+    try {
+      await externalMutation.mutateAsync({ asset, amount: n, address: address.trim(), network: meta.network || "" });
+      setFb({ t:"ok", msg:`Withdrawal of ${n} ${asset} submitted successfully.` });
+      setAmount(""); setAddress("");
+    } catch (err) {
+      setFb({ t:"err", msg: err?.response?.data?.message || err?.message || "Withdrawal failed." });
+    }
+  };
+
+  const isPending = tab === "internal" ? internalMutation.isPending : externalMutation.isPending;
+
+  return (
+    <div className="wp-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="wp-modal" role="dialog" aria-modal="true" aria-label="Transfer">
+        <div className="wp-modal-hdr">
+          <div className="wp-modal-title">
+            <span className="wp-modal-icon wp-modal-icon--tr"><i className="bi bi-send-fill" /></span>
+            Transfer
+          </div>
+          <button className="wp-icon-btn" onClick={onClose}><i className="bi bi-x-lg" /></button>
+        </div>
+
+        {/* Tabs */}
+        <div className="wp-tr-tabs">
+          <button
+            className={`wp-tr-tab${tab === "internal" ? " wp-tr-tab--on" : ""}`}
+            onClick={() => switchTab("internal")}
+          >
+            <i className="bi bi-people-fill" /> Internal (UID)
+          </button>
+          <button
+            className={`wp-tr-tab${tab === "external" ? " wp-tr-tab--on" : ""}`}
+            onClick={() => switchTab("external")}
+          >
+            <i className="bi bi-box-arrow-up-right" /> External (Address)
+          </button>
+        </div>
+
+        <div className="wp-modal-body">
+          {fb && (
+            <div className={`wp-alert wp-alert--${fb.t === "ok" ? "ok" : "err"}`}>
+              <i className={`bi bi-${fb.t === "ok" ? "check-circle-fill" : "exclamation-circle-fill"}`} />
+              {fb.msg}
+            </div>
+          )}
+
+          {/* ── Asset selector (shared) ── */}
+          <div className="wp-field">
+            <label className="wp-flabel">Asset</label>
+            <select className="wp-sel" value={asset} onChange={e => { setAsset(e.target.value); setFb(null); }}>
+              {assets.map(a => <option key={a.symbol} value={a.symbol}>{a.name} ({a.symbol})</option>)}
+            </select>
+          </div>
+
+          {tab === "internal" ? (
+            <form onSubmit={submitInternal} noValidate>
+              <div className="wp-field">
+                <label className="wp-flabel">Recipient UID</label>
+                <input
+                  type="text" className="wp-inp"
+                  placeholder="8-digit UID (e.g. 12345678)"
+                  maxLength={8} value={uid}
+                  onChange={e => { setUid(e.target.value.replace(/\D/g, "")); setFb(null); }}
+                  required
+                />
+                {uid.length === 8 && (
+                  <div className="wp-uid-lookup">
+                    {looking && <span className="wp-dim"><i className="bi bi-hourglass-split" /> Looking up…</span>}
+                    {!looking && recipient && <span className="wp-uid-found"><i className="bi bi-person-check-fill" /> {recipient.displayName}</span>}
+                    {!looking && lookupErr  && <span className="wp-uid-notfound"><i className="bi bi-person-x-fill" /> No account found</span>}
+                  </div>
+                )}
+              </div>
+
+              <div className="wp-field">
+                <div className="wp-flabel-row">
+                  <label className="wp-flabel">Amount</label>
+                  <span className="wp-avail-hint">Available: <b>{fmtCrypto(avail, dec)} {asset}</b></span>
+                </div>
+                <div className="wp-inp-wrap">
+                  <input type="number" className="wp-inp" placeholder="0.00" min="0" step="any"
+                    max={avail} value={amount} onChange={e => setAmount(e.target.value)} required />
+                  <button type="button" className="wp-max-btn" onClick={() => setAmount(String(avail))}>MAX</button>
+                </div>
+              </div>
+
+              <div className="wp-notice">
+                <i className="bi bi-info-circle-fill" />
+                Internal transfers between TrusonXchanger accounts are instant and free.
+              </div>
+
+              <button type="submit" className="wp-submit wp-submit--tr" disabled={isPending || !recipient}>
+                {isPending ? <><i className="bi bi-hourglass-split" /> Sending…</> : <><i className="bi bi-send-fill" /> Send {asset}</>}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={submitExternal} noValidate>
+              {meta.network && (
+                <div className="wp-net-badge">
+                  <i className="bi bi-hdd-network" /> Network: <b>{meta.network}</b>
+                </div>
+              )}
+
+              <div className="wp-field">
+                <div className="wp-flabel-row">
+                  <label className="wp-flabel">Amount</label>
+                  <span className="wp-avail-hint">Available: <b>{fmtCrypto(avail, dec)} {asset}</b></span>
+                </div>
+                <div className="wp-inp-wrap">
+                  <input type="number" className="wp-inp" placeholder="0.00" min="0" step="any"
+                    max={avail} value={amount} onChange={e => setAmount(e.target.value)} required />
+                  <button type="button" className="wp-max-btn" onClick={() => setAmount(String(avail))}>MAX</button>
+                </div>
+              </div>
+
+              <div className="wp-field">
+                <label className="wp-flabel">Destination Address</label>
+                <input
+                  type="text" className="wp-inp"
+                  placeholder={`Paste your ${asset} address on ${meta.network || "the network"}`}
+                  value={address} onChange={e => setAddress(e.target.value)} required
+                />
+                <div className="wp-field-hint">
+                  This is the wallet address on Binance, Bybit, Bitget, or any other exchange.
+                </div>
+              </div>
+
+              <div className="wp-notice wp-notice--warn">
+                <i className="bi bi-exclamation-triangle-fill" />
+                Double-check the address and network. Crypto transactions are irreversible.
+              </div>
+
+              <button type="submit" className="wp-submit wp-submit--wd" disabled={isPending}>
+                {isPending ? <><i className="bi bi-hourglass-split" /> Submitting…</> : <><i className="bi bi-box-arrow-up-right" /> Send to External Wallet</>}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ── Recent Activity ───────────────────────────────────────────────────────────
 
 const RecentActivity = ({ assetMap }) => {
@@ -595,7 +865,7 @@ const RecentActivity = ({ assetMap }) => {
       <div className="wp-card-head">
         <div className="wp-card-title">Recent Activity</div>
         <div className="wp-tab-row">
-          {["","deposit","withdrawal","trade"].map(t => (
+          {["","deposit","withdrawal","transfer","trade"].map(t => (
             <button
               key={t || "all"}
               className={`wp-tab${filter === t ? " wp-tab--on" : ""}`}
@@ -633,14 +903,21 @@ const RecentActivity = ({ assetMap }) => {
               </thead>
               <tbody>
                 {txs.map(tx => {
-                  const dec      = assetMap[tx.asset]?.decimals ?? 6;
-                  const isCredit = tx.type === "deposit" || tx.type === "trade_buy";
+                  const dec = assetMap[tx.asset]?.decimals ?? 6;
+                  const isTransfer = tx.type === "transfer";
+                  const isIn  = isTransfer ? tx.direction === "in"  : tx.type === "deposit"  || tx.type === "trade_buy";
+                  const isOut = isTransfer ? tx.direction === "out" : tx.type === "withdrawal";
+                  const isCredit = isIn;
+                  const typeLabel = isTransfer
+                    ? (tx.direction === "in" ? "Received" : "Sent")
+                    : tx.type.charAt(0).toUpperCase() + tx.type.slice(1);
+                  const noteText = tx.note || tx.reference || "—";
                   return (
                     <tr key={tx._id || tx.id} className="wp-row">
                       <td className="wp-td">
-                        <span className={`wp-type-badge wp-type-badge--${tx.type}`}>
+                        <span className={`wp-type-badge wp-type-badge--${isTransfer ? (isCredit ? "deposit" : "withdrawal") : tx.type}`}>
                           <i className={`bi bi-arrow-${isCredit ? "down" : "up"}-short`} />
-                          {tx.type}
+                          {typeLabel}
                         </span>
                       </td>
                       <td className="wp-td">
@@ -658,7 +935,7 @@ const RecentActivity = ({ assetMap }) => {
                         <span className={`wp-status wp-status--${tx.status}`}>{tx.status}</span>
                       </td>
                       <td className="wp-td wp-td--ref">
-                        <span className="wp-ref">{tx.reference || "—"}</span>
+                        <span className="wp-ref" title={noteText}>{noteText}</span>
                       </td>
                       <td className="wp-td wp-td--num wp-td--date">{fmtDate(tx.createdAt)}</td>
                     </tr>
@@ -768,6 +1045,14 @@ const Wallet = () => {
       {modal?.type === "withdraw" && (
         <WithdrawModal
           initialAsset={modal.asset}
+          assets={assets}
+          wallets={wallets}
+          assetMap={assetMap}
+          onClose={closeModal}
+        />
+      )}
+      {modal?.type === "transfer" && (
+        <TransferModal
           assets={assets}
           wallets={wallets}
           assetMap={assetMap}

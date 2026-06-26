@@ -5,30 +5,97 @@
  */
 
 export const ASSETS = {
-  // ── Major cryptocurrencies ──────────────────────────────────────────────────
-  BTC:   { name: "Bitcoin",     network: "Bitcoin",        decimals: 8, price: 80350 },
-  ETH:   { name: "Ethereum",    network: "Ethereum",       decimals: 8, price: 2315  },
-  BNB:   { name: "BNB",         network: "BNB Chain",      decimals: 8, price: 645   },
-  SOL:   { name: "Solana",      network: "Solana",         decimals: 8, price: 173.2 },
-  XRP:   { name: "XRP",         network: "XRP Ledger",     decimals: 6, price: 0.61  },
-  ADA:   { name: "Cardano",     network: "Cardano",        decimals: 6, price: 0.47  },
-  DOGE:  { name: "Dogecoin",    network: "Dogecoin",       decimals: 8, price: 0.17  },
-  LINK:  { name: "Chainlink",   network: "Ethereum",       decimals: 8, price: 10.2  },
-  DOT:   { name: "Polkadot",    network: "Polkadot",       decimals: 8, price: 6.5   },
-  AVAX:  { name: "Avalanche",   network: "Avalanche C-Chain", decimals: 8, price: 26.5 },
-  MATIC: { name: "Polygon",     network: "Polygon",        decimals: 8, price: 0.45  },
-  TRX:   { name: "TRON",        network: "TRON",           decimals: 6, price: 0.12  },
-  LTC:   { name: "Litecoin",    network: "Litecoin",       decimals: 8, price: 75    },
-  UNI:   { name: "Uniswap",     network: "Ethereum",       decimals: 8, price: 6.8   },
-  ATOM:  { name: "Cosmos",      network: "Cosmos Hub",     decimals: 6, price: 6.2   },
-  NEAR:  { name: "NEAR Protocol", network: "NEAR",         decimals: 8, price: 4.5   },
-  OP:    { name: "Optimism",    network: "Optimism",       decimals: 8, price: 1.8   },
-  ARB:   { name: "Arbitrum",    network: "Arbitrum One",   decimals: 8, price: 0.85  },
-  // ── Stablecoins ─────────────────────────────────────────────────────────────
-  USDT:  { name: "Tether",      network: "Tron (TRC-20)",  decimals: 2, price: 1.0   },
-  USDC:  { name: "USD Coin",    network: "Ethereum",       decimals: 2, price: 1.0   },
-  // ── TrusonCoin ─────────────────────────────────────────────────────────────
-  TRUSON:{ name: "TrusonCoin",  network: "TrusonChain",    decimals: 6, price: 1.0   },
+  // ── Tier-1 — Market leaders ────────────────────────────────────────────────
+  BTC:   { name: "Bitcoin",          network: "Bitcoin",              decimals: 8, price: 105000  },
+  ETH:   { name: "Ethereum",         network: "Ethereum",             decimals: 8, price: 3800    },
+  BNB:   { name: "BNB",              network: "BNB Chain",            decimals: 8, price: 720     },
+  SOL:   { name: "Solana",           network: "Solana",               decimals: 8, price: 195     },
+  XRP:   { name: "XRP",              network: "XRP Ledger",           decimals: 6, price: 2.45    },
+  ADA:   { name: "Cardano",          network: "Cardano",              decimals: 6, price: 0.78    },
+  DOGE:  { name: "Dogecoin",         network: "Dogecoin",             decimals: 8, price: 0.22    },
+  TRX:   { name: "TRON",             network: "TRON",                 decimals: 6, price: 0.28    },
+  LTC:   { name: "Litecoin",         network: "Litecoin",             decimals: 8, price: 105     },
+  BCH:   { name: "Bitcoin Cash",     network: "Bitcoin Cash",         decimals: 8, price: 480     },
+  XLM:   { name: "Stellar",          network: "Stellar",              decimals: 7, price: 0.38    },
+  XMR:   { name: "Monero",           network: "Monero",               decimals: 12,price: 310     },
+  ETC:   { name: "Ethereum Classic", network: "Ethereum Classic",     decimals: 8, price: 28      },
+  VET:   { name: "VeChain",          network: "VeChain",              decimals: 8, price: 0.062   },
+  ALGO:  { name: "Algorand",         network: "Algorand",             decimals: 6, price: 0.32    },
+
+  // ── Layer 2 & Smart Contract Platforms ────────────────────────────────────
+  MATIC: { name: "Polygon",          network: "Polygon",              decimals: 8, price: 0.62    },
+  AVAX:  { name: "Avalanche",        network: "Avalanche C-Chain",    decimals: 8, price: 42      },
+  DOT:   { name: "Polkadot",         network: "Polkadot",             decimals: 8, price: 9.2     },
+  NEAR:  { name: "NEAR Protocol",    network: "NEAR",                 decimals: 8, price: 6.8     },
+  ATOM:  { name: "Cosmos",           network: "Cosmos Hub",           decimals: 6, price: 8.5     },
+  OP:    { name: "Optimism",         network: "Optimism",             decimals: 8, price: 2.4     },
+  ARB:   { name: "Arbitrum",         network: "Arbitrum One",         decimals: 8, price: 1.15    },
+  APT:   { name: "Aptos",            network: "Aptos",                decimals: 8, price: 12.5    },
+  SUI:   { name: "Sui",              network: "Sui",                  decimals: 9, price: 3.8     },
+  SEI:   { name: "Sei",              network: "Sei Network",          decimals: 6, price: 0.52    },
+  TIA:   { name: "Celestia",         network: "Celestia",             decimals: 6, price: 6.2     },
+  STX:   { name: "Stacks",           network: "Stacks",               decimals: 6, price: 2.1     },
+  FTM:   { name: "Fantom",           network: "Fantom Opera",         decimals: 8, price: 1.05    },
+  ONE:   { name: "Harmony",          network: "Harmony",              decimals: 8, price: 0.025   },
+  EGLD:  { name: "MultiversX",       network: "MultiversX",           decimals: 8, price: 38      },
+  FLOW:  { name: "Flow",             network: "Flow",                 decimals: 8, price: 0.75    },
+  KAVA:  { name: "Kava",             network: "Kava",                 decimals: 6, price: 0.68    },
+  ICP:   { name: "Internet Computer",network: "Internet Computer",    decimals: 8, price: 11.5    },
+  FIL:   { name: "Filecoin",         network: "Filecoin",             decimals: 8, price: 5.8     },
+  HBAR:  { name: "Hedera",           network: "Hedera",               decimals: 8, price: 0.115   },
+  THETA: { name: "Theta Network",    network: "Theta",                decimals: 8, price: 1.85    },
+
+  // ── DeFi ──────────────────────────────────────────────────────────────────
+  LINK:  { name: "Chainlink",        network: "Ethereum",             decimals: 8, price: 18.5    },
+  UNI:   { name: "Uniswap",          network: "Ethereum",             decimals: 8, price: 9.2     },
+  AAVE:  { name: "Aave",             network: "Ethereum",             decimals: 8, price: 285     },
+  MKR:   { name: "Maker",            network: "Ethereum",             decimals: 8, price: 1650    },
+  CRV:   { name: "Curve DAO",        network: "Ethereum",             decimals: 8, price: 0.85    },
+  LDO:   { name: "Lido DAO",         network: "Ethereum",             decimals: 8, price: 1.95    },
+  SNX:   { name: "Synthetix",        network: "Ethereum",             decimals: 8, price: 2.8     },
+  COMP:  { name: "Compound",         network: "Ethereum",             decimals: 8, price: 68      },
+  GRT:   { name: "The Graph",        network: "Ethereum",             decimals: 8, price: 0.22    },
+  DYDX:  { name: "dYdX",             network: "dYdX Chain",           decimals: 8, price: 1.35    },
+  INJ:   { name: "Injective",        network: "Injective",            decimals: 8, price: 28      },
+  JUP:   { name: "Jupiter",          network: "Solana",               decimals: 6, price: 0.92    },
+  PENDLE:{ name: "Pendle",           network: "Ethereum",             decimals: 8, price: 5.6     },
+  GMX:   { name: "GMX",              network: "Arbitrum One",         decimals: 8, price: 32      },
+
+  // ── AI & Data ─────────────────────────────────────────────────────────────
+  FET:   { name: "Fetch.ai",         network: "Ethereum",             decimals: 8, price: 1.65    },
+  RNDR:  { name: "Render",           network: "Solana",               decimals: 8, price: 7.2     },
+  WLD:   { name: "Worldcoin",        network: "Optimism",             decimals: 8, price: 2.8     },
+  TAO:   { name: "Bittensor",        network: "Bittensor",            decimals: 9, price: 420     },
+  OCEAN: { name: "Ocean Protocol",   network: "Ethereum",             decimals: 8, price: 0.78    },
+
+  // ── Gaming & Metaverse ────────────────────────────────────────────────────
+  AXS:   { name: "Axie Infinity",    network: "Ethereum",             decimals: 8, price: 7.5     },
+  SAND:  { name: "The Sandbox",      network: "Ethereum",             decimals: 8, price: 0.52    },
+  MANA:  { name: "Decentraland",     network: "Ethereum",             decimals: 8, price: 0.48    },
+  GALA:  { name: "Gala",             network: "Ethereum",             decimals: 8, price: 0.038   },
+  IMX:   { name: "Immutable",        network: "Immutable zkEVM",      decimals: 8, price: 1.45    },
+  ENJ:   { name: "Enjin Coin",       network: "Ethereum",             decimals: 8, price: 0.28    },
+
+  // ── Infrastructure & Oracles ──────────────────────────────────────────────
+  QNT:   { name: "Quant",            network: "Ethereum",             decimals: 8, price: 115     },
+  HNT:   { name: "Helium",           network: "Solana",               decimals: 8, price: 7.2     },
+  ROSE:  { name: "Oasis Network",    network: "Oasis",                decimals: 9, price: 0.085   },
+  CHZ:   { name: "Chiliz",           network: "Chiliz Chain",         decimals: 8, price: 0.095   },
+  BAT:   { name: "Basic Attention",  network: "Ethereum",             decimals: 8, price: 0.22    },
+
+  // ── Meme coins ────────────────────────────────────────────────────────────
+  SHIB:  { name: "Shiba Inu",        network: "Ethereum",             decimals: 8, price: 0.0000175 },
+  PEPE:  { name: "Pepe",             network: "Ethereum",             decimals: 8, price: 0.0000138 },
+  FLOKI: { name: "FLOKI",            network: "BNB Chain",            decimals: 9, price: 0.000155  },
+  BONK:  { name: "Bonk",             network: "Solana",               decimals: 5, price: 0.0000285 },
+  WIF:   { name: "dogwifhat",        network: "Solana",               decimals: 6, price: 2.15    },
+
+  // ── Stablecoins ──────────────────────────────────────────────────────────
+  USDT:  { name: "Tether",           network: "Tron (TRC-20)",        decimals: 2, price: 1.0     },
+  USDC:  { name: "USD Coin",         network: "Ethereum",             decimals: 2, price: 1.0     },
+
+  // ── TrusonCoin ────────────────────────────────────────────────────────────
+  TRUSON:{ name: "TrusonCoin",       network: "TrusonChain",          decimals: 6, price: 1.0     },
 };
 
 /** Assets that can be on the RIGHT side of a trading pair (quote assets). */

@@ -1,17 +1,21 @@
 import mongoose from "mongoose";
 
-// Coin catalog entries (e.g., TrusonCoin).
 const CoinSchema = new mongoose.Schema(
   {
-    symbol: { type: String, required: true, unique: true, uppercase: true },
-    name: { type: String, required: true },
+    symbol:      { type: String, required: true, unique: true, uppercase: true },
+    name:        { type: String, required: true },
     description: { type: String, default: "" },
-    decimals: { type: Number, default: 2 },
-    priceUsd: { type: Number, default: 0 },
-    change24h: { type: Number, default: 0 },
-    volume24h: { type: Number, default: 0 },
+    network:     { type: String, default: "Ethereum" },
+    decimals:    { type: Number, default: 8 },
+    priceUsd:    { type: Number, default: 0 },
+    change24h:   { type: Number, default: 0 },
+    volume24h:   { type: Number, default: 0 },
+    marketCap:   { type: Number, default: 0 },
     totalSupply: { type: Number, default: 0 },
-    isActive: { type: Boolean, default: true },
+    logoUrl:     { type: String, default: "" },
+    website:     { type: String, default: "" },
+    cgId:        { type: String, default: "" },   // CoinGecko coin ID for price syncs
+    isActive:    { type: Boolean, default: true },
   },
   { timestamps: true }
 );

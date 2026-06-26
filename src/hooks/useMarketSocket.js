@@ -19,7 +19,7 @@ export const useMarketSocket = () => {
 
   useEffect(() => {
     const socket = io(getSocketUrl(), {
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionDelay: 1_000,
       reconnectionDelayMax: 15_000,

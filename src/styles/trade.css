@@ -481,3 +481,65 @@
     font-size: 1rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .tx-trade-page {
+  --tx-bg: #f0f2f5;
+  --tx-panel: #ffffff;
+  --tx-panel-soft: #f5f7fa;
+  --tx-border: rgba(0,0,0,0.1);
+  --tx-text: #1e2329;
+  --tx-muted: #707a8a;
+  background: #f0f2f5;
+}
+
+html.light .tx-trade-header {
+  background: linear-gradient(120deg, #f5f7fa 0%, #ffffff 100%);
+}
+
+html.light .tx-pair-name    { color: #1e2329; }
+html.light .tx-pair-price   { color: #1e2329; }
+html.light .tx-stat-label   { color: #707a8a; }
+html.light .tx-stat-val     { color: #474d57; }
+
+/* Order book */
+html.light .tx-ob-panel { background: #ffffff; border-color: rgba(0,0,0,0.1); }
+html.light .tx-ob-th    { color: #707a8a; border-bottom-color: rgba(0,0,0,0.08); }
+html.light .tx-ob-row:hover { background: rgba(0,0,0,0.03); }
+html.light .tx-ob-price-buy  { color: #0aab6b; }
+html.light .tx-ob-price-sell { color: #d93550; }
+html.light .tx-ob-spread { background: #f5f7fa; border-color: rgba(0,0,0,0.08); color: #474d57; }
+
+/* Order form */
+html.light .tx-form-panel { background: #ffffff; border-color: rgba(0,0,0,0.1); }
+html.light .tx-form-tabs  { border-bottom-color: rgba(0,0,0,0.08); }
+html.light .tx-form-tab   { color: #707a8a; }
+html.light .tx-form-tab--active { color: #1e2329; border-bottom-color: #f0b90b; }
+
+html.light .tx-inp {
+  background: #f5f7fa;
+  border-color: rgba(0,0,0,0.12);
+  color: #1e2329;
+}
+html.light .tx-inp:focus { border-color: #f0b90b; background: #fff; }
+html.light .tx-inp::placeholder { color: #b7bdc6; }
+html.light .tx-inp-addon { background: #eef0f4; border-color: rgba(0,0,0,0.1); color: #707a8a; }
+html.light .tx-inp-label { color: #474d57; }
+
+html.light .tx-slider-track { background: #eaecef; }
+
+/* Recent trades */
+html.light .tx-trades-panel { background: #ffffff; border-color: rgba(0,0,0,0.1); }
+html.light .tx-trades-th    { color: #707a8a; border-bottom-color: rgba(0,0,0,0.08); }
+html.light .tx-trades-row { border-bottom-color: rgba(0,0,0,0.04); }
+html.light .tx-trades-row:hover { background: rgba(0,0,0,0.02); }
+html.light .tx-trades-time  { color: #b7bdc6; }
+
+/* Open orders table */
+html.light .tx-orders-panel { background: #ffffff; border-color: rgba(0,0,0,0.1); }
+html.light .tx-orders-th { background: #f5f7fa; color: #707a8a; border-bottom-color: rgba(0,0,0,0.08); }
+html.light .tx-orders-td { border-bottom-color: rgba(0,0,0,0.04); color: #474d57; }
+html.light .tx-orders-row:hover td { background: rgba(0,0,0,0.02); }

@@ -679,3 +679,49 @@
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .tx-contact-page {
+  --tx-bg: #f5f7fa;
+  --tx-text: #1e2329;
+  --tx-muted: #707a8a;
+  --tx-accent: #00a872;
+  background: #f5f7fa;
+  color: #1e2329;
+}
+
+html.light .tx-contact-card {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+html.light .tx-contact-title { color: #1e2329; }
+html.light .tx-contact-sub   { color: #707a8a; }
+html.light .tx-contact-label { color: #474d57; }
+
+html.light .tx-contact-inp,
+html.light .tx-contact-textarea {
+  background: #f5f7fa;
+  border-color: #d9dde0;
+  color: #1e2329;
+}
+html.light .tx-contact-inp:focus,
+html.light .tx-contact-textarea:focus {
+  border-color: #00d6a0;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0,214,160,0.1);
+}
+html.light .tx-contact-inp::placeholder,
+html.light .tx-contact-textarea::placeholder { color: #b7bdc6; }
+
+html.light .tx-contact-btn {
+  background: #00d6a0;
+  color: #fff;
+}
+html.light .tx-contact-btn:hover { background: #00b886; }
+
+html.light .tx-contact-info-item { color: #474d57; }
+html.light .tx-contact-info-icon { color: #00d6a0; }

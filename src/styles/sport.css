@@ -393,3 +393,42 @@
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .sport-page {
+  --sport-bg: #f0f2f5;
+  --sport-panel: #ffffff;
+  --sport-border: rgba(0,0,0,0.09);
+  --sport-text: #1e2329;
+  --sport-muted: #707a8a;
+  --sport-accent: #00a872;
+  background: #f0f2f5;
+}
+
+html.light .sport-panel {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.09);
+}
+html.light .sport-panel-title { color: #1e2329; }
+html.light .sport-tab     { color: #707a8a; border-bottom-color: transparent; }
+html.light .sport-tab:hover { color: #474d57; }
+html.light .sport-tab--active { color: #f0b90b; border-bottom-color: #f0b90b; }
+html.light .sport-tab-bar { border-bottom-color: rgba(0,0,0,0.08); }
+
+html.light .sport-inp {
+  background: #f5f7fa;
+  border-color: rgba(0,0,0,0.12);
+  color: #1e2329;
+}
+html.light .sport-inp:focus { border-color: #f0b90b; background: #fff; }
+html.light .sport-inp-label { color: #474d57; }
+html.light .sport-inp-addon { background: #eef0f4; color: #707a8a; border-color: rgba(0,0,0,0.1); }
+
+html.light .sport-ob-th   { color: #707a8a; border-bottom-color: rgba(0,0,0,0.08); }
+html.light .sport-ob-row:hover { background: rgba(0,0,0,0.025); }
+html.light .sport-stat-label { color: #707a8a; }
+html.light .sport-stat-val   { color: #474d57; }
+html.light .sport-pair-name  { color: #1e2329; }

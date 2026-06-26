@@ -210,3 +210,51 @@
     margin-top: 1.3rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .support-page { background: #f5f7fa; color: #1e2329; }
+html.light .support-page h1,
+html.light .support-page h2,
+html.light .support-page h3 { color: #1e2329; }
+html.light .support-page p { color: #474d57; }
+
+html.light .support-hero { background: linear-gradient(135deg, #f0f2f5 0%, #ffffff 100%); }
+html.light .support-hero-title { color: #1e2329; }
+html.light .support-hero-sub   { color: #707a8a; }
+
+html.light .support-search {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+html.light .support-search-inp { background: transparent; color: #1e2329; border-color: #eaecef; }
+html.light .support-search-inp:focus { border-color: #00d6a0; }
+html.light .support-search-inp::placeholder { color: #b7bdc6; }
+html.light .support-search-ico { color: #b7bdc6; }
+
+html.light .support-card {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+}
+html.light .support-card:hover { border-color: rgba(0,214,160,0.35); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+html.light .support-card-icon { background: rgba(0,214,160,0.1); color: #00a872; }
+html.light .support-card-title { color: #1e2329; }
+html.light .support-card-desc  { color: #707a8a; }
+
+html.light .support-faq-item {
+  background: #ffffff;
+  border-color: #eaecef;
+}
+html.light .support-faq-q { color: #1e2329; }
+html.light .support-faq-a { color: #474d57; border-top-color: #f0f1f2; }
+
+html.light .support-tag {
+  background: #f0f1f2;
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .support-tag:hover { border-color: rgba(0,214,160,0.4); color: #00a872; }

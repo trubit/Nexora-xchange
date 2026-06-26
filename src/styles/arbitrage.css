@@ -366,3 +366,48 @@
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .arb-page { background: #f0f2f5; color: #1e2329; }
+html.light .arb-page h1,
+html.light .arb-page h2,
+html.light .arb-page h3 { color: #1e2329; }
+html.light .arb-page p  { color: #474d57; }
+
+html.light .arb-panel {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.09);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+}
+html.light .arb-panel-title { color: #1e2329; }
+html.light .arb-panel-sub   { color: #707a8a; }
+html.light .arb-panel-head  { border-bottom-color: rgba(0,0,0,0.08); }
+
+html.light .arb-stat-card {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.09);
+}
+html.light .arb-stat-label { color: #707a8a; }
+html.light .arb-stat-val   { color: #1e2329; }
+html.light .arb-stat-sub   { color: #b7bdc6; }
+
+html.light .arb-row { border-bottom-color: rgba(0,0,0,0.06); }
+html.light .arb-row:hover { background: rgba(0,0,0,0.025); }
+html.light .arb-col-label { color: #707a8a; }
+html.light .arb-col-val   { color: #474d57; }
+html.light .arb-col-main  { color: #1e2329; }
+
+html.light .arb-badge-profit { background: rgba(14,203,129,0.1); color: #0aab6b; border-color: rgba(14,203,129,0.25); }
+html.light .arb-badge-risk   { background: rgba(246,70,93,0.1);  color: #d93550; border-color: rgba(246,70,93,0.25); }
+
+html.light .arb-btn-exec {
+  background: #0ecb81;
+  color: #fff;
+}
+html.light .arb-btn-exec:hover { background: #0aab6b; }
+
+html.light .arb-empty { color: #707a8a; }
+html.light .arb-empty i { color: #d9dde0; }

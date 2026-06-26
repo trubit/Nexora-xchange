@@ -370,3 +370,48 @@
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .sub-page { background: #f5f7fa; color: #1e2329; }
+html.light .sub-page h1,
+html.light .sub-page h2 { color: #1e2329; }
+html.light .sub-page p { color: #474d57; }
+
+html.light .sub-card {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+html.light .sub-card:hover { border-color: rgba(240,185,11,0.4); }
+html.light .sub-card--featured {
+  background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+  border-color: #f0b90b;
+}
+html.light .sub-card-title { color: #1e2329; }
+html.light .sub-card-price { color: #1e2329; }
+html.light .sub-card-period { color: #707a8a; }
+html.light .sub-card-desc  { color: #707a8a; }
+html.light .sub-feature { color: #474d57; }
+html.light .sub-feature i { color: #0ecb81; }
+html.light .sub-feature--missing i { color: #d9dde0; }
+html.light .sub-feature--missing { color: #b7bdc6; }
+
+html.light .sub-btn-cta {
+  background: #f0b90b;
+  color: #181a1e;
+}
+html.light .sub-btn-cta:hover { background: #d4a600; }
+html.light .sub-btn-outline {
+  background: transparent;
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .sub-btn-outline:hover { border-color: #f0b90b; color: #f0b90b; }
+
+html.light .sub-badge { background: rgba(240,185,11,0.12); color: #c89000; border-color: rgba(240,185,11,0.25); }
+
+html.light .sub-divider { background: #eaecef; }
+html.light .sub-note { color: #707a8a; }

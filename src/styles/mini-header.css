@@ -270,3 +270,24 @@
     min-height: 44px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .tx-mini-header {
+  background: rgba(255,255,255,0.97) !important;
+  border-bottom: 1px solid #eaecef;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+html.light .tx-mini-brand { color: #1e2329; }
+html.light .tx-mini-brand:hover { color: #f0b90b; }
+html.light .tx-mini-link { color: #474d57; }
+html.light .tx-mini-link:hover,
+html.light .tx-mini-link.active { color: #f0b90b; }
+html.light .tx-mini-btn {
+  background: rgba(0,0,0,0.05);
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .tx-mini-btn:hover { background: rgba(0,0,0,0.09); color: #1e2329; }

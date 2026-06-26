@@ -730,3 +730,83 @@
   .fw-tx-table th,
   .fw-tx-table td { padding: 0.55rem 0.65rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .fw-page { background: #fafafa; color: #1e2329; }
+html.light .fw-heading { color: #1e2329; }
+html.light .fw-subhead { color: #707a8a; }
+
+/* Balance cards */
+html.light .fw-bal-card {
+  background: #ffffff;
+  border-color: #eaecef;
+}
+html.light .fw-bal-card:hover,
+html.light .fw-bal-card--active {
+  border-color: #f0b90b;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+html.light .fw-bal-label   { color: #707a8a; }
+html.light .fw-bal-amount  { color: #1e2329; }
+html.light .fw-bal-symbol  { color: #707a8a; }
+html.light .fw-bal-frozen  { color: #b7bdc6; }
+
+/* Buttons */
+html.light .fw-btn {
+  background: #f5f7fa;
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .fw-btn:hover:not(:disabled) { background: #eef0f4; color: #1e2329; }
+html.light .fw-btn--primary { background: #f0b90b; border-color: #f0b90b; color: #181a1e; }
+html.light .fw-btn--primary:hover:not(:disabled) { background: #d4a600; }
+html.light .fw-btn--outline { background: transparent; border-color: #d9dde0; color: #474d57; }
+html.light .fw-btn--outline:hover:not(:disabled) { border-color: #f0b90b; color: #1e2329; }
+html.light .fw-btn--danger  { background: rgba(246,70,93,0.08); border-color: rgba(246,70,93,0.3); color: #f6465d; }
+html.light .fw-btn--ghost   { background: transparent; color: #707a8a; }
+html.light .fw-btn--ghost:hover:not(:disabled) { background: rgba(0,0,0,0.04); color: #1e2329; }
+
+/* Panel */
+html.light .fw-panel {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+}
+html.light .fw-panel-head { border-bottom-color: #eaecef; }
+html.light .fw-panel-title { color: #1e2329; }
+html.light .fw-panel-close { color: #707a8a; }
+html.light .fw-panel-close:hover { color: #1e2329; }
+
+/* Form fields */
+html.light .fw-field label { color: #474d57; }
+html.light .fw-field input,
+html.light .fw-field select {
+  background: #f5f7fa;
+  border-color: #d9dde0;
+  color: #1e2329;
+}
+html.light .fw-field input:focus,
+html.light .fw-field select:focus { border-color: #f0b90b; background: #fff; }
+html.light .fw-field select option { background: #fff; color: #1e2329; }
+
+/* Transaction table */
+html.light .fw-tx-table { background: #ffffff; }
+html.light .fw-tx-table thead th {
+  background: #f5f7fa;
+  border-bottom-color: #eaecef;
+  color: #707a8a;
+}
+html.light .fw-tx-table tbody td { border-bottom-color: #f0f1f2; color: #474d57; }
+html.light .fw-tx-table tbody tr:hover td { background: rgba(0,0,0,0.02); }
+html.light .fw-tx-table .fw-td-main { color: #1e2329; }
+html.light .fw-tx-table .fw-td-muted { color: #707a8a; }
+
+/* Empty state */
+html.light .fw-empty { color: #707a8a; }
+html.light .fw-empty i { color: #d9dde0; }
+
+/* Section title */
+html.light .fw-section-title { color: #1e2329; border-bottom-color: #eaecef; }

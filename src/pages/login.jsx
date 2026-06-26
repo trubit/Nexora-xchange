@@ -45,7 +45,7 @@ const Login = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const token = params.get("token");
+    const oauthCode = params.get("code");
     const redirectPath = params.get("redirect") || "/Dashboard";
     const googleStatus = params.get("google");
     const googleError = params.get("error");
@@ -89,23 +89,25 @@ const Login = () => {
       shouldCleanQuery = true;
     }
 
-    if (!token) {
+    if (!oauthCode) {
       if (shouldCleanQuery && window?.history?.replaceState) {
         window.history.replaceState(null, "", location.pathname);
       }
       return;
     }
 
-    // Google redirect flow gives us only a token in the URL.
-    // We must fetch the user from /api/auth/me before we can set a full
-    // session — otherwise isAuthenticated stays false and Dashboard redirects back.
+    // Google redirect flow: exchange the one-time code for a JWT via the API.
+    // The code is short-lived (60 s) and single-use — the JWT never appears in
+    // the URL itself, so it cannot leak into server logs or Referer headers.
     let cancelled = false;
     const completeGoogleSession = async () => {
-      localStorage.setItem("token", token);
       if (window?.history?.replaceState) {
         window.history.replaceState(null, "", location.pathname);
       }
       try {
+        const { token } = await authService.exchangeOAuthCode(oauthCode);
+        if (cancelled) return;
+        localStorage.setItem("token", token);
         const meData = await authService.getMe();
         if (cancelled) return;
         const user = meData?.user;

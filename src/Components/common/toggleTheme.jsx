@@ -1,34 +1,23 @@
-import { useState, useEffect } from "react";
-import { Sun, Moon } from "react-bootstrap-icons";
-import "../../styles/toggleTheme.css";
+import { useThemeStore } from "../../store/themeStore";
 
-// Theme toggle button for light/dark mode.
+// Inline theme toggle — delegates to the global themeStore.
+// The toggle button in DashNavbar already uses this store directly;
+// this component is kept for any other pages that still import it.
 const ToggleTheme = () => {
-  // Start with dark mode by default (you can change to false for light)
-  const [isDark, setIsDark] = useState(true);
-
-  // Apply theme whenever isDark changes
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add("dark");
-      document.documentElement.classList.remove("light");
-    } else {
-      document.documentElement.classList.add("light");
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDark]);
+  const { theme, toggleTheme } = useThemeStore();
+  const isDark = theme === "dark";
 
   return (
     <button
-      onClick={() => setIsDark((prev) => !prev)}
+      onClick={toggleTheme}
       className="button-toggle"
       style={{
-        background: isDark ? " rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)",
-        color: isDark ? "white" : "black",
+        background: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.07)",
+        color: isDark ? "#eaecef" : "#1e2329",
       }}
-      aria-label="Toggle dark/light mode"
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {isDark ? <Sun size={24} /> : <Moon size={24} />}
+      <i className={`bi bi-${isDark ? "sun" : "moon-stars"}`} style={{ fontSize: "1rem" }} />
     </button>
   );
 };

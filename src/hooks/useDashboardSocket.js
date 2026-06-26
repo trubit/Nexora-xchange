@@ -19,7 +19,7 @@ export const useDashboardSocket = ({ enabled = true } = {}) => {
     setStatus("connecting");
 
     const socket = io(getSocketUrl(), {
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnection: true,
     });
     socketRef.current = socket;

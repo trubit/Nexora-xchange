@@ -802,6 +802,110 @@
   border-color: rgba(240,185,11,0.18);
 }
 
+/* ── On-chain deposit panel ──────────────────────────────────────────────── */
+
+.wp-dep-onchain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+.wp-dep-qr-wrap {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  display: inline-flex;
+}
+.wp-dep-qr-placeholder {
+  width: 168px;
+  height: 168px;
+  background: #1e2026;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  color: #848e9c;
+  gap: 0.4rem;
+}
+.wp-dep-addr-label {
+  font-size: 0.78rem;
+  color: #848e9c;
+  text-align: center;
+}
+.wp-dep-addr-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #151a1e;
+  border: 1px solid #2b2f36;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+}
+.wp-dep-addr-text {
+  flex: 1;
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: #e6edf3;
+  word-break: break-all;
+  line-height: 1.4;
+}
+.wp-dep-copy-btn {
+  flex-shrink: 0;
+  background: rgba(240,185,11,0.1);
+  border: 1px solid rgba(240,185,11,0.25);
+  color: #f0b90b;
+  border-radius: 6px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.wp-dep-copy-btn:hover { background: rgba(240,185,11,0.2); }
+.wp-dep-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.wp-dep-info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: #848e9c;
+}
+.wp-dep-info-row b { color: #c0c9d6; }
+
+.wp-dep-net-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.wp-dep-net-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.55rem 0.75rem;
+  background: #151a1e;
+  border: 1px solid #2b2f36;
+  border-radius: 8px;
+  color: #848e9c;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.wp-dep-net-btn:hover { border-color: #f0b90b; color: #e6edf3; }
+.wp-dep-net-btn--active {
+  border-color: #f0b90b;
+  background: rgba(240,185,11,0.08);
+  color: #f0b90b;
+  font-weight: 600;
+}
+
 .wp-submit {
   width: 100%;
   padding: 0.85rem;
@@ -823,6 +927,39 @@
 .wp-submit--dep:not(:disabled):hover  { background: #13d989; }
 .wp-submit--wd   { background: #f6465d; color: #fff; }
 .wp-submit--wd:not(:disabled):hover   { background: #f75d72; }
+.wp-submit--tr   { background: #f0b90b; color: #000; }
+.wp-submit--tr:not(:disabled):hover   { background: #f5c842; }
+
+/* Transfer button in quick actions */
+.wp-qa--transfer { background: rgba(240,185,11,0.12); color: #f0b90b; border-color: rgba(240,185,11,0.3); }
+.wp-qa--transfer:hover { background: rgba(240,185,11,0.2); }
+
+/* Transfer modal icon */
+.wp-modal-icon--tr { background: rgba(240,185,11,0.12); color: #f0b90b; }
+
+/* UID lookup result */
+.wp-uid-lookup { margin-top: 0.4rem; font-size: 0.8rem; }
+.wp-uid-found   { color: #0ecb81; }
+.wp-uid-notfound { color: #f6465d; }
+
+/* Transfer modal tabs */
+.wp-tr-tabs {
+  display: flex;
+  border-bottom: 1px solid #2b2f36;
+  padding: 0 1.5rem;
+}
+.wp-tr-tab {
+  flex: 1; background: none; border: none;
+  color: #848e9c; font-size: 0.82rem; font-weight: 600;
+  padding: 0.75rem 0; cursor: pointer; border-bottom: 2px solid transparent;
+  display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.wp-tr-tab:hover { color: #c9d1d9; }
+.wp-tr-tab--on { color: #f0b90b; border-bottom-color: #f0b90b; }
+
+/* Field helper hint */
+.wp-field-hint { font-size: 0.74rem; color: #636d77; margin-top: 0.35rem; }
 
 /* ═══════════════════════════════════════════════════════
    RESPONSIVE
@@ -895,3 +1032,257 @@
 @media (min-width: 1600px) {
   .wp-page { padding: 2rem 2.5rem 3rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .wp-portfolio-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 55%, #f0f2f5 100%);
+  border-color: #eaecef;
+}
+html.light .wp-portfolio-glow {
+  background: radial-gradient(circle, rgba(240,185,11,0.06) 0%, transparent 65%);
+}
+html.light .wp-label-sm { color: #707a8a; }
+html.light .wp-portfolio-big-value { color: #1e2329; }
+html.light .wp-pstat-label { color: #707a8a; }
+html.light .wp-pstat-value { color: #1e2329; }
+html.light .wp-pstat-sep { background: #eaecef; }
+
+html.light .wp-icon-btn {
+  background: rgba(0,0,0,0.04);
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .wp-icon-btn:hover { color: #1e2329; background: rgba(0,0,0,0.07); }
+
+html.light .wp-portfolio-assets-hint { color: #707a8a; }
+html.light .wp-portfolio-stats { border-top-color: #eaecef; }
+
+html.light .wp-quick-actions { border-top-color: #eaecef; }
+html.light .wp-qa {
+  background: #f5f7fa;
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .wp-qa:hover { background: #eef0f4; border-color: #d9dde0; color: #1e2329; }
+html.light .wp-qa--primary { background: #f0b90b; border-color: #f0b90b; color: #181a1e; }
+html.light .wp-qa--primary:hover { background: #d4a600; }
+
+html.light .wp-assets-card,
+html.light .wp-activity-card {
+  background: #ffffff;
+  border-color: #eaecef;
+}
+html.light .wp-card-head { border-bottom-color: #eaecef; }
+html.light .wp-card-title { color: #1e2329; }
+html.light .wp-badge { background: rgba(240,185,11,0.12); color: #c89000; }
+
+html.light .wp-controls { border-bottom-color: #eaecef; }
+html.light .wp-search {
+  background: #f5f7fa;
+  border-color: #eaecef;
+}
+html.light .wp-search-ico { color: #b7bdc6; }
+html.light .wp-search-inp { background: transparent; color: #1e2329; }
+html.light .wp-search-inp:focus { border-color: #f0b90b; }
+html.light .wp-search-inp::placeholder { color: #b7bdc6; }
+html.light .wp-search-clr { color: #b7bdc6; }
+html.light .wp-search-clr:hover { color: #474d57; }
+
+html.light .wp-chk-lbl { color: #474d57; }
+html.light .wp-chk-lbl input[type="checkbox"] {
+  border-color: #d9dde0;
+  background: #fff;
+}
+
+html.light .wp-table { background: #ffffff; }
+html.light .wp-th {
+  background: #f5f7fa;
+  border-bottom-color: #eaecef;
+  color: #707a8a;
+}
+html.light .wp-sort-btn { color: #707a8a; }
+html.light .wp-sort-btn:hover { color: #474d57; }
+html.light .wp-sort-icon { color: #d9dde0; }
+html.light .wp-td {
+  border-bottom-color: #f0f1f2;
+  color: #474d57;
+}
+html.light .wp-td--bold { color: #1e2329; }
+html.light .wp-td--date { color: #b7bdc6; }
+html.light .wp-row:hover { background: rgba(0,0,0,0.02); }
+
+/* coin row */
+html.light .wp-coin-name { color: #1e2329; }
+html.light .wp-coin-sym  { color: #707a8a; }
+html.light .wp-amount-main { color: #1e2329; }
+html.light .wp-amount-sub  { color: #707a8a; }
+
+/* action buttons */
+html.light .wp-act-btn {
+  background: rgba(0,0,0,0.04);
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .wp-act-btn:hover { background: rgba(0,0,0,0.07); color: #1e2329; }
+
+/* activity list */
+html.light .wp-tx-item { border-bottom-color: #f0f1f2; }
+html.light .wp-tx-item:hover { background: rgba(0,0,0,0.02); }
+html.light .wp-tx-label { color: #1e2329; }
+html.light .wp-tx-sub   { color: #707a8a; }
+html.light .wp-tx-date  { color: #b7bdc6; }
+html.light .wp-tx-amount { color: #1e2329; }
+
+/* empty / error states */
+html.light .wp-empty { color: #707a8a; }
+html.light .wp-empty i { color: #d9dde0; }
+html.light .wp-err-banner {
+  background: rgba(246,70,93,0.07);
+  border-color: rgba(246,70,93,0.25);
+  color: #f6465d;
+}
+
+/* shimmer */
+html.light .wp-shimmer-row { border-bottom-color: #f0f1f2; }
+html.light .wp-shimmer-cell { background: linear-gradient(90deg, #f0f1f2 25%, #e4e6ea 50%, #f0f1f2 75%); }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE — COMPLETE CORRECT OVERRIDES  (html.light)
+   Extends the partial block appended earlier.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Row action buttons (Deposit / Withdraw / Trade) ───────── */
+html.light .wp-rbtn {
+  background: #f0f1f2;
+  border-color: #d9dde0;
+  color: #474d57;
+}
+html.light .wp-rbtn:hover {
+  background: #e4e6ea;
+  border-color: #c8cdd6;
+  color: #1e2329;
+}
+html.light .wp-rbtn--dep {
+  background: rgba(14,203,129,0.07);
+  border-color: rgba(14,203,129,0.3);
+  color: #0aab6b;
+}
+html.light .wp-rbtn--dep:hover { background: rgba(14,203,129,0.14); }
+html.light .wp-rbtn--wd {
+  background: rgba(246,70,93,0.07);
+  border-color: rgba(246,70,93,0.3);
+  color: #d93550;
+}
+html.light .wp-rbtn--wd:hover { background: rgba(246,70,93,0.14); }
+
+/* ── Transaction asset text ────────────────────────────────── */
+html.light .wp-tx-asset { color: #1e2329; }
+
+/* ── Type badges ────────────────────────────────────────────── */
+html.light .wp-type-badge--trade { background: rgba(59,130,246,0.1); color: #2563eb; }
+
+/* ── Empty state ────────────────────────────────────────────── */
+html.light .wp-empty         { color: #707a8a; }
+html.light .wp-empty > i     { color: #d9dde0; }
+html.light .wp-empty-h       { color: #474d57; }
+html.light .wp-empty-sub     { color: #b7bdc6; }
+
+/* ── Shimmer / skeleton ─────────────────────────────────────── */
+html.light .wp-shimmer {
+  background: linear-gradient(90deg, #f0f1f2 25%, #e4e6ea 50%, #f0f1f2 75%);
+}
+html.light .wp-act-skel {
+  background: linear-gradient(90deg, #f0f1f2 25%, #e4e6ea 50%, #f0f1f2 75%);
+}
+
+/* ── Modal ──────────────────────────────────────────────────── */
+html.light .wp-modal {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.14);
+}
+html.light .wp-modal-hdr   { border-bottom-color: #eaecef; }
+html.light .wp-modal-title { color: #1e2329; }
+html.light .wp-modal-close {
+  background: rgba(0,0,0,0.04);
+  border-color: #eaecef;
+  color: #707a8a;
+}
+html.light .wp-modal-close:hover { background: rgba(246,70,93,0.08); color: #f6465d; }
+
+/* ── Modal form fields ──────────────────────────────────────── */
+html.light .wp-flabel   { color: #b7bdc6; }
+html.light .wp-avail-hint { color: #707a8a; }
+
+html.light .wp-sel,
+html.light .wp-inp {
+  background: #f5f7fa;
+  border-color: #d9dde0;
+  color: #1e2329;
+}
+html.light .wp-sel:focus,
+html.light .wp-inp:focus {
+  border-color: #f0b90b;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(240,185,11,0.1);
+}
+html.light .wp-sel option { background: #ffffff; color: #1e2329; }
+html.light .wp-inp::placeholder { color: #b7bdc6; }
+
+html.light .wp-net-badge {
+  background: #f5f7fa;
+  border-color: #eaecef;
+  color: #707a8a;
+}
+html.light .wp-net-badge b { color: #474d57; }
+
+/* ── Alerts inside modal ────────────────────────────────────── */
+html.light .wp-alert--warn {
+  background: rgba(240,185,11,0.07);
+  border-color: rgba(240,185,11,0.25);
+  color: #8a6800;
+}
+html.light .wp-alert--err {
+  background: rgba(246,70,93,0.06);
+  border-color: rgba(246,70,93,0.25);
+  color: #d93550;
+}
+html.light .wp-alert--ok {
+  background: rgba(14,203,129,0.07);
+  border-color: rgba(14,203,129,0.25);
+  color: #0aab6b;
+}
+
+/* ── Modal footer ───────────────────────────────────────────── */
+html.light .wp-modal-footer { border-top-color: #eaecef; }
+html.light .wp-btn-ghost {
+  background: rgba(0,0,0,0.04);
+  border-color: #eaecef;
+  color: #474d57;
+}
+html.light .wp-btn-ghost:hover { background: rgba(0,0,0,0.07); color: #1e2329; }
+html.light .wp-btn-primary { background: #f0b90b; color: #181a1e; border-color: #f0b90b; }
+html.light .wp-btn-primary:hover { background: #d4a600; }
+html.light .wp-btn-danger  { background: rgba(246,70,93,0.08); border-color: rgba(246,70,93,0.3); color: #d93550; }
+html.light .wp-btn-danger:hover { background: rgba(246,70,93,0.15); }
+
+/* ── QR / address copy box ──────────────────────────────────── */
+html.light .wp-addr-box {
+  background: #f5f7fa;
+  border-color: #eaecef;
+  color: #1e2329;
+}
+html.light .wp-copy-btn {
+  background: rgba(0,0,0,0.04);
+  border-color: #eaecef;
+  color: #707a8a;
+}
+html.light .wp-copy-btn:hover { background: rgba(240,185,11,0.1); color: #c89000; }
+
+/* ── Fee / info rows ────────────────────────────────────────── */
+html.light .wp-fee-row  { border-bottom-color: #f0f1f2; color: #707a8a; }
+html.light .wp-fee-val  { color: #1e2329; }
+html.light .wp-info-txt { color: #707a8a; }

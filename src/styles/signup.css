@@ -358,3 +358,46 @@
     font-size: 0.72rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .tx-signup-page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef0f4 100%);
+}
+html.light .tx-signup-card {
+  background: #ffffff;
+  border-color: #eaecef;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+}
+html.light .tx-signup-title { color: #1e2329; }
+html.light .tx-signup-sub   { color: #707a8a; }
+html.light .tx-signup-label { color: #474d57; }
+
+html.light .tx-signup-inp {
+  background: #f5f7fa;
+  border-color: #d9dde0;
+  color: #1e2329;
+}
+html.light .tx-signup-inp:focus {
+  border-color: #00d6a0;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0,214,160,0.1);
+}
+html.light .tx-signup-inp::placeholder { color: #b7bdc6; }
+
+html.light .tx-signup-btn {
+  background: linear-gradient(135deg, #00d6a0 0%, #00b886 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,214,160,0.3);
+}
+html.light .tx-signup-btn:hover { box-shadow: 0 6px 20px rgba(0,214,160,0.4); }
+
+html.light .tx-signup-terms { color: #707a8a; }
+html.light .tx-signup-terms a { color: #00a872; }
+html.light .tx-signup-link  { color: #00a872; }
+html.light .tx-signup-link:hover { color: #007d58; }
+
+html.light .tx-signup-strength-bar { background: #f0f1f2; }
+html.light .tx-signup-strength-label { color: #707a8a; }

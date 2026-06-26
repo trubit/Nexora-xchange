@@ -29,16 +29,23 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "http://localhost:5001",
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on("error", silentProxyError);
         },
       },
       "/socket.io": {
-        target: "http://localhost:5000",
+        target: "http://localhost:5001",
         changeOrigin: true,
         ws: true,
+        configure: (proxy) => {
+          proxy.on("error", silentProxyError);
+        },
+      },
+      "/uploads": {
+        target: "http://localhost:5001",
+        changeOrigin: true,
         configure: (proxy) => {
           proxy.on("error", silentProxyError);
         },

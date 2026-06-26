@@ -8,6 +8,8 @@ const connectDb = async (mongoUri) => {
 
   mongoose.set("strictQuery", true);
   return mongoose.connect(mongoUri, {
+    // Retryable writes require a replica set; disable for standalone MongoDB.
+    retryWrites: false,
     maxPoolSize: Number(process.env.MONGODB_MAX_POOL_SIZE || 80),
     minPoolSize: Number(process.env.MONGODB_MIN_POOL_SIZE || 10),
     serverSelectionTimeoutMS: 8000,

@@ -379,3 +379,45 @@
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES  (html.light)
+   ═══════════════════════════════════════════════════════════ */
+
+html.light .future-page {
+  --future-bg: #f0f2f5;
+  --future-panel: #ffffff;
+  --future-border: rgba(0,0,0,0.09);
+  --future-text: #1e2329;
+  --future-muted: #707a8a;
+  --future-accent: #00a872;
+  background: #f0f2f5;
+}
+
+html.light .future-panel {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.09);
+}
+html.light .future-panel-title { color: #1e2329; }
+html.light .future-tab { color: #707a8a; }
+html.light .future-tab:hover { color: #474d57; }
+html.light .future-tab--active { color: #f0b90b; border-bottom-color: #f0b90b; }
+html.light .future-tab-bar { border-bottom-color: rgba(0,0,0,0.08); }
+
+html.light .future-inp {
+  background: #f5f7fa;
+  border-color: rgba(0,0,0,0.12);
+  color: #1e2329;
+}
+html.light .future-inp:focus { border-color: #f0b90b; background: #fff; }
+html.light .future-inp-label  { color: #474d57; }
+html.light .future-inp-addon  { background: #eef0f4; color: #707a8a; border-color: rgba(0,0,0,0.1); }
+
+html.light .future-lev-badge { background: rgba(240,185,11,0.12); color: #c89000; border-color: rgba(240,185,11,0.25); }
+html.light .future-pnl-positive { color: #0aab6b; }
+html.light .future-pnl-negative { color: #d93550; }
+
+html.light .future-ob-th  { color: #707a8a; border-bottom-color: rgba(0,0,0,0.08); }
+html.light .future-ob-row:hover { background: rgba(0,0,0,0.025); }
+html.light .future-stat-label { color: #707a8a; }
+html.light .future-stat-val   { color: #474d57; }
