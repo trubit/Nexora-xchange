@@ -135,7 +135,7 @@ jobs:
           VITE_CURRENCY_API_URL: https://api.frankfurter.dev/v1
           VITE_BLOG_ADMIN: "true"
           VITE_TRUSON_API_URL: https://api.nexora.com
-          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || '' }}
           VITE_WORK_EMAIL: contact@nexora.com
 
       - name: Upload build artifact
