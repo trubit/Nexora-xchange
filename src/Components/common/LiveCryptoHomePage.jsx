@@ -1,8 +1,8 @@
-import { Card, Row, Col, Table, Badge } from "react-bootstrap";
+﻿import { Card, Row, Col, Table, Badge } from "react-bootstrap";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import logoName from "../../assets/logoName.png";
 import "../../styles/LiveCryptoHomePage.css";
-import TrusonCoins from "./trusonCoins";
+import TrusonCoins from "./TrusonCoins";
 import useLiveCryptoHomePage from "../../hooks/useLiveCryptoHomePage";
 import { useAppContext } from "./AppContext";
 import {
