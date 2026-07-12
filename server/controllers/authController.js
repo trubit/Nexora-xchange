@@ -1,7 +1,5 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import path from "path";
-import fs from "fs";
 import multer from "multer";
 import { OAuth2Client } from "google-auth-library";
 import User from "../models/User.js";

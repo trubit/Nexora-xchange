@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+﻿import { useState, useMemo, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import {
@@ -208,6 +208,17 @@ const AssetRow = ({ row, hidden, onDeposit, onWithdraw }) => {
   );
 };
 
+const SortTh = ({ label, k, align = "right", sortBy, sortDir, onSort }) => (
+  <th className={`wp-th${align === "right" ? " wp-th--r" : ""}`}>
+    <button className="wp-sort-btn" onClick={() => onSort(k)}>
+      {label}
+      {sortBy === k
+        ? <i className={`bi bi-caret-${sortDir === -1 ? "down" : "up"}-fill wp-sort-act`} />
+        : <i className="bi bi-chevron-expand wp-sort-icon" />}
+    </button>
+  </th>
+);
+
 const AssetsTable = ({ wallets, assetMap, tickers, loading, hidden, onDeposit, onWithdraw }) => {
   const [q,        setQ]        = useState("");
   const [hideZero, setHideZero] = useState(true);
@@ -252,16 +263,6 @@ const AssetsTable = ({ wallets, assetMap, tickers, loading, hidden, onDeposit, o
   const totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
   const visible    = rows.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
-  const SortTh = ({ label, k, align = "right" }) => (
-    <th className={`wp-th${align === "right" ? " wp-th--r" : ""}`}>
-      <button className="wp-sort-btn" onClick={() => toggleSort(k)}>
-        {label}
-        {sortBy === k
-          ? <i className={`bi bi-caret-${sortDir === -1 ? "down" : "up"}-fill wp-sort-act`} />
-          : <i className="bi bi-chevron-expand wp-sort-icon" />}
-      </button>
-    </th>
-  );
 
   return (
     <div className="wp-assets-card">
@@ -298,12 +299,12 @@ const AssetsTable = ({ wallets, assetMap, tickers, loading, hidden, onDeposit, o
         <table className="wp-table">
           <thead>
             <tr>
-              <SortTh label="Coin" k="name" align="left" />
-              <SortTh label="Available" k="avail" />
+              <SortTh label="Coin" k="name" align="left" sortBy={sortBy} sortDir={sortDir} onSort={toggleSort} />
+              <SortTh label="Available" k="avail" sortBy={sortBy} sortDir={sortDir} onSort={toggleSort} />
               <th className="wp-th wp-th--r">In Orders</th>
-              <SortTh label="Total" k="total" />
-              <SortTh label="USD Value" k="usd" />
-              <SortTh label="24h Change" k="change" />
+              <SortTh label="Total" k="total" sortBy={sortBy} sortDir={sortDir} onSort={toggleSort} />
+              <SortTh label="USD Value" k="usd" sortBy={sortBy} sortDir={sortDir} onSort={toggleSort} />
+              <SortTh label="24h Change" k="change" sortBy={sortBy} sortDir={sortDir} onSort={toggleSort} />
               <th className="wp-th wp-th--r wp-th--acts">Actions</th>
             </tr>
           </thead>

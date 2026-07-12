@@ -720,19 +720,20 @@ const DashFiatWallet = () => {
     selectedCurrency, setSelectedCurrency,
   } = useFiatStore();
 
+  // Hooks must run before any early return
+  const { data: walletData, isLoading: walletLoading } = useFiatWalletQuery();
+  const { data: bankData }                              = useBankAccountsQuery();
+
   // Auth guard — same localStorage fallback used across all dash pages
   const tok = localStorage.getItem("token");
   let usr = null;
   try {
     const r = localStorage.getItem("user");
     usr = r && r !== "null" ? JSON.parse(r) : null;
-  } catch {}
+  } catch {} // intentional
   if (!isAuthenticated && !(tok && usr && typeof usr === "object")) {
     return <Navigate to="/login" replace />;
   }
-
-  const { data: walletData, isLoading: walletLoading } = useFiatWalletQuery();
-  const { data: bankData }                              = useBankAccountsQuery();
 
   const bankAccounts = bankData?.bankAccounts ?? [];
   const config       = walletData?.config;

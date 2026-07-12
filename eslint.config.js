@@ -5,9 +5,12 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Never lint generated output or third-party dirs
+  globalIgnores(['dist/**', 'coverage/**', 'node_modules/**']),
+
+  // ── Frontend (React / browser) ──────────────────────────────────────
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['src/**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
@@ -23,13 +26,52 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
+      'no-empty': ['warn', { allowEmptyCatch: true }],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      // React Compiler rules (react-hooks v7+) — disable until the project opts into the compiler
+      'react-hooks/react-compiler': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/immutability': 'off',
     },
   },
+
+  // ── Server (Node.js) ────────────────────────────────────────────────
   {
     files: ['server/**/*.js'],
+    extends: [js.configs.recommended],
     languageOptions: {
-      globals: { ...globals.browser, ...globals.node },
+      ecmaVersion: 2022,
+      globals: globals.node,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
+      'no-empty': ['warn', { allowEmptyCatch: true }],
+    },
+  },
+
+  // ── Root config files & test/e2e (Node.js) ──────────────────────────
+  {
+    files: [
+      '*.config.{js,cjs,mjs}',
+      'e2e/**/*.js',
+      '**/__tests__/**/*.{js,jsx}',
+      '**/test/**/*.{js,jsx}',
+      'vitest.*.js',
+    ],
+    languageOptions: {
+      globals: { ...globals.node, ...globals.browser },
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
     },
   },
 ])

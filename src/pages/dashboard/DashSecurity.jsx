@@ -314,8 +314,7 @@ const DashSecurity = () => {
   const [auditPage, setAuditPage] = useState(1);
   const qc = useQueryClient();
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-
+  // All hooks must run before early returns
   const { data: summary, isLoading: summaryLoading } = useQuery({
     queryKey: ["security-summary"],
     queryFn:  api.summary,
@@ -343,6 +342,8 @@ const DashSecurity = () => {
     mutationFn: api.revokeKey,
     onSuccess: () => qc.invalidateQueries({ queryKey: ["security-summary"] }),
   });
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
 
   const handleLogout = () => { logout(); };
   const toggleSidebar = () => setSidebarOpen(v => !v);

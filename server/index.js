@@ -1,7 +1,5 @@
 import "./env.js";
 import http from "http";
-import fs from "fs";
-import path from "path";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";

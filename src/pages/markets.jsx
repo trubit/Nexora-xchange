@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+﻿import { useEffect, useState, useMemo, useCallback } from "react";
 import { Navigate, useNavigate }        from "react-router-dom";
 import { useAuthStore }                 from "../store/authStore";
 import { useMarketSummary }             from "../hooks/useMarketData.js";
@@ -150,6 +150,12 @@ const TickerRow = ({ ticker, onTrade, isFav, onToggleFav }) => {
 
 const QUOTE_TABS = ["★ Favorites", "USDT", "BTC", "ETH", "ALL"];
 
+const SortIcon = ({ col, sortKey, sortDir }) => (
+  <span className="mk-sort-icon">
+    {sortKey !== col ? "⇅" : sortDir === -1 ? "↓" : "↑"}
+  </span>
+);
+
 const Markets = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
@@ -181,10 +187,7 @@ const Markets = () => {
     if (data?.tickers?.length) setAllTickers(data.tickers);
   }, [data, setAllTickers]);
 
-  // Auth guard
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-
-  // Filter + sort
+  // Filter + sort — must run before any early return
   const rows = useMemo(() => {
     const all  = Object.values(liveTickers);
     const term = search.trim().toLowerCase();
@@ -208,16 +211,13 @@ const Markets = () => {
     });
   }, [liveTickers, search, quoteTab, sortKey, sortDir, favs]);
 
+  // Auth guard — after all hooks
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
   const handleSort = (key) => {
     if (sortKey === key) setSortDir((d) => -d);
     else { setSortKey(key); setSortDir(-1); }
   };
-
-  const SortIcon = ({ col }) => (
-    <span className="mk-sort-icon">
-      {sortKey !== col ? "⇅" : sortDir === -1 ? "↓" : "↑"}
-    </span>
-  );
 
   const totalPairs   = Object.values(liveTickers).length;
   const gainers      = Object.values(liveTickers).filter((t) => (t.priceChangePct ?? 0) > 0).length;
@@ -341,18 +341,18 @@ const Markets = () => {
                   <tr>
                     <th className="mk-th-star" />
                     <th className="mk-th-sort" onClick={() => handleSort("symbol")}>
-                      Pair <SortIcon col="symbol" />
+                      Pair <SortIcon col="symbol" sortKey={sortKey} sortDir={sortDir} />
                     </th>
                     <th className="mk-td-right mk-th-sort" onClick={() => handleSort("lastPrice")}>
-                      Price <SortIcon col="lastPrice" />
+                      Price <SortIcon col="lastPrice" sortKey={sortKey} sortDir={sortDir} />
                     </th>
                     <th className="mk-td-right mk-th-sort" onClick={() => handleSort("priceChangePct")}>
-                      24h Change <SortIcon col="priceChangePct" />
+                      24h Change <SortIcon col="priceChangePct" sortKey={sortKey} sortDir={sortDir} />
                     </th>
                     <th className="mk-td-right mk-hide-sm">24h High</th>
                     <th className="mk-td-right mk-hide-sm">24h Low</th>
                     <th className="mk-td-right mk-hide-md mk-th-sort" onClick={() => handleSort("quoteVolume24h")}>
-                      Volume <SortIcon col="quoteVolume24h" />
+                      Volume <SortIcon col="quoteVolume24h" sortKey={sortKey} sortDir={sortDir} />
                     </th>
                     <th className="mk-td-right mk-hide-md">Trend</th>
                     <th className="mk-td-right">Action</th>
