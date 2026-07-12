@@ -1,4 +1,5 @@
 import rateLimit from "express-rate-limit";
+import logger from "../config/logger.js";
 
 // NOTE: Rate limiting + lightweight anomaly tracking for auth endpoints.
 const WINDOW_MS = 10 * 60 * 1000;
@@ -39,12 +40,14 @@ export const logAuthAnomaly = (req, reason) => {
   anomalyTracker.set(key, entry);
 
   if (entry.count >= THRESHOLD) {
-    console.warn(
-      `[AUTH ANOMALY] ${reason}; ip=${req.ip} email=${entry.email} attempts=${entry.count} route=${req.path}`,
+    logger.warn(
+      { ip: req.ip, email: entry.email, attempts: entry.count, route: req.path },
+      `[AUTH ANOMALY] ${reason}`,
     );
   } else {
-    console.info(
-      `[AUTH NOTICE] ${reason}; ip=${req.ip} email=${entry.email} attempts=${entry.count}`,
+    logger.info(
+      { ip: req.ip, email: entry.email, attempts: entry.count },
+      `[AUTH NOTICE] ${reason}`,
     );
   }
 };

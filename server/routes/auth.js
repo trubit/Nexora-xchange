@@ -8,6 +8,7 @@ import {
   login,
   logout,
   me,
+  refreshToken,
   register,
   resendEmailVerification,
   resendEmailVerificationMe,
@@ -47,6 +48,7 @@ router.post("/reset-password", resetPasswordLimiter, resetPassword);
 router.post("/verify-email", verifyEmail);
 router.get("/verify-email", verifyEmail);
 router.get("/me", requireAuth, me);
+router.post("/refresh", loginLimiter, refreshToken);
 router.post("/logout", requireAuth, logout);
 router.post("/verify-email/resend-me", requireAuth, resendVerificationLimiter, resendEmailVerificationMe);
 router.post("/avatar", requireAuth, uploadAvatar);

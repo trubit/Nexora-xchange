@@ -1,0 +1,54 @@
+name: Security Audit
+
+# ── When this runs ─────────────────────────────────────────────────────────────
+# • Every push / PR to main (catches newly introduced vulnerable packages)
+# • Every Monday at 08:00 UTC (weekly sweep even with no new code)
+# • Manually via "Run workflow" button in the Actions tab
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Fail on HIGH or CRITICAL vulnerabilities only.
+      # Moderate / low issues are reported but don't block merges.
+      - name: Run security audit
+        run: npm audit --audit-level=high
+
+      # Always produce a full JSON report so you can download it from the
+      # Artifacts tab even when the step above passes.
+      - name: Generate full audit report
+        if: always()
+        run: npm audit --json > audit-report.json || true
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: npm-audit-report
+          path: audit-report.json
+          retention-days: 30

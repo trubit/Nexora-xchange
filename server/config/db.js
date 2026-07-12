@@ -6,12 +6,16 @@ const connectDb = async (mongoUri) => {
     throw new Error("Missing MONGODB_URI");
   }
 
+  const isProd = process.env.NODE_ENV === "production";
+
   mongoose.set("strictQuery", true);
   return mongoose.connect(mongoUri, {
     // Retryable writes require a replica set; disable for standalone MongoDB.
     retryWrites: false,
-    maxPoolSize: Number(process.env.MONGODB_MAX_POOL_SIZE || 80),
-    minPoolSize: Number(process.env.MONGODB_MIN_POOL_SIZE || 10),
+    // Dev: 2/20 — starts fast and uses little memory.
+    // Prod: 5/50 — enough headroom for real traffic.
+    minPoolSize: Number(process.env.MONGODB_MIN_POOL_SIZE || (isProd ? 5  : 2)),
+    maxPoolSize: Number(process.env.MONGODB_MAX_POOL_SIZE || (isProd ? 50 : 20)),
     serverSelectionTimeoutMS: 8000,
     socketTimeoutMS: 45000,
   });

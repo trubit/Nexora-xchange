@@ -29,7 +29,7 @@ The backend needs SMTP credentials so password-reset links can be emailed. Updat
    SMTP_SECURE=false
    SMTP_USER=your-account@gmail.com
    SMTP_PASS=<app-password>
-   SMTP_FROM="TrusonXchanger <no-reply@yourdomain.com>"
+   SMTP_FROM="Nexora <no-reply@yourdomain.com>"
    ```
 
 4. Restart the Node server so `server/utils/email.js` picks up those values and can dispatch reset links.

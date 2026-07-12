@@ -1,0 +1,146 @@
+name: CI
+
+# ── When this runs ─────────────────────────────────────────────────────────────
+# • Every push to main / dev / any feature branch
+# • Every pull request that targets main
+# All three jobs (lint, test, build) must pass before a PR can be merged.
+# Go to Settings → Branches → Add rule → check "Require status checks to pass"
+# and select: "Lint", "Test & Coverage", "Build".
+on:
+  push:
+    branches: [main, dev, "feature/**", "fix/**", "hotfix/**"]
+  pull_request:
+    branches: [main]
+
+# Cancel any in-progress run for the same branch/PR the moment a new one starts.
+# Saves CI minutes and avoids stale results.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# ── Shared defaults ────────────────────────────────────────────────────────────
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # ── 1. Lint ──────────────────────────────────────────────────────────────────
+  # Fast check — runs first so test and build don't waste time if the code
+  # has obvious style / correctness errors.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+  # ── 2. Test & Coverage ───────────────────────────────────────────────────────
+  # Runs the unified workspace (frontend + server) and publishes coverage.
+  # On pull requests, posts a coverage table as a PR comment so reviewers
+  # can see exactly which lines are untested before approving.
+  test:
+    name: Test & Coverage
+    runs-on: ubuntu-latest
+    needs: lint
+    permissions:
+      contents: read
+      pull-requests: write   # needed to post the coverage comment on PRs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+        env:
+          # Server tests read these via vitest.workspace.js env block;
+          # setting them here too ensures they're available for any test
+          # that reads process.env directly.
+          NODE_ENV: test
+          JWT_SECRET: vitest-test-jwt-secret-minimum-32-chars!!
+          JWT_EXPIRES_IN: 1h
+          SUPPORT_EMAIL: support@test.example.com
+          REDIS_ENABLED: "false"
+          LOG_LEVEL: silent
+
+      # Upload the full HTML report so you can download and browse it from the
+      # Actions tab after any run — even on pushes (not just PRs).
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+      # Post a coverage summary table as a comment on the PR.
+      # The table shows % statements / branches / functions / lines per file,
+      # colour-coded green / yellow / red so reviewers can see what needs tests.
+      - name: Report coverage on PR
+        uses: davelosert/vitest-coverage-report-action@v2
+        if: github.event_name == 'pull_request'
+        with:
+          name: Nexora (frontend + server)
+          json-summary-path: coverage/coverage-summary.json
+          json-final-path: coverage/coverage-final.json
+
+  # ── 3. Build ─────────────────────────────────────────────────────────────────
+  # Verifies that the Vite production bundle compiles without errors.
+  # Catches missing imports, bad JSX, and broken dynamic imports that tests
+  # might not exercise.
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Vite production build
+        run: npm run build
+        env:
+          # Public VITE_ vars are baked into the bundle at build time.
+          # Use safe placeholder values here — real secrets never go in CI env.
+          VITE_COINGECKO_API_URL: https://api.coingecko.com/api/v3
+          VITE_CURRENCY_API_URL: https://api.frankfurter.dev/v1
+          VITE_BLOG_ADMIN: "true"
+          VITE_TRUSON_API_URL: https://api.nexora.com
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_WORK_EMAIL: contact@nexora.com
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 3

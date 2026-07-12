@@ -147,19 +147,33 @@ app.use(
 );
 app.use(compression());
 app.use(hpp());
-// Patch: Only sanitize body, params, headers (not query) for Express 5 compatibility
+// Express 5: req.query is read-only — sanitize query values in-place; body/params/headers can be replaced.
 app.use((req, res, next) => {
   ["body", "params", "headers"].forEach((key) => {
     if (req[key]) {
       req[key] = mongoSanitize.sanitize(req[key]);
     }
   });
+  if (req.query && typeof req.query === "object") {
+    for (const key of Object.keys(req.query)) {
+      if (typeof req.query[key] === "string") {
+        req.query[key] = mongoSanitize.sanitize(req.query[key]);
+      } else if (req.query[key] && typeof req.query[key] === "object") {
+        req.query[key] = mongoSanitize.sanitize(req.query[key]);
+      }
+    }
+  }
   next();
 });
 app.use(express.json({ limit: "8mb" }));
 app.use(express.urlencoded({ extended: false, limit: "8mb" }));
 app.use("/api", globalApiLimiter);
-app.use("/uploads", express.static(UPLOADS_ROOT));
+// Cache uploaded images/files for 7 days in browsers — they never change in place.
+app.use("/uploads", express.static(UPLOADS_ROOT, {
+  maxAge: "7d",
+  etag: true,
+  lastModified: true,
+}));
 
 app.get("/health", (_req, res) => {
   const mongoStateMap = { 0: "disconnected", 1: "connected", 2: "connecting", 3: "disconnecting" };
@@ -239,6 +253,10 @@ const startServer = async () => {
   try {
     await connectDb(MONGODB_URI);
     const httpServer = http.createServer(app);
+    // Many services (Socket.io, blockchain, liquidity engine, etc.) each attach
+    // listeners to the HTTP server's close/end events. Raise the limit to match
+    // the number of services that start so Node doesn't warn.
+    httpServer.setMaxListeners(30);
     const tradePublisher = setupTradeSocketServer(httpServer, {
       cors: {
         origin: corsOrigins,

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" role="img" aria-label="Nexora">
+  <defs>
+    <linearGradient id="g" x1="10" y1="36" x2="38" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#c8930a"/>
+      <stop offset="50%"  stop-color="#f0b90b"/>
+      <stop offset="100%" stop-color="#f8d33a"/>
+    </linearGradient>
+  </defs>
+  <polygon
+    points="24,2.5 43.4,13.25 43.4,34.75 24,45.5 4.6,34.75 4.6,13.25"
+    fill="none" stroke="url(#g)" stroke-width="1.5" opacity="0.65"
+  />
+  <path d="M10,12 L16,12 L16,36 L10,36 Z" fill="url(#g)"/>
+  <path d="M16,12 L22,12 L32,36 L26,36 Z" fill="url(#g)"/>
+  <path d="M32,12 L38,12 L38,36 L32,36 Z" fill="url(#g)"/>
+  <circle cx="43.4" cy="13.25" r="5"   fill="#0ecb81" opacity="0.15"/>
+  <circle cx="43.4" cy="13.25" r="2.8" fill="#0ecb81"/>
+</svg>

@@ -3,6 +3,12 @@ import Transaction from "../models/Transaction.js";
 import { emitWalletUpdated, emitTransactionCreated } from "../socket/walletEvents.js";
 import { isSupported, getMeta, ASSETS } from "../config/supportedAssets.js";
 import { notificationService } from "../notifications/NotificationService.js";
+import {
+  checkFrozen,
+  checkWithdrawalAllowed,
+  recordDeposit,
+  recordWithdrawal,
+} from "./riskService.js";
 
 // Default wallets created for every new user (starters — other assets auto-create on first deposit).
 const DEFAULT_ASSETS = ["USDT", "BTC", "ETH"];
@@ -50,6 +56,8 @@ export const getWallets = async (userId) => {
 export const deposit = async (userId, { asset, amount }) => {
   asset  = String(asset  || "").toUpperCase();
   amount = Number(amount);
+
+  await checkFrozen(userId);
 
   if (!isSupported(asset))
     throw Object.assign(new Error(`Unsupported asset: ${asset}`), { status: 400 });
@@ -101,6 +109,7 @@ export const deposit = async (userId, { asset, amount }) => {
   emitTransactionCreated(userId, { transaction: tx });
 
   notificationService.notifyWallet(userId, { type: "deposit", asset, amount, status: "completed" }).catch(() => {});
+  recordDeposit(userId).catch(() => {});
 
   return { wallet: updated, transaction: tx };
 };
@@ -108,6 +117,9 @@ export const deposit = async (userId, { asset, amount }) => {
 export const requestWithdrawal = async (userId, { asset, amount, address, network }) => {
   asset  = String(asset  || "").toUpperCase();
   amount = Number(amount);
+
+  await checkFrozen(userId);
+  await checkWithdrawalAllowed(userId);
 
   if (!isSupported(asset))
     throw Object.assign(new Error(`Unsupported asset: ${asset}`), { status: 400 });
@@ -121,7 +133,7 @@ export const requestWithdrawal = async (userId, { asset, amount, address, networ
     throw Object.assign(new Error(`No ${asset} wallet found.`), { status: 404 });
   if (wallet.available < amount)
     throw Object.assign(
-      new Error(`Insufficient ${asset} balance. Available: ${wallet.available}`),
+      new Error(`Insufficient ${asset} balance.`),
       { status: 400 }
     );
 
@@ -159,6 +171,7 @@ export const requestWithdrawal = async (userId, { asset, amount, address, networ
   emitTransactionCreated(userId, { transaction: tx });
 
   notificationService.notifyWallet(userId, { type: "withdrawal", asset, amount, status: "pending" }).catch(() => {});
+  recordWithdrawal(userId, amount, asset).catch(() => {});
 
   return { wallet: updated, transaction: tx };
 };

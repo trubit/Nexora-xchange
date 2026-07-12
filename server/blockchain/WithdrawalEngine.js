@@ -199,11 +199,18 @@ class WithdrawalEngineClass {
     const gasPrice = await adapter.getGasPrice();
     const nonce    = await adapter.getNonce(hotWallet);
 
+    // String-based conversion avoids float precision loss for large/fractional amounts.
+    const toTokenUnits = (amount, decimals) => {
+      const [whole = "0", frac = ""] = String(amount).split(".");
+      const fracPadded = frac.padEnd(decimals, "0").slice(0, decimals);
+      return BigInt(whole + fracPadded);
+    };
+
     let to, value, data, gasLimit;
 
     if (!tokenConfig) {
       // Native token transfer
-      value    = BigInt(Math.round(item.grossAmount * 1e18));
+      value    = toTokenUnits(item.grossAmount, 18);
       to       = item.toAddress;
       data     = "0x";
       gasLimit = 21_000n;
@@ -211,7 +218,7 @@ class WithdrawalEngineClass {
       // ERC-20 transfer
       // transfer(address,uint256) selector = 0xa9059cbb
       const paddedTo     = item.toAddress.replace(/^0x/, "").padStart(64, "0");
-      const rawAmount    = BigInt(Math.round(item.grossAmount * 10 ** tokenConfig.decimals));
+      const rawAmount    = toTokenUnits(item.grossAmount, tokenConfig.decimals);
       const paddedAmount = rawAmount.toString(16).padStart(64, "0");
       data     = `0xa9059cbb${paddedTo}${paddedAmount}`;
       to       = tokenConfig.contractAddress;
