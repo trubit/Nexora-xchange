@@ -1,4 +1,4 @@
-.xch-cookie-banner {
+﻿.xch-cookie-banner {
   position: fixed;
   right: 0;
   bottom: 0;
@@ -8,7 +8,7 @@
   overflow-y: auto;
   border-top: 1px solid rgba(0, 85, 255, 0.26);
   background:
-    radial-gradient(140% 190% at -4% -35%, rgba(0, 186, 124, 0.3) 0%, rgba(0, 186, 124, 0) 45%),
+    radial-gradient(140% 190% at -4% -35%, rgba(240, 185, 11, 0.3) 0%, rgba(240, 185, 11, 0) 45%),
     linear-gradient(120deg, #020712 0%, #061326 52%, #050b18 100%);
   box-shadow: 0 -22px 56px rgba(0, 0, 0, 0.5);
 }
@@ -121,7 +121,7 @@
   border: 1px solid rgba(0, 85, 255, 0.22);
   border-radius: 16px;
   background:
-    radial-gradient(120% 110% at -10% -20%, rgba(0, 186, 124, 0.22) 0%, rgba(0, 186, 124, 0) 36%),
+    radial-gradient(120% 110% at -10% -20%, rgba(240, 185, 11, 0.22) 0%, rgba(240, 185, 11, 0) 36%),
     linear-gradient(145deg, #040913 0%, #06162b 68%, #071120 100%);
   color: #ffffff;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.46);

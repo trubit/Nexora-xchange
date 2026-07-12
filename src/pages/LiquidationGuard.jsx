@@ -11,14 +11,14 @@ const LiquidationGuard = () => {
         <Container className="lg-wrap">
           <article className="lg-card">
             <h1 className="lg-title">
-              Liquidation Guard Framework | TrusonXchanger
+              Liquidation Guard Framework | Nexora
             </h1>
             <p className="lg-subtitle">
               Margin risk controls, liquidation mechanics, and platform
               safeguards for leveraged trading products.
             </p>
             <p className="lg-intro">
-              Liquidation Guard is TrusonXchanger&apos;s structured risk
+              Liquidation Guard is Nexora&apos;s structured risk
               framework designed to reduce disorderly closeouts, protect market
               integrity, and provide transparent liquidation procedures.
             </p>
@@ -88,7 +88,7 @@ const LiquidationGuard = () => {
             <section className="lg-section">
               <h2>5. Partial Liquidation</h2>
               <p>
-                TrusonXchanger may reduce position size in stages to restore
+                Nexora may reduce position size in stages to restore
                 margin compliance before full liquidation is required.
               </p>
             </section>
@@ -171,7 +171,7 @@ const LiquidationGuard = () => {
               <h2>12. Risk Disclosure and Platform Safeguards</h2>
               <p>
                 Liquidation outcomes may vary with liquidity, slippage, and
-                volatility conditions. TrusonXchanger provides layered controls,
+                volatility conditions. Nexora provides layered controls,
                 but losses may exceed expectations in stressed markets.
               </p>
             </section>

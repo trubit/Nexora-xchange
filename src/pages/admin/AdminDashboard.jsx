@@ -289,7 +289,7 @@ const UsersPanel = () => {
                             <i className="bi bi-shield-fill" /> Make Admin
                           </button>
                         )}
-                        {u.role === "admin" && u.email !== (import.meta.env.VITE_SUPER_ADMIN_EMAIL || "") && (
+                        {u.role === "admin" && !u.superAdmin && (
                           <button
                             className="adm-btn adm-btn--gray"
                             disabled={saving === u.id + "role"}

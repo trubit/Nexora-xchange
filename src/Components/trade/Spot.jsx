@@ -58,11 +58,11 @@ const Spot = () => {
         fullName: "Sports Waitlist User",
         email: sanitizedEmail,
         subject: "Sports Trading Early Access Request",
-        message: "Please add this email to the TrusonXchanger Sports early access list.",
+        message: "Please add this email to the Nexora Sports early access list.",
       });
       if (response.data?.success) {
         setSubmitStatus("success");
-        setStatusMessage("Thank you. You have joined the TrusonXchanger Sports early access list.");
+        setStatusMessage("Thank you. You have joined the Nexora Sports early access list.");
         setEmail("");
       } else {
         setSubmitStatus("error");
@@ -87,7 +87,7 @@ const Spot = () => {
             </h1>
             <p className="sport-coming-soon">Launching Soon</p>
             <p className="sport-intro">
-              TrusonXchanger is preparing an innovative sports prediction and
+              Nexora is preparing an innovative sports prediction and
               trading environment designed to combine market intelligence with
               engaging trading experiences. Users will gain access to a secure
               ecosystem offering real-time market opportunities and data-driven
@@ -118,7 +118,7 @@ const Spot = () => {
 
           <section className="sport-waitlist" aria-label="Sports early access">
             <h2 className="sport-section-title">Stay Updated</h2>
-            <p>Receive launch updates as TrusonXchanger Sports progresses towards release.</p>
+            <p>Receive launch updates as Nexora Sports progresses towards release.</p>
             <form className="sport-form" onSubmit={handleSubmit}>
               <label htmlFor="sport-email" className="sport-sr-only">Email address</label>
               <input
@@ -148,7 +148,7 @@ const Spot = () => {
           </section>
 
           <p className="sport-footer-note">
-            TrusonXchanger Sports ecosystem is currently in development and
+            Nexora Sports ecosystem is currently in development and
             will become available in an upcoming release.
           </p>
         </Container>

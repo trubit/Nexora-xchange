@@ -1,16 +1,16 @@
-/* NewsletterSection.css — Premium dark newsletter section */
+﻿/* NewsletterSection.css â€” Premium dark newsletter section */
 
 .nl-section {
   background:
     radial-gradient(
       900px 460px at 5% 6%,
-      rgba(0, 214, 160, 0.12),
-      rgba(0, 214, 160, 0) 65%
+      rgba(240, 185, 11, 0.12),
+      rgba(240, 185, 11, 0) 65%
     ),
     radial-gradient(
       760px 420px at 98% 94%,
-      rgba(60, 102, 95, 0.24),
-      rgba(60, 102, 95, 0) 70%
+      rgba(26, 20, 3, 0.24),
+      rgba(26, 20, 3, 0) 70%
     ),
     #06080b;
   padding: clamp(2.2rem, 4.6vw, 4rem) 1rem;
@@ -55,8 +55,8 @@
 .nl-shell::before {
   background: linear-gradient(
     135deg,
-    rgba(0, 214, 160, 0.14),
-    rgba(0, 214, 160, 0)
+    rgba(240, 185, 11, 0.14),
+    rgba(240, 185, 11, 0)
   );
   border-radius: 50%;
   content: "";
@@ -78,7 +78,7 @@
 }
 
 .nl-label {
-  color: #00d6a0;
+  color: #f0b90b;
   font-family: "Space Grotesk", "Manrope", sans-serif;
   font-size: clamp(10px, 0.95vw, 13px);
   font-weight: 800;
@@ -147,21 +147,21 @@
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)),
     linear-gradient(180deg, #1a2330, #141d26);
-  border-color: rgba(0, 214, 160, 0.55);
+  border-color: rgba(240, 185, 11, 0.55);
   box-shadow:
-    0 0 0 3px rgba(0, 214, 160, 0.12),
+    0 0 0 3px rgba(240, 185, 11, 0.12),
     0 6px 18px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .nl-btn {
-  background: linear-gradient(145deg, #00d6a0, #00a884);
+  background: linear-gradient(135deg, #f0b90b 0%, #d99c00 100%);
   border: none;
   border-radius: 14px;
   box-shadow:
-    0 10px 26px rgba(0, 107, 81, 0.4),
+    0 8px 22px rgba(240, 185, 11, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  color: #0b0e11;
   cursor: pointer;
   font-family: "Space Grotesk", "Manrope", sans-serif;
   font-size: 0.95rem;
@@ -178,7 +178,7 @@
 
 .nl-btn:hover:not(:disabled) {
   box-shadow:
-    0 14px 34px rgba(0, 107, 81, 0.5),
+    0 14px 34px rgba(26, 20, 3, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
   filter: brightness(1.08);
   transform: translateY(-2px);
@@ -196,7 +196,7 @@
 }
 
 .nl-success {
-  color: #5effc8;
+  color: #0ecb81;
 }
 
 .nl-error {

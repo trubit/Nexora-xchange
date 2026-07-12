@@ -30,7 +30,7 @@ const transporter = mailerConfigured
     )
   : null;
 
-const SUPPORT_INBOX = process.env.SUPPORT_EMAIL || "trusonxchanger@gmail.com";
+const SUPPORT_INBOX = process.env.SUPPORT_EMAIL || "nexora@gmail.com";
 
 export const CONTACT_RECEIVER =
   process.env.CONTACT_RECEIVER ||
@@ -47,7 +47,7 @@ export const sendContactEmail = async ({ fromEmail, subject, text, html }) => {
 
   const fromAddress =
     process.env.SMTP_FROM ||
-    `"TrusonXchanger Contact" <${process.env.SMTP_FROM_EMAIL || smtpUser}>`;
+    `"Nexora Contact" <${process.env.SMTP_FROM_EMAIL || smtpUser}>`;
 
   await transporter.sendMail({
     from: fromAddress,

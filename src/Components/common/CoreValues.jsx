@@ -35,13 +35,13 @@ const values = [
     icon: allImg,
     title: "Inclusive For All",
     description:
-      "Whether you're a first-time crypto user or a pro trader, TrusonXchanger offers intuitive tools and support for every journey.",
+      "Whether you're a first-time crypto user or a pro trader, Nexora offers intuitive tools and support for every journey.",
   },
   {
     icon: customerServiceImg,
     title: "24/7 Customer Service",
     description:
-      "Our support team is available 24/7 to assist you. Email us at support@trusonxchanger.io anytime. For instant help, use our live chat widget.",
+      "Our support team is available 24/7 to assist you. Email us at support@nexora.io anytime. For instant help, use our live chat widget.",
   },
 ];
 
@@ -49,7 +49,7 @@ const CoreValues = () => {
   return (
     <section className="core-values">
       <Container fluid="xxl" className="core-values__container">
-        <h2 className="core-values__title">TrusonXchanger Core Values</h2>
+        <h2 className="core-values__title">Nexora Core Values</h2>
         <Row className="core-values__grid g-4">
           {values.map((value) => (
             <Col key={value.title} xs={12} md={6} xl={4}>

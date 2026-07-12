@@ -1,6 +1,7 @@
 import express from "express";
 import axios from "axios";
 import { cacheGet, cacheSet } from "../utils/cache.js";
+import logger from "../config/logger.js";
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get("/latest", async (req, res) => {
     await cacheSet(cacheKey, response.data, 300);
     return res.json(response.data);
   } catch (err) {
-    console.error("Currency conversion error:", err.message);
+    logger.error({ err: err.message }, "Currency conversion error");
     const statusCode = err.response?.status || 500;
     const errorMessage =
       err.response?.data?.message || err.message || "Failed to fetch currency rates.";

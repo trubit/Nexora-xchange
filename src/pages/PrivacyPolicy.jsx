@@ -13,26 +13,26 @@ const PrivacyPolicy = () => {
         <Container className="privacy-policy-wrap">
           <article className="privacy-policy-card">
             <h1 className="privacy-policy-title">
-              Privacy Policy | TrusonXchanger - Secure Crypto Trading Exchange
+              Privacy Policy | Nexora - Secure Crypto Trading Exchange
             </h1>
             <p className="privacy-policy-subtitle">
-              Read TrusonXchanger&apos;s Privacy Policy to learn how we protect
+              Read Nexora&apos;s Privacy Policy to learn how we protect
               your data. We prioritize security, privacy, and transparency for a
               safe crypto trading experience.
             </p>
             <p className="privacy-policy-intro">
-              Welcome to TrusonXchanger Mobile App. Your privacy is important to
+              Welcome to Nexora Mobile App. Your privacy is important to
               us, and we are committed to protecting your personal data while
               providing a secure and seamless cryptocurrency trading experience.
               This Privacy Policy explains how we collect, use, store, and
               protect your information when you use our app. By using
-              TrusonXchanger, you agree to the terms outlined below.
+              Nexora, you agree to the terms outlined below.
             </p>
 
             <section className="policy-section">
               <h2>1. Information We Collect</h2>
               <p>
-                When you use the TrusonXchanger Mobile App, we may collect the
+                When you use the Nexora Mobile App, we may collect the
                 following types of information:
               </p>
               <h3>A. Personal Information (Provided by You)</h3>
@@ -157,7 +157,7 @@ const PrivacyPolicy = () => {
             <section className="policy-section">
               <h2>7. Third-Party Links &amp; Services</h2>
               <p>
-                TrusonXchanger may link to external platforms. We are not
+                Nexora may link to external platforms. We are not
                 responsible for their privacy practices.
               </p>
             </section>

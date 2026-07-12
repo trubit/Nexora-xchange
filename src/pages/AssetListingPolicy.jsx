@@ -5,31 +5,31 @@ import NavigationSection from "../Components/layout/NavigationSection";
 import BottomBar from "../Components/layout/BottomBar";
 
 const AssetListingPolicy = () => {
-  const contactEmail = "compliance@trusonxchanger.io";
+  const contactEmail = "compliance@nexora.io";
   return (
     <>
       <section className="asset-list-policy-page">
         <Container className="asset-list-policy-wrap">
           <article className="asset-list-policy-card">
             <h1 className="asset-list-policy-title">
-              Asset Listing Policy | TrusonXchanger - Secure Crypto Trading
+              Asset Listing Policy | Nexora - Secure Crypto Trading
               Exchange
             </h1>
             <p className="asset-list-policy-subtitle">
-              Discover how TrusonXchanger evaluates, lists, and monitors digital
+              Discover how Nexora evaluates, lists, and monitors digital
               assets to ensure security, compliance, and investor protection.
             </p>
             <p className="asset-list-policy-intro">
               This Asset Listing Policy outlines the standards and procedures
               for reviewing, listing, and monitoring digital assets on
-              TrusonXchanger. Our approach is designed to protect users, ensure
+              Nexora. Our approach is designed to protect users, ensure
               regulatory compliance, and maintain a secure trading environment.
             </p>
 
             <section className="asset-section">
               <h2>Introduction</h2>
               <p>
-                TrusonXchanger is committed to listing only high-quality digital
+                Nexora is committed to listing only high-quality digital
                 assets that meet our rigorous standards for security,
                 compliance, and market integrity.
               </p>
@@ -180,7 +180,7 @@ const AssetListingPolicy = () => {
             <section className="asset-section">
               <h2>Compliance Obligations</h2>
               <p>
-                TrusonXchanger complies with all applicable laws and
+                Nexora complies with all applicable laws and
                 regulations, including AML, CFT, and data protection
                 requirements.
               </p>

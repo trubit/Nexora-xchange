@@ -30,7 +30,7 @@ const arbitrageHighlights = [
   {
     title: "Multi-Exchange Liquidity Access",
     description:
-      "TrusonXchanger is expanding cross-venue connectivity to provide broad liquidity access, resilient order fulfilment, and improved execution quality across market conditions.",
+      "Nexora is expanding cross-venue connectivity to provide broad liquidity access, resilient order fulfilment, and improved execution quality across market conditions.",
   },
 ];
 
@@ -64,7 +64,7 @@ const Artbitrage = () => {
             fullName: "Arbitrage Waitlist User",
             email: sanitizedEmail,
             subject: "Arbitrage Waitlist Request",
-            message: "Please add this email to the TrusonXchanger Arbitrage waitlist.",
+            message: "Please add this email to the Nexora Arbitrage waitlist.",
           });
         } else {
           throw error;
@@ -72,7 +72,7 @@ const Artbitrage = () => {
       }
       if (response.data?.success) {
         setSubmitStatus("success");
-        setStatusMessage("Thank you. You have been added to the TrusonXchanger Arbitrage waitlist.");
+        setStatusMessage("Thank you. You have been added to the Nexora Arbitrage waitlist.");
         setEmail("");
       } else {
         setSubmitStatus("error");
@@ -97,7 +97,7 @@ const Artbitrage = () => {
             </h1>
             <p className="arb-coming-soon">COMING SOON</p>
             <p className="arb-intro">
-              TrusonXchanger is building a next-generation arbitrage trading
+              Nexora is building a next-generation arbitrage trading
               infrastructure designed for professional market participants.
               Users will soon be able to access advanced cross-market
               opportunities through a secure execution environment backed by
@@ -127,7 +127,7 @@ const Artbitrage = () => {
           <section className="arb-waitlist" aria-label="Stay updated">
             <h2 className="arb-section-title">Stay Updated</h2>
             <p>
-              Receive launch updates when the TrusonXchanger Arbitrage Suite
+              Receive launch updates when the Nexora Arbitrage Suite
               becomes available.
             </p>
             <form className="arb-form" onSubmit={handleSubmit}>
@@ -159,7 +159,7 @@ const Artbitrage = () => {
           </section>
 
           <p className="arb-footer-note">
-            TrusonXchanger Arbitrage Suite is currently under active
+            Nexora Arbitrage Suite is currently under active
             development and will launch in a future platform release.
           </p>
         </Container>

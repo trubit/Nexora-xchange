@@ -1,9 +1,9 @@
-.home-page {
+﻿.home-page {
   background:
     radial-gradient(
       900px 520px at 8% -6%,
-      rgba(0, 214, 160, 0.16),
-      rgba(0, 214, 160, 0) 64%
+      rgba(240, 185, 11, 0.16),
+      rgba(240, 185, 11, 0) 64%
     ),
     radial-gradient(
       880px 480px at 96% 8%,
@@ -44,7 +44,7 @@
 }
 
 .hero-eyebrow {
-  color: #00d6a0;
+  color: #f0b90b;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -64,7 +64,7 @@
 }
 
 .arbitrage-headline {
-  background: linear-gradient(90deg, #96f7d8, #37e8b6, #00d6a0);
+  background: linear-gradient(90deg, #f8d33a, #f0b90b, #d99c00);
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -112,19 +112,21 @@
 }
 
 .hero-cta.btn {
-  background: linear-gradient(145deg, rgba(0, 214, 160, 0.4), rgba(0, 214, 160, 0.16));
-  border: 1px solid rgba(0, 214, 160, 0.58);
+  background: linear-gradient(135deg, #f0b90b 0%, #d99c00 100%);
+  border: 1px solid #f0b90b;
   box-shadow:
-    0 14px 30px rgba(0, 107, 81, 0.35),
+    0 8px 24px rgba(240, 185, 11, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  color: #edfffa;
+  color: #0b0e11;
+  font-weight: 700;
 }
 
 .hero-cta.btn:hover,
 .hero-cta.btn:focus-visible {
-  background: linear-gradient(145deg, rgba(0, 214, 160, 0.52), rgba(0, 214, 160, 0.2));
-  border-color: rgba(89, 255, 201, 0.86);
-  color: #ffffff;
+  background: linear-gradient(135deg, #f5ca2e 0%, #e6a800 100%);
+  border-color: #f5ca2e;
+  color: #0b0e11;
+  box-shadow: 0 10px 28px rgba(240, 185, 11, 0.38);
 }
 
 .hero-secondary.btn {
@@ -136,7 +138,7 @@
 .hero-secondary.btn:hover,
 .hero-secondary.btn:focus-visible {
   background: rgba(144, 166, 180, 0.12);
-  border-color: rgba(0, 214, 160, 0.64);
+  border-color: rgba(240, 185, 11, 0.64);
   color: #ffffff;
 }
 
@@ -217,9 +219,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .home-page,
 html.light .recent-updates-section,
@@ -244,7 +246,7 @@ html.light .updates-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .updates-card:hover { border-color: rgba(0,214,160,0.35); }
+html.light .updates-card:hover { border-color: rgba(240,185,11,0.35); }
 html.light .updates-card-title { color: #1e2329; }
 html.light .updates-card-description { color: #474d57; }
 html.light .updates-card-date { color: #b7bdc6; }
@@ -259,5 +261,5 @@ html.light .features-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .features-card:hover { border-color: rgba(0,214,160,0.3); }
+html.light .features-card:hover { border-color: rgba(240,185,11,0.3); }
 html.light .features-card p { color: #474d57; }

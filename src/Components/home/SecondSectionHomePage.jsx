@@ -3,7 +3,7 @@ import ExchangesSection from "../common/ExchangesSection";
 import "../../styles/SecondSectionHomePage.css";
 import { Link } from "react-router-dom";
 import { useBlogPosts } from "../../hooks/useBlogPosts";
-import TrusonXBot from "../../assets/truson-x-bot.png";
+import NexoraBot from "../../assets/truson-x-bot.png";
 
 const stripHtml = (value) =>
   (value || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -31,7 +31,7 @@ const SecondSectionHomePage = () => {
                 <h2 className="updates-title">Recent Updates</h2>
                 <p className="updates-subtitle">
                   Stay current with the latest product improvements, compliance
-                  wins, and trading upgrades from TrusonXchanger.
+                  wins, and trading upgrades from Nexora.
                 </p>
               </div>
               <Link to="/Blogs" className="updates-link">
@@ -43,7 +43,7 @@ const SecondSectionHomePage = () => {
               {latestPosts.map((post, index) => {
                 const slugOrId = post?.slug || post?.id || post?._id;
                 const detailLink = slugOrId ? `/blogs/${slugOrId}` : post.link;
-                const imageSource = post.image || TrusonXBot;
+                const imageSource = post.image || NexoraBot;
                 const imageAlt =
                   post.imageAlt || post.title || `Update ${index + 1}`;
                 const excerpt = post.excerpt || createExcerpt(post.description);

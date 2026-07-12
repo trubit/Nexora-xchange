@@ -5,29 +5,29 @@ import NavigationSection from "../Components/layout/NavigationSection";
 import BottomBar from "../Components/layout/BottomBar";
 
 const CookieBanner = () => {
-  const contactEmail = "support@trusonxchanger.io";
+  const contactEmail = "support@nexora.io";
   return (
     <>
       <section className="cookie-banner-page">
         <Container className="cookie-banner-wrap">
           <article className="cookie-banner-card">
             <h1 className="cookie-banner-title">
-              Cookie Policy | TrusonXchanger - Secure Crypto Trading Exchange
+              Cookie Policy | Nexora - Secure Crypto Trading Exchange
             </h1>
             <p className="cookie-banner-subtitle">
-              Learn how TrusonXchanger uses cookies to enhance your experience,
+              Learn how Nexora uses cookies to enhance your experience,
               protect your privacy, and ensure compliance with global standards.
             </p>
             <p className="cookie-banner-intro">
-              This Cookie Policy explains how TrusonXchanger uses cookies and
-              similar technologies on our platform. By using TrusonXchanger, you
+              This Cookie Policy explains how Nexora uses cookies and
+              similar technologies on our platform. By using Nexora, you
               consent to the use of cookies as described below.
             </p>
 
             <section className="cookie-section">
               <h2>Introduction</h2>
               <p>
-                TrusonXchanger uses cookies to provide a secure, efficient, and
+                Nexora uses cookies to provide a secure, efficient, and
                 personalized experience. Cookies help us remember your
                 preferences, analyze site usage, and deliver relevant content.
               </p>
@@ -116,7 +116,7 @@ const CookieBanner = () => {
               <h2>Analytical Cookies</h2>
               <p>
                 Analytical cookies help us understand how users interact with
-                TrusonXchanger, allowing us to improve performance and user
+                Nexora, allowing us to improve performance and user
                 experience.
               </p>
               <table className="cookie-table">
@@ -175,7 +175,7 @@ const CookieBanner = () => {
               <h2>Third-Party Cookies</h2>
               <p>
                 Third-party cookies are set by external services integrated into
-                TrusonXchanger, such as analytics providers and social media
+                Nexora, such as analytics providers and social media
                 platforms. These cookies are subject to the privacy policies of
                 the respective providers.
               </p>
@@ -184,7 +184,7 @@ const CookieBanner = () => {
             <section className="cookie-section">
               <h2>User Consent</h2>
               <p>
-                By using TrusonXchanger, you consent to the use of cookies as
+                By using Nexora, you consent to the use of cookies as
                 described in this policy. You can manage your preferences at any
                 time.
               </p>
@@ -210,7 +210,7 @@ const CookieBanner = () => {
             <section className="cookie-section">
               <h2>Data Protection</h2>
               <p>
-                TrusonXchanger implements robust security measures to protect
+                Nexora implements robust security measures to protect
                 your data, including encryption, access controls, and regular
                 security audits.
               </p>

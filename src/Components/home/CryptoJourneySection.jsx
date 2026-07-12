@@ -149,7 +149,7 @@ const CryptoJourneySection = () => {
                   <img
                     className="cj-logo"
                     src={mainLogo}
-                    alt="TrusonXchanger"
+                    alt="Nexora"
                     draggable="false"
                   />
                 </div>

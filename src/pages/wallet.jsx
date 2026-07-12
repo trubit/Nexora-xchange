@@ -794,7 +794,7 @@ const TransferModal = ({ assets, wallets, assetMap, onClose }) => {
 
               <div className="wp-notice">
                 <i className="bi bi-info-circle-fill" />
-                Internal transfers between TrusonXchanger accounts are instant and free.
+                Internal transfers between Nexora accounts are instant and free.
               </div>
 
               <button type="submit" className="wp-submit wp-submit--tr" disabled={isPending || !recipient}>

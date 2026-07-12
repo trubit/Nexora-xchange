@@ -4,6 +4,7 @@ import { useAuthStore } from "../../store/authStore";
 import { useThemeStore } from "../../store/themeStore";
 import NotificationBell from "./NotificationBell";
 import EmailVerifyBanner from "../common/EmailVerifyBanner";
+import NexoraLogo from "../common/NexoraLogo";
 import "../../styles/dashboard.css";
 
 const DashNavbar = ({ onMenuClick, connectionStatus }) => {
@@ -64,11 +65,7 @@ const DashNavbar = ({ onMenuClick, connectionStatus }) => {
 
             {/* Logo */}
             <Link to="/Dashboard" className="bnx-logo">
-              <span className="bnx-logo-icon">T</span>
-              <div className="bnx-logo-text">
-                <span className="bnx-logo-main">TRUSONX</span>
-                <span className="bnx-logo-sub">CHANGER</span>
-              </div>
+              <NexoraLogo size={28} />
             </Link>
 
             {/* Desktop nav links */}

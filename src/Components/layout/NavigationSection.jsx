@@ -1,6 +1,7 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import NexoraLogo from "../common/NexoraLogo";
 import "../../styles/NavigationSection.css";
 
 const companyAndLegalLinks = [
@@ -45,8 +46,8 @@ const communityLinks = [
   { label: "Medium", href: "https://medium.com", icon: "bi-medium" },
 ];
 
-const NavigationSection = ({ workEmail = "support@trusonxchanger.io" }) => {
-  const mailToEmail = "trusonxchanger@gmail.com";
+const NavigationSection = ({ workEmail = "support@nexora.io" }) => {
+  const mailToEmail = "nexora@gmail.com";
   const emailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(mailToEmail)}`;
   return (
     <footer className="nav-section">
@@ -56,10 +57,7 @@ const NavigationSection = ({ workEmail = "support@trusonxchanger.io" }) => {
           <Col xs={12} lg={4} className="nav-brand-col">
             <div className="nav-brand-column">
               <Link to="/" className="nav-logo-link">
-                <h2 className="nav-logo" aria-label="TrusonXchanger">
-                  <span className="nav-logo-mark">T</span>
-                  <span className="nav-logo-text">rusonXchanger</span>
-                </h2>
+                <NexoraLogo size={36} />
               </Link>
               <p className="nav-brand-copy">
                 Experience the next generation of digital asset trading with our
@@ -68,7 +66,7 @@ const NavigationSection = ({ workEmail = "support@trusonxchanger.io" }) => {
               </p>
               <div className="nav-badge-wrapper">
                 <span className="nav-badge">
-                  A Project By TrusonXchanger S.R.O
+                  A Project By Nexora S.R.O
                 </span>
               </div>
               <div className="nav-email-block">

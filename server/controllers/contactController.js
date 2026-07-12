@@ -17,7 +17,7 @@ const escapeHtml = (value) =>
 
 const formatMessageText = ({ fullName, email, subject, message }) => {
   return [
-    "New TrusonXchanger Contact Message",
+    "New Nexora Contact Message",
     "",
     `Name: ${fullName}`,
     `Email: ${email}`,
@@ -30,7 +30,7 @@ const formatMessageText = ({ fullName, email, subject, message }) => {
 
 const formatMessageHtml = ({ fullName, email, subject, message }) => {
   return `
-    <h2>New TrusonXchanger Contact Message</h2>
+    <h2>New Nexora Contact Message</h2>
     <p><strong>Name:</strong> ${escapeHtml(fullName)}</p>
     <p><strong>Email:</strong> ${escapeHtml(email)}</p>
     <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
@@ -51,7 +51,7 @@ const WAITLIST_LABELS = {
 const formatWaitlistText = ({ email, waitlistType, sourceIp, userAgent }) => {
   const label = WAITLIST_LABELS[waitlistType] || waitlistType;
   return [
-    "New TrusonXchanger Waitlist Signup",
+    "New Nexora Waitlist Signup",
     "",
     `Program: ${label}`,
     `Email: ${email}`,
@@ -64,7 +64,7 @@ const formatWaitlistText = ({ email, waitlistType, sourceIp, userAgent }) => {
 const formatWaitlistHtml = ({ email, waitlistType, sourceIp, userAgent }) => {
   const label = WAITLIST_LABELS[waitlistType] || waitlistType;
   return `
-    <h2>New TrusonXchanger Waitlist Signup</h2>
+    <h2>New Nexora Waitlist Signup</h2>
     <p><strong>Program:</strong> ${escapeHtml(label)}</p>
     <p><strong>Email:</strong> ${escapeHtml(email)}</p>
     <p><strong>Submitted At:</strong> ${escapeHtml(new Date().toISOString())}</p>

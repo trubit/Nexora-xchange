@@ -1,12 +1,12 @@
-/* CryptoJourneySection.css — Premium fit with the homepage design language */
+﻿/* CryptoJourneySection.css â€” Premium fit with the homepage design language */
 
 /* ---------------------------- Light Section ----------------------------- */
 .cj-light {
   background:
     radial-gradient(
       820px 420px at 4% 4%,
-      rgba(0, 214, 160, 0.08),
-      rgba(0, 214, 160, 0) 66%
+      rgba(240, 185, 11, 0.08),
+      rgba(240, 185, 11, 0) 66%
     ),
     radial-gradient(
       720px 400px at 98% 96%,
@@ -104,8 +104,8 @@
 .cj-card::before {
   background: linear-gradient(
     145deg,
-    rgba(0, 214, 160, 0.12),
-    rgba(0, 214, 160, 0)
+    rgba(240, 185, 11, 0.12),
+    rgba(240, 185, 11, 0)
   );
   content: "";
   height: 130px;
@@ -117,10 +117,10 @@
 }
 
 .cj-card:hover {
-  border-color: rgba(0, 214, 160, 0.45);
+  border-color: rgba(240, 185, 11, 0.45);
   box-shadow:
     0 22px 38px rgba(0, 0, 0, 0.12),
-    0 0 0 1px rgba(0, 214, 160, 0.15),
+    0 0 0 1px rgba(240, 185, 11, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   transform: translateY(-4px);
 }
@@ -129,10 +129,10 @@
   align-items: center;
   background: linear-gradient(
     145deg,
-    rgba(0, 214, 160, 0.18),
-    rgba(0, 214, 160, 0.06)
+    rgba(240, 185, 11, 0.18),
+    rgba(240, 185, 11, 0.06)
   );
-  border: 1px solid rgba(0, 214, 160, 0.35);
+  border: 1px solid rgba(240, 185, 11, 0.35);
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
   display: flex;
@@ -173,13 +173,13 @@
   background:
     radial-gradient(
       900px 460px at 5% 6%,
-      rgba(0, 214, 160, 0.12),
-      rgba(0, 214, 160, 0) 65%
+      rgba(240, 185, 11, 0.12),
+      rgba(240, 185, 11, 0) 65%
     ),
     radial-gradient(
       760px 420px at 98% 94%,
-      rgba(60, 102, 95, 0.24),
-      rgba(60, 102, 95, 0) 70%
+      rgba(26, 20, 3, 0.24),
+      rgba(26, 20, 3, 0) 70%
     ),
     #06080b;
   padding: clamp(2.2rem, 4.6vw, 4rem) 1rem;
@@ -212,7 +212,7 @@
 }
 
 .cj-dark .cj-label {
-  color: #00d6a0;
+  color: #f0b90b;
 }
 
 .cj-dark .cj-heading {
@@ -240,10 +240,10 @@
 }
 
 .cj-dark-card:hover {
-  border-color: rgba(0, 214, 160, 0.45);
+  border-color: rgba(240, 185, 11, 0.45);
   box-shadow:
     0 20px 38px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(0, 214, 160, 0.18),
+    0 0 0 1px rgba(240, 185, 11, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-4px);
 }
@@ -251,8 +251,8 @@
 .cj-dark-card::before {
   background: linear-gradient(
     145deg,
-    rgba(0, 214, 160, 0.12),
-    rgba(0, 214, 160, 0)
+    rgba(240, 185, 11, 0.12),
+    rgba(240, 185, 11, 0)
   );
   content: "";
   height: 120px;
@@ -341,7 +341,7 @@
 
 .cj-logo {
   animation: cjLogoFade 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 40px rgba(0, 214, 160, 0.55));
+  filter: drop-shadow(0 0 40px rgba(240, 185, 11, 0.55));
   height: auto;
   width: 320px;
 }
@@ -434,9 +434,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .home-page,
 html.light .recent-updates-section,
@@ -461,7 +461,7 @@ html.light .updates-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .updates-card:hover { border-color: rgba(0,214,160,0.35); }
+html.light .updates-card:hover { border-color: rgba(240,185,11,0.35); }
 html.light .updates-card-title { color: #1e2329; }
 html.light .updates-card-description { color: #474d57; }
 html.light .updates-card-date { color: #b7bdc6; }
@@ -476,5 +476,5 @@ html.light .features-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .features-card:hover { border-color: rgba(0,214,160,0.3); }
+html.light .features-card:hover { border-color: rgba(240,185,11,0.3); }
 html.light .features-card p { color: #474d57; }

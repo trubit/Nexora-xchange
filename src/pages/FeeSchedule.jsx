@@ -11,14 +11,14 @@ const FeeSchedule = () => {
         <Container className="fee-wrap">
           <article className="fee-card">
             <h1 className="fee-title">
-              Fee Schedule | TrusonXchanger
+              Fee Schedule | Nexora
             </h1>
             <p className="fee-subtitle">
               Transparent pricing for spot, futures, conversion, and transfer
-              activities across TrusonXchanger services.
+              activities across Nexora services.
             </p>
             <p className="fee-intro">
-              TrusonXchanger applies a clear fee framework designed for retail,
+              Nexora applies a clear fee framework designed for retail,
               professional, and institutional clients. Charges are disclosed
               before execution where technically possible. No hidden platform
               fees are applied outside published schedules.
@@ -79,7 +79,7 @@ const FeeSchedule = () => {
             <section className="fee-section">
               <h2>4. Deposit Fees</h2>
               <p>
-                TrusonXchanger does not charge platform fees for standard crypto
+                Nexora does not charge platform fees for standard crypto
                 deposits. External providers may apply third-party costs.
               </p>
             </section>
@@ -128,7 +128,7 @@ const FeeSchedule = () => {
               <h2>6. Blockchain Network Fees</h2>
               <p>
                 Network fees are dynamic and can increase during congestion.
-                TrusonXchanger updates fee estimates in near real time to
+                Nexora updates fee estimates in near real time to
                 reflect settlement costs.
               </p>
             </section>

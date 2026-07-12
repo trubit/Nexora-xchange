@@ -12,7 +12,7 @@ const AboutHighlightSection = () => {
                 <div className="about-highlight__image-wrap">
                   <img
                     src={mobilePng}
-                    alt="TrusonXchanger mobile trading interface"
+                    alt="Nexora mobile trading interface"
                     className="about-highlight__image"
                   />
                 </div>
@@ -20,7 +20,7 @@ const AboutHighlightSection = () => {
               <Col lg={8} className="about-highlight__text-col">
                 <div className="about-highlight__copy">
                   <p className="about-highlight__text">
-                    <span>TrusonXchanger</span> is a fast, secure, and
+                    <span>Nexora</span> is a fast, secure, and
                     user-centric cryptocurrency trading platform built for the
                     next generation of digital finance. With robust identity
                     verification powered by Veriff and advanced wallet security

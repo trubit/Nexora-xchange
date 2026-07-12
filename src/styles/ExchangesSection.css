@@ -1,9 +1,9 @@
-.exchanges-section-bg {
+﻿.exchanges-section-bg {
   background:
     radial-gradient(
       760px 420px at 6% -2%,
-      rgba(0, 214, 160, 0.1),
-      rgba(0, 214, 160, 0) 66%
+      rgba(240, 185, 11, 0.1),
+      rgba(240, 185, 11, 0) 66%
     ),
     radial-gradient(
       680px 380px at 96% 100%,
@@ -27,7 +27,7 @@
 }
 
 .exchanges-kicker {
-  color: #00d6a0;
+  color: #f0b90b;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -173,9 +173,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .home-page,
 html.light .recent-updates-section,
@@ -200,7 +200,7 @@ html.light .updates-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .updates-card:hover { border-color: rgba(0,214,160,0.35); }
+html.light .updates-card:hover { border-color: rgba(240,185,11,0.35); }
 html.light .updates-card-title { color: #1e2329; }
 html.light .updates-card-description { color: #474d57; }
 html.light .updates-card-date { color: #b7bdc6; }
@@ -215,5 +215,5 @@ html.light .features-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .features-card:hover { border-color: rgba(0,214,160,0.3); }
+html.light .features-card:hover { border-color: rgba(240,185,11,0.3); }
 html.light .features-card p { color: #474d57; }

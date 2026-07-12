@@ -93,7 +93,7 @@ export async function cachedFetch(cacheKey, ttlMs, fetchFn) {
   // L1: Redis
   if (redis) {
     try {
-      const cached = await redis.get(`trusonx:cache:${cacheKey}`);
+      const cached = await redis.get(`nexora:cache:${cacheKey}`);
       if (cached) return JSON.parse(cached);
     } catch {
       // fall through to L2
@@ -113,7 +113,7 @@ export async function cachedFetch(cacheKey, ttlMs, fetchFn) {
   L2_CACHE.set(cacheKey, { data, ts: Date.now() });
   if (redis) {
     redis
-      .set(`trusonx:cache:${cacheKey}`, JSON.stringify(data), "PX", ttlMs)
+      .set(`nexora:cache:${cacheKey}`, JSON.stringify(data), "PX", ttlMs)
       .catch(() => {});
   }
 
@@ -123,7 +123,7 @@ export async function cachedFetch(cacheKey, ttlMs, fetchFn) {
 export function invalidateCache(cacheKey) {
   L2_CACHE.delete(cacheKey);
   if (redisClients.cache) {
-    redisClients.cache.del(`trusonx:cache:${cacheKey}`).catch(() => {});
+    redisClients.cache.del(`nexora:cache:${cacheKey}`).catch(() => {});
   }
 }
 

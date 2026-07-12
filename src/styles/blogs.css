@@ -1,4 +1,4 @@
-.blogs-page {
+﻿.blogs-page {
   background: #0c0e12;
   color: #f6f7fb;
   min-height: 100vh;
@@ -7,7 +7,7 @@
 .blogs-hero {
   padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(3rem, 6vw, 4.5rem);
   background:
-    radial-gradient(circle at 12% 8%, rgba(46, 226, 163, 0.12), transparent 45%),
+    radial-gradient(circle at 12% 8%, rgba(240, 185, 11, 0.12), transparent 45%),
     radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.08), transparent 45%),
     #0c0e12;
 }
@@ -91,7 +91,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  box-shadow: 0 0 12px rgba(47, 230, 164, 0.35);
+  box-shadow: 0 0 12px rgba(240, 185, 11, 0.35);
 }
 
 .blogs-grid-body {
@@ -347,7 +347,7 @@
 .blogs-dot.active {
   width: 24px;
   background: #2fe6a4;
-  box-shadow: 0 0 8px rgba(47, 230, 164, 0.6);
+  box-shadow: 0 0 8px rgba(240, 185, 11, 0.6);
 }
 
 .blogs-dot:focus-visible {
@@ -448,14 +448,14 @@
 
 .blogs-field input:focus-visible,
 .blogs-field textarea:focus-visible {
-  outline: 2px solid rgba(47, 230, 164, 0.5);
+  outline: 2px solid rgba(240, 185, 11, 0.5);
   outline-offset: 2px;
 }
 
 .blogs-field input:focus,
 .blogs-field textarea:focus,
 .blogs-form-select select:focus {
-  outline: 2px solid rgba(47, 230, 164, 0.5);
+  outline: 2px solid rgba(240, 185, 11, 0.5);
   outline-offset: 2px;
 }
 
@@ -603,9 +603,9 @@
   margin: 0;
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light body,
 html.light .blogs-page { background: #fafafa; color: #1e2329; }
@@ -629,12 +629,12 @@ html.light .blog-tag {
   color: #474d57;
   border-color: #eaecef;
 }
-html.light .blog-tag:hover { background: rgba(0,214,160,0.1); color: #00a872; border-color: rgba(0,214,160,0.3); }
+html.light .blog-tag:hover { background: rgba(240,185,11,0.1); color: #d99c00; border-color: rgba(240,185,11,0.3); }
 
 html.light .blog-search-inp {
   background: #f5f7fa;
   border-color: #eaecef;
   color: #1e2329;
 }
-html.light .blog-search-inp:focus { border-color: #00d6a0; }
+html.light .blog-search-inp:focus { border-color: #f0b90b; }
 html.light .blog-search-inp::placeholder { color: #b7bdc6; }

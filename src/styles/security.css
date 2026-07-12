@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   SECURITY CENTER — TrusonXchanger
+﻿/* ═══════════════════════════════════════════════════════════════
+   SECURITY CENTER — Nexora
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Page header ─────────────────────────────────────────────── */
@@ -456,7 +456,7 @@ html.light .sec-kyc-step-num {
 html.light .sec-kyc-step--done .sec-kyc-step-num {
   background: rgba(14,203,129,0.1);
   border-color: rgba(14,203,129,0.35);
-  color: #0aab6b;
+  color: #0ecb81;
 }
 html.light .sec-kyc-step-icon { color: #b7bdc6; }
 html.light .sec-kyc-step--done .sec-kyc-step-icon { color: #f0b90b; }

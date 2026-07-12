@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
+import NexoraLogo from "../common/NexoraLogo";
 
 const NAV = [
   {
@@ -106,8 +107,7 @@ const DashSidebar = ({ open, onClose, onLogout }) => {
 
         {/* Brand strip */}
         <div className="dsb-brand-strip">
-          <span className="dsb-brand-main">TRUSONX</span>
-          <span className="dsb-brand-sub">CHANGER</span>
+          <NexoraLogo size={26} />
           <span className="dsb-brand-dot" />
         </div>
 
@@ -161,7 +161,7 @@ const DashSidebar = ({ open, onClose, onLogout }) => {
             </span>
             <span className="dsb-link-label">Sign Out</span>
           </button>
-          <p className="dsb-footer-copy">TrusonXchanger © {new Date().getFullYear()}</p>
+          <p className="dsb-footer-copy">Nexora © {new Date().getFullYear()}</p>
         </div>
       </aside>
     </>

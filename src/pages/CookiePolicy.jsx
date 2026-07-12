@@ -11,20 +11,20 @@ const CookiePolicy = () => {
         <Container className="cookie-policy-wrap">
           <article className="cookie-policy-card">
             <h1 className="cookie-policy-title">
-              TrusonXchanger Cookies Policy
+              Nexora Cookies Policy
             </h1>
 
             <section className="cookie-section">
               <h2>1. Introduction:</h2>
               <p>
-                TrusonXchanger FZCO (&ldquo;we&rdquo;, &ldquo;us,&rdquo; or
+                Nexora FZCO (&ldquo;we&rdquo;, &ldquo;us,&rdquo; or
                 &ldquo;our&rdquo;) uses cookies and similar technologies
                 (&ldquo;cookies&rdquo;) on our website and platform
                 (collectively, the &ldquo;Site&rdquo;) to enhance your
                 experience, understand usage patterns, and improve our services.
                 This Cookies Policy explains what cookies are, how we use them,
                 the types of cookies we employ, and how you can manage or
-                disable them. By continuing to use TrusonXchanger, you consent
+                disable them. By continuing to use Nexora, you consent
                 to our use of cookies as described herein.
               </p>
             </section>
@@ -118,7 +118,7 @@ const CookiePolicy = () => {
             <section className="cookie-section">
               <h2>5. Third-Party Cookies</h2>
               <p>
-                Some cookies on TrusonXchanger are placed by trusted third-party
+                Some cookies on Nexora are placed by trusted third-party
                 service providers (e.g., Google Analytics, CDN partners,
                 advertising networks). These third parties may recognize your
                 device across websites and use that information for their own
@@ -174,7 +174,7 @@ const CookiePolicy = () => {
               <p>
                 We may update this Cookies Policy periodically. Updates will be
                 reflected with a &ldquo;Last Updated&rdquo; date. Continued use
-                of TrusonXchanger implies acceptance of changes.
+                of Nexora implies acceptance of changes.
               </p>
             </section>
           </article>

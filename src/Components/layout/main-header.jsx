@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import LangCurrencyModal from "../common/LangCurrencyModal";
+import NexoraLogo from "../common/NexoraLogo";
 import "../../styles/header.css";
 
 // Primary site header/navigation bar.
@@ -23,10 +24,7 @@ const MainHeader = () => {
           to="/"
           className="tx-main-brand"
         >
-          <span className="tx-main-brand-mark" aria-hidden="true">
-            TX
-          </span>
-          <span className="tx-main-brand-text">TrusonXchanger</span>
+          <NexoraLogo size={30} />
         </Navbar.Brand>
 
         <Navbar.Toggle

@@ -17,7 +17,7 @@ export const getVisiblePosts = (posts = []) => {
   const blockedTitles = new Set(
     [
       "Arbitrage Bot: Never Miss a Risk-Free Spread Again",
-      "TrusonXchanger Golden XBot: Powering Smarter Trades with 50+ Trading Pair Signals",
+      "Nexora Golden XBot: Powering Smarter Trades with 50+ Trading Pair Signals",
     ].map((title) => title.toLowerCase()),
   );
 

@@ -3,7 +3,7 @@ import Coin from "../models/Coin.js";
 const TRUSON_COIN = {
   symbol: "TRUSON",
   name: "TrusonCoin",
-  description: "Internal reward and utility coin for TrusonXchanger.",
+  description: "Internal reward and utility coin for Nexora.",
   decimals: 2,
   priceUsd: 0,
   change24h: 0,

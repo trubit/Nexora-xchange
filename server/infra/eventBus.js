@@ -5,8 +5,8 @@
  * Uses Redis Pub/Sub channels when available; falls back to in-process
  * EventEmitter for local-only / development mode.
  *
- * Channel naming: trusonx:<region>:<event-type>
- * Global fanout:  trusonx:global:<event-type>
+ * Channel naming: nexora:<region>:<event-type>
+ * Global fanout:  nexora:global:<event-type>
  *
  * Guaranteed ordering per-region. No global ordering guarantee
  * (each region's matching engine is the authority for its markets).
@@ -26,7 +26,7 @@ import logger from "../config/logger.js";
 import { DEFAULT_REGION } from "./regionRegistry.js";
 
 const LOCAL_REGION = process.env.REGION_ID ?? DEFAULT_REGION;
-const PREFIX       = "trusonx";
+const PREFIX       = "nexora";
 
 export class CrossRegionEventBus extends EventEmitter {
   constructor() {

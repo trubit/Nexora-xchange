@@ -148,7 +148,7 @@ export const getMeta = (symbol) => ASSETS[String(symbol || "").toUpperCase()] ??
 export const TRUSON_COIN_SEED = {
   symbol:      "TRUSON",
   name:        "TrusonCoin",
-  description: "The native token of the TrusonXchanger platform.",
+  description: "The native token of the Nexora platform.",
   decimals:    6,
   priceUsd:    1.0,
   change24h:   0,

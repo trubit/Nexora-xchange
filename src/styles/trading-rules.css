@@ -1,4 +1,4 @@
-.tr-page {
+﻿.tr-page {
   background: #05090d;
   min-height: 100vh;
   padding: clamp(2rem, 4.5vw, 4rem) 0;
@@ -41,14 +41,14 @@
 }
 
 
-/* ═══ LIGHT MODE ═══ */
+/* â•â•â• LIGHT MODE â•â•â• */
 html.light { background: #fafafa; color: #1e2329; }
 html.light .policy-page,
 html.light .legal-page,
 html.light .doc-page { background: #fafafa; color: #1e2329; }
 html.light h1, html.light h2, html.light h3, html.light h4 { color: #1e2329; }
 html.light p, html.light li { color: #474d57; }
-html.light a { color: #00a872; }
+html.light a { color: #d99c00; }
 html.light a:hover { color: #007d58; }
 html.light hr, html.light .divider { border-color: #eaecef; }
 html.light .section-card,

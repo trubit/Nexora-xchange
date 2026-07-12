@@ -26,6 +26,43 @@ const silentProxyError = (err) => {
 export default defineConfig({
   customLogger: logger,
   plugins: [react()],
+
+  build: {
+    // Split vendor code into separate chunks so the browser can cache them
+    // independently from your app code — vendor libs rarely change.
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          // React core — loaded on every page
+          if (id.includes("/react-dom/") || id.includes("/react/")) return "vendor-react";
+          // Router
+          if (id.includes("react-router")) return "vendor-router";
+          // Data-fetching
+          if (id.includes("@tanstack")) return "vendor-query";
+          // Charts — large, only used on analytics/market pages
+          if (
+            id.includes("recharts") ||
+            id.includes("/d3-") ||
+            id.includes("victory")
+          ) return "vendor-charts";
+          // TradingView widgets — very large, trade pages only
+          if (id.includes("tradingview")) return "vendor-trading";
+          // UI framework
+          if (id.includes("react-bootstrap") || id.includes("/bootstrap/")) return "vendor-ui";
+          // Real-time layer — dashboard only
+          if (id.includes("socket.io")) return "vendor-socket";
+          // Utilities
+          if (id.includes("axios") || id.includes("zustand")) return "vendor-utils";
+          // Everything else (qrcode, icons, etc.)
+          return "vendor-misc";
+        },
+      },
+    },
+    // Warn on chunks > 800 kB (default 500 kB is too noisy with trading widgets)
+    chunkSizeWarningLimit: 800,
+  },
+
   server: {
     proxy: {
       "/api": {

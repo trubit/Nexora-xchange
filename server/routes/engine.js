@@ -2,7 +2,7 @@ import { Router } from "express";
 import Order from "../models/Order.js";
 import Trade from "../models/Trade.js";
 import Wallet from "../models/Wallet.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireAuth, requireRole } from "../middleware/auth.js";
 
 const router = Router();
 
@@ -11,7 +11,7 @@ router.get("/status", (req, res) => {
   const engine = req.app.locals.matchingEngine;
   if (!engine) return res.status(503).json({ message: "Matching engine not initialized." });
   res.json({
-    service:   "trusonx-matching-engine",
+    service:   "nexora-matching-engine",
     version:   "2.0.0",
     timestamp: new Date().toISOString(),
     ...engine.status(),
@@ -44,8 +44,8 @@ router.get("/pairs", (req, res) => {
   res.json({ pairs });
 });
 
-// POST /api/engine/start
-router.post("/start", (req, res) => {
+// POST /api/engine/start  — admin only (starting the engine affects all traders)
+router.post("/start", requireAuth, requireRole("admin"), (req, res) => {
   const engine = req.app.locals.matchingEngine;
   if (!engine) return res.status(503).json({ message: "Matching engine not initialized." });
   if (engine.running) return res.json({ message: "Engine already running." });
@@ -53,8 +53,8 @@ router.post("/start", (req, res) => {
   res.json({ message: "Engine started." });
 });
 
-// POST /api/engine/stop
-router.post("/stop", (req, res) => {
+// POST /api/engine/stop  — admin only (stopping the engine halts all trading)
+router.post("/stop", requireAuth, requireRole("admin"), (req, res) => {
   const engine = req.app.locals.matchingEngine;
   if (!engine) return res.status(503).json({ message: "Matching engine not initialized." });
   if (!engine.running) return res.json({ message: "Engine already stopped." });
@@ -62,8 +62,8 @@ router.post("/stop", (req, res) => {
   res.json({ message: "Engine stopped. Resting orders retained in memory." });
 });
 
-// DELETE /api/engine/book/:symbol
-router.delete("/book/:symbol", (req, res) => {
+// DELETE /api/engine/book/:symbol  — admin only (flushing a book drops all resting orders)
+router.delete("/book/:symbol", requireAuth, requireRole("admin"), (req, res) => {
   const engine = req.app.locals.matchingEngine;
   if (!engine) return res.status(503).json({ message: "Matching engine not initialized." });
   const sym = String(req.params.symbol).toUpperCase();

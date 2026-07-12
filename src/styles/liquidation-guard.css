@@ -1,4 +1,4 @@
-.lg-page {
+﻿.lg-page {
   background: #05090d;
   min-height: 100vh;
   padding: clamp(2rem, 4.5vw, 4rem) 0;
@@ -57,7 +57,7 @@
 }
 
 .lg-table th {
-  background: rgba(0, 214, 160, 0.12);
+  background: rgba(240, 185, 11, 0.12);
   color: #f7fbff;
 }
 

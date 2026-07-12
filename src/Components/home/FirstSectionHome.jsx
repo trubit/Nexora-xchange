@@ -21,7 +21,7 @@ const FirstSectionHome = () => {
 
                 <p className="hero-subtitle">
                   Trade cryptocurrencies across different exchanges through the
-                  TrusonXchanger Arbitrage Trading feature and capture price
+                  Nexora Arbitrage Trading feature and capture price
                   differentials with confidence.
                 </p>
 

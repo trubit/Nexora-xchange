@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════════════
    Wallet Page — premium exchange-grade design
    Token prefix: wp- (wallet page)
    Design system: dark bg #0b0e11, card #1e2026, border #2b2f36
@@ -1168,7 +1168,7 @@ html.light .wp-rbtn:hover {
 html.light .wp-rbtn--dep {
   background: rgba(14,203,129,0.07);
   border-color: rgba(14,203,129,0.3);
-  color: #0aab6b;
+  color: #0ecb81;
 }
 html.light .wp-rbtn--dep:hover { background: rgba(14,203,129,0.14); }
 html.light .wp-rbtn--wd {
@@ -1253,7 +1253,7 @@ html.light .wp-alert--err {
 html.light .wp-alert--ok {
   background: rgba(14,203,129,0.07);
   border-color: rgba(14,203,129,0.25);
-  color: #0aab6b;
+  color: #0ecb81;
 }
 
 /* ── Modal footer ───────────────────────────────────────────── */

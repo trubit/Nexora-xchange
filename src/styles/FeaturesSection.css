@@ -1,20 +1,20 @@
-.tx-features {
+﻿.tx-features {
   --txf-bg: #06080b;
   --txf-surface: #10161c;
   --txf-border: rgba(138, 159, 171, 0.24);
-  --txf-accent: #00d6a0;
+  --txf-accent: #f0b90b;
   --txf-heading: #f3f7f9;
   --txf-body: #9baab2;
   background:
     radial-gradient(
       900px 460px at 5% 6%,
-      rgba(0, 214, 160, 0.12),
-      rgba(0, 214, 160, 0) 65%
+      rgba(240, 185, 11, 0.12),
+      rgba(240, 185, 11, 0) 65%
     ),
     radial-gradient(
       760px 420px at 98% 94%,
-      rgba(60, 102, 95, 0.24),
-      rgba(60, 102, 95, 0) 70%
+      rgba(26, 20, 3, 0.24),
+      rgba(26, 20, 3, 0) 70%
     ),
     var(--txf-bg);
   padding: clamp(30px, 5vw, 54px) 0 clamp(52px, 6vw, 72px);
@@ -101,8 +101,8 @@
 .tx-feature-card::before {
   background: linear-gradient(
     145deg,
-    rgba(0, 214, 160, 0.14),
-    rgba(0, 214, 160, 0)
+    rgba(240, 185, 11, 0.14),
+    rgba(240, 185, 11, 0)
   );
   content: "";
   height: 130px;
@@ -114,10 +114,10 @@
 }
 
 .tx-feature-card:hover {
-  border-color: rgba(0, 214, 160, 0.45);
+  border-color: rgba(240, 185, 11, 0.45);
   box-shadow:
     0 22px 38px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(0, 214, 160, 0.18),
+    0 0 0 1px rgba(240, 185, 11, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-4px);
 }
@@ -150,10 +150,10 @@
   align-items: center;
   background: linear-gradient(
     145deg,
-    rgba(0, 214, 160, 0.24),
-    rgba(0, 214, 160, 0.08)
+    rgba(240, 185, 11, 0.24),
+    rgba(240, 185, 11, 0.08)
   );
-  border: 1px solid rgba(0, 214, 160, 0.38);
+  border: 1px solid rgba(240, 185, 11, 0.38);
   border-radius: 10px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
   display: flex;
@@ -175,8 +175,8 @@
 .tx-feature-divider {
   background: linear-gradient(
     90deg,
-    rgba(0, 214, 160, 0.5),
-    rgba(0, 214, 160, 0.06)
+    rgba(240, 185, 11, 0.5),
+    rgba(240, 185, 11, 0.06)
   );
   border-radius: 999px;
   display: block;
@@ -282,9 +282,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .home-page,
 html.light .recent-updates-section,
@@ -309,7 +309,7 @@ html.light .updates-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .updates-card:hover { border-color: rgba(0,214,160,0.35); }
+html.light .updates-card:hover { border-color: rgba(240,185,11,0.35); }
 html.light .updates-card-title { color: #1e2329; }
 html.light .updates-card-description { color: #474d57; }
 html.light .updates-card-date { color: #b7bdc6; }
@@ -324,5 +324,5 @@ html.light .features-card {
   background: #ffffff;
   border-color: #eaecef;
 }
-html.light .features-card:hover { border-color: rgba(0,214,160,0.3); }
+html.light .features-card:hover { border-color: rgba(240,185,11,0.3); }
 html.light .features-card p { color: #474d57; }

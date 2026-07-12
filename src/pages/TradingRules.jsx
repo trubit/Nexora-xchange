@@ -11,14 +11,14 @@ const TradingRules = () => {
         <Container className="tr-wrap">
           <article className="tr-card">
             <h1 className="tr-title">
-              Trading Rules | TrusonXchanger
+              Trading Rules | Nexora
             </h1>
             <p className="tr-subtitle">
               Formal trading conduct and market integrity standards for all
-              participants on TrusonXchanger.
+              participants on Nexora.
             </p>
             <p className="tr-intro">
-              TrusonXchanger operates a fairness-first trading environment. All
+              Nexora operates a fairness-first trading environment. All
               clients, professional participants, and institutional users must
               follow these rules to maintain transparent execution and orderly
               digital asset markets.
@@ -46,7 +46,7 @@ const TradingRules = () => {
             <section className="tr-section">
               <h2>3. Manipulation Prevention</h2>
               <p>
-                TrusonXchanger monitors account and order patterns for anomalous
+                Nexora monitors account and order patterns for anomalous
                 behaviour, including layered quotes, self-directed flow, and
                 event-driven exploitation.
               </p>
@@ -106,7 +106,7 @@ const TradingRules = () => {
             <section className="tr-section">
               <h2>10. Market Volatility and Suspension</h2>
               <p>
-                TrusonXchanger may apply temporary controls, instrument pauses,
+                Nexora may apply temporary controls, instrument pauses,
                 or matching restrictions during extraordinary volatility or
                 infrastructure risk events.
               </p>

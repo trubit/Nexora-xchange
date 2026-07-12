@@ -21,7 +21,7 @@ const ArbitrageSection = () => (
             Maximize Gains with Smart Arbitrage
           </h2>
           <p className="arbitrage-desc mb-4">
-            TrusonXchanger empowers you to maximize your crypto gains by
+            Nexora empowers you to maximize your crypto gains by
             leveraging intelligent arbitrage strategies. Seamlessly identify and
             act on profitable opportunities across multiple exchanges and market
             conditionsâ€”all in one platform.
@@ -39,7 +39,7 @@ const ArbitrageSection = () => (
                     Filtered Pairs with Profit Margins
                   </Card.Title>
                   <Card.Text className="arbitrage-feature-desc">
-                    TrusonXchanger identifies profitable crypto pairs across
+                    Nexora identifies profitable crypto pairs across
                     exchanges using price differences and smart filtering.
                   </Card.Text>
                 </Card.Body>
@@ -59,7 +59,7 @@ const ArbitrageSection = () => (
                   <Card.Text className="arbitrage-feature-desc">
                     Users can buy from one exchange and sell on another
                     instantly with minimal delay, reducing missed opportunities
-                    on TrusonXchanger.
+                    on Nexora.
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -72,7 +72,7 @@ const ArbitrageSection = () => (
         >
           <img
             src={arbitrageIllustration}
-            alt="TrusonXchanger Arbitrage Illustration"
+            alt="Nexora Arbitrage Illustration"
             className="arbitrage-illustration"
             style={{ maxWidth: "600px", width: "100%" }}
           />

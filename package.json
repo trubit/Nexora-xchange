@@ -1,18 +1,18 @@
 {
-  "name": "my-trusonxchanger-app",
+  "name": "my-nexora-app",
   "version": "0.0.0",
   "private": true,
-  "description": "trusonxchanger website",
+  "description": "nexora website",
   "keywords": [
-    "trusonxhanger"
+    "nexora"
   ],
-  "homepage": "https://github.com/trubit/Trusonxchanger#readme",
+  "homepage": "https://github.com/trubit/Nexora#readme",
   "bugs": {
-    "url": "https://github.com/trubit/Trusonxchanger/issues"
+    "url": "https://github.com/trubit/Nexora/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trubit/Trusonxchanger.git"
+    "url": "git+https://github.com/trubit/Nexora.git"
   },
   "license": "ISC",
   "author": "truson",
@@ -27,7 +27,21 @@
     "server:dev": "nodemon server/index.js",
     "start": "concurrently -k -n \"CLIENT,SERVER\" -c \"cyan,green\" \"npm run dev\" \"npm run server:dev\"",
     "reset": "powershell -ExecutionPolicy Bypass -File kill-and-start.ps1",
-    "docker:prod": "docker compose -f docker-compose.production.yml up --build"
+    "docker:prod": "docker compose -f docker-compose.production.yml up --build",
+    "test": "vitest --config vitest.workspace.js",
+    "test:run": "vitest run --config vitest.workspace.js",
+    "test:ui": "vitest --config vitest.workspace.js --ui",
+    "test:coverage": "vitest run --config vitest.workspace.js --coverage",
+    "test:client": "vitest run --config vitest.config.js",
+    "test:client:watch": "vitest --config vitest.config.js",
+    "test:client:coverage": "vitest run --config vitest.config.js --coverage",
+    "test:server": "vitest run --config vitest.server.config.js",
+    "test:server:watch": "vitest --config vitest.server.config.js",
+    "test:server:coverage": "vitest run --config vitest.server.config.js --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:all": "npm run test:coverage && npm run test:e2e"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
@@ -72,14 +86,23 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.61.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/ui": "^4.1.9",
     "concurrently": "^10.0.3",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
-    "vite": "^7.2.4"
+    "jsdom": "^29.1.1",
+    "supertest": "^7.2.2",
+    "vite": "^7.2.4",
+    "vitest": "^4.1.9"
   }
 }

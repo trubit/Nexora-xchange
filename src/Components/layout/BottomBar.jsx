@@ -14,7 +14,7 @@ const BottomBar = () => {
             <p className="bottom-bar-text">
               <span className="copyright-symbol">&copy;</span> {currentYear} All
               rights reserved -{" "}
-              <span className="brand-accent">TrusonXchanger</span>
+              <span className="brand-accent">Nexora</span>
             </p>
           </Col>
         </Row>

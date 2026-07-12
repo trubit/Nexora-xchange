@@ -1,8 +1,9 @@
 import nodemailer from "nodemailer";
+import logger from "../config/logger.js";
 
 // Defaults used when env vars are missing.
-const DEFAULT_FROM_NAME = "TrusonXchanger";
-const DEFAULT_FROM_EMAIL = "no-reply@trusonxchanger.com";
+const DEFAULT_FROM_NAME = "Nexora";
+const DEFAULT_FROM_EMAIL = "no-reply@nexora.com";
 
 // Read SMTP config from environment with Brevo defaults.
 const getSmtpConfig = () => ({
@@ -53,22 +54,15 @@ const transporter = isConfigured(transporterConfig)
 // Verify connection on startup for fast feedback.
 const verifyTransporter = async () => {
   if (!transporter) {
-    console.warn(
-      "SMTP not configured. Skipping email transport verification.",
-    );
+    logger.warn("SMTP not configured. Skipping email transport verification.");
     return;
   }
 
   try {
     await transporter.verify();
-    console.log(
-      "SMTP connection ready. Emails will be sent through Brevo SMTP.",
-    );
+    logger.info("SMTP connection ready. Emails will be sent through Brevo SMTP.");
   } catch (error) {
-    console.error(
-      "SMTP verification failed. Check your Brevo SMTP credentials:",
-      error?.message || error,
-    );
+    logger.error({ err: error }, "SMTP verification failed. Check your Brevo SMTP credentials.");
   }
 };
 
@@ -106,10 +100,7 @@ export const sendEmail = async (to, subject, html, text) => {
     args.text || (htmlBody ? htmlToText(htmlBody) : undefined);
 
   if (!transporter) {
-    console.warn("SMTP not configured. Email skipped:", {
-      to: recipient,
-      subject: mailSubject,
-    });
+    logger.warn({ to: recipient, subject: mailSubject }, "SMTP not configured. Email skipped.");
     return;
   }
 
@@ -123,7 +114,7 @@ export const sendEmail = async (to, subject, html, text) => {
       replyTo,
     });
   } catch (error) {
-    console.error("Email send failed:", error?.message || error);
+    logger.error({ err: error }, "Email send failed.");
     throw error;
   }
 };

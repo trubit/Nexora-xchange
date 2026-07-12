@@ -62,11 +62,11 @@ const Futures = () => {
         fullName: "Futures Waitlist User",
         email: sanitizedEmail,
         subject: "Futures Waitlist Request",
-        message: "Please add this email to the TrusonXchanger Futures waitlist.",
+        message: "Please add this email to the Nexora Futures waitlist.",
       });
       if (response.data?.success) {
         setSubmitStatus("success");
-        setStatusMessage("Thank you. You have been added to the TrusonXchanger Futures waitlist.");
+        setStatusMessage("Thank you. You have been added to the Nexora Futures waitlist.");
         setEmail("");
       } else {
         setSubmitStatus("error");
@@ -91,7 +91,7 @@ const Futures = () => {
             </h1>
             <p className="future-coming-soon">Launching Soon</p>
             <p className="future-intro">
-              TrusonXchanger is building an advanced futures trading ecosystem
+              Nexora is building an advanced futures trading ecosystem
               designed for professional traders and institutions. Our upcoming
               infrastructure will provide powerful market tools, intelligent
               execution systems, and advanced risk management capabilities for
@@ -122,7 +122,7 @@ const Futures = () => {
 
           <section className="future-waitlist" aria-label="Futures waitlist">
             <h2 className="future-section-title">Stay Updated</h2>
-            <p>Receive launch updates when TrusonXchanger Futures becomes available.</p>
+            <p>Receive launch updates when Nexora Futures becomes available.</p>
             <form className="future-form" onSubmit={handleSubmit}>
               <label htmlFor="future-email" className="future-sr-only">Email address</label>
               <input
@@ -152,7 +152,7 @@ const Futures = () => {
           </section>
 
           <p className="future-footer-note">
-            TrusonXchanger Futures infrastructure is currently under development
+            Nexora Futures infrastructure is currently under development
             and will be introduced in a future release.
           </p>
         </Container>

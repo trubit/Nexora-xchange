@@ -1,4 +1,4 @@
-.bottom-bar {
+﻿.bottom-bar {
   background-color: #030712; /* Deep, mature black */
   position: relative;
   padding: 24px 0;
@@ -18,7 +18,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(25, 218, 169, 0.4),
+    rgba(240, 185, 11, 0.4),
     transparent
   );
   z-index: 1;
@@ -45,7 +45,7 @@
 }
 
 .brand-accent {
-  color: #19daa9; /* Signature brand green */
+  color: #f0b90b; /* Signature brand green */
   font-weight: 600;
   letter-spacing: 0.02em;
   transition: color 0.3s ease;
@@ -69,9 +69,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .tx-bottom-bar {
   background: rgba(255,255,255,0.97);

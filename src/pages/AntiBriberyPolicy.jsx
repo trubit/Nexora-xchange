@@ -22,8 +22,8 @@ const AntiBriberyPolicy = () => {
                 <section className="anti-bribery-section">
                   <h2>1. Introduction</h2>
                   <p>
-                    TrusonXchanger FZCO (the &ldquo;Company&rdquo; or
-                    &ldquo;TrusonXchanger&rdquo;) is committed to conducting its
+                    Nexora FZCO (the &ldquo;Company&rdquo; or
+                    &ldquo;Nexora&rdquo;) is committed to conducting its
                     business with the highest standards of integrity,
                     transparency, and accountability. In accordance with the
                     Virtual Assets and Related Activities Regulations (2023)
@@ -32,10 +32,10 @@ const AntiBriberyPolicy = () => {
                     the Company maintains a zero-tolerance approach to bribery
                     and corruption. All employees, officers, directors, agents,
                     and third-party intermediaries acting on behalf of
-                    TrusonXchanger must comply fully with applicable
+                    Nexora must comply fully with applicable
                     anti-bribery and anti-corruption laws, including UAE Federal
                     Law No. 3 of 1987 (as amended), and any other relevant
-                    statutes of jurisdictions in which TrusonXchanger operates.
+                    statutes of jurisdictions in which Nexora operates.
                   </p>
                 </section>
 
@@ -52,12 +52,12 @@ const AntiBriberyPolicy = () => {
                       improper inducement in all Company dealings;
                     </li>
                     <li>
-                      Ensure that TrusonXchanger&rsquo;s employees and
+                      Ensure that Nexora&rsquo;s employees and
                       representatives avoid conflicts of interest that could
                       compromise regulatory compliance or client interests;
                     </li>
                     <li>
-                      Safeguard TrusonXchanger&rsquo;s reputation by fostering a
+                      Safeguard Nexora&rsquo;s reputation by fostering a
                       culture of ethical conduct; and
                     </li>
                     <li>
@@ -73,16 +73,16 @@ const AntiBriberyPolicy = () => {
                   <p>This Policy applies to:</p>
                   <ul>
                     <li>
-                      All TrusonXchanger employees, officers, directors, and
+                      All Nexora employees, officers, directors, and
                       members of the Board (&ldquo;Employees&rdquo;);
                     </li>
                     <li>
                       All contractors, consultants, agents, and intermediaries
-                      engaged to act for or on behalf of TrusonXchanger;
+                      engaged to act for or on behalf of Nexora;
                     </li>
                     <li>
                       All business activities and transactions conducted in
-                      connection with TrusonXchanger&rsquo;s Virtual Asset
+                      connection with Nexora&rsquo;s Virtual Asset
                       Exchange Services, whether in the Emirate of Dubai or any
                       other jurisdiction.
                     </li>
@@ -116,7 +116,7 @@ const AntiBriberyPolicy = () => {
                       Conflict of Interest: Any situation where personal
                       interests, or those of a related party, could influence or
                       appear to influence an Employee&rsquo;s objectivity in
-                      performing TrusonXchanger duties.
+                      performing Nexora duties.
                     </li>
                   </ul>
                 </section>
@@ -220,8 +220,8 @@ const AntiBriberyPolicy = () => {
                   <h2>12. Reporting, Investigations &amp; Whistleblower Protection</h2>
                   <p>Report to:</p>
                   <ul>
-                    <li>compliance@trusonxchanger.com</li>
-                    <li>report@trusonxchanger.com</li>
+                    <li>compliance@nexora.com</li>
+                    <li>report@nexora.com</li>
                   </ul>
                   <p>Includes:</p>
                   <ul>
@@ -261,7 +261,7 @@ const AntiBriberyPolicy = () => {
                 <section className="anti-bribery-section">
                   <h2>16. Reporting to VARA</h2>
                   <p>
-                    TrusonXchanger must report relevant incidents with
+                    Nexora must report relevant incidents with
                     corrective actions and regulatory disclosures.
                   </p>
                 </section>

@@ -8,7 +8,7 @@
  * The lock state is stored in Redis (shared across all nodes in a region)
  * with TTL-based renewal so dead nodes release their locks automatically.
  *
- * Lock key:  trusonx:market-lock:<SYMBOL>
+ * Lock key:  nexora:market-lock:<SYMBOL>
  * Lock value: <regionId>
  * TTL:         60 s (renewed by heartbeat every 30 s)
  */
@@ -18,7 +18,7 @@ import { MARKET_REGION_MAP, DEFAULT_REGION } from "./regionRegistry.js";
 import logger from "../config/logger.js";
 
 const LOCAL_REGION  = process.env.REGION_ID ?? DEFAULT_REGION;
-const LOCK_PREFIX   = "trusonx:market-lock:";
+const LOCK_PREFIX   = "nexora:market-lock:";
 const LOCK_TTL_MS   = 60_000;
 const RENEW_INTERVAL_MS = 30_000;
 

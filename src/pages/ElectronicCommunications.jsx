@@ -5,7 +5,7 @@ import NavigationSection from "../Components/layout/NavigationSection";
 import BottomBar from "../Components/layout/BottomBar";
 
 const ElectronicCommunications = () => {
-  const contactEmail = "trusonxchanger@gmail.com";
+  const contactEmail = "nexora@gmail.com";
 
   return (
     <>
@@ -13,14 +13,14 @@ const ElectronicCommunications = () => {
         <Container className="ec-wrap">
           <article className="ec-card">
             <h1 className="ec-title">
-              Electronic Communications Policy | TrusonXchanger
+              Electronic Communications Policy | Nexora
             </h1>
             <p className="ec-subtitle">
-              This policy explains how TrusonXchanger delivers electronic
+              This policy explains how Nexora delivers electronic
               notices, security alerts, and legal communications to clients.
             </p>
             <p className="ec-intro">
-              By creating or using a TrusonXchanger account, you consent to
+              By creating or using a Nexora account, you consent to
               receiving required operational, compliance, and legal
               communications electronically. Electronic delivery supports
               secure, timely, and auditable communication for digital asset
@@ -30,7 +30,7 @@ const ElectronicCommunications = () => {
             <section className="ec-section">
               <h2>1. Introduction</h2>
               <p>
-                TrusonXchanger communicates with clients through approved
+                Nexora communicates with clients through approved
                 digital channels, including in-app notifications, registered
                 email, and verified phone messaging for security events.
               </p>
@@ -87,7 +87,7 @@ const ElectronicCommunications = () => {
             <section className="ec-section">
               <h2>7. Delivery Failures</h2>
               <p>
-                TrusonXchanger is not liable for communication failures caused
+                Nexora is not liable for communication failures caused
                 by incorrect, outdated, blocked, or inaccessible client contact
                 details.
               </p>
@@ -115,7 +115,7 @@ const ElectronicCommunications = () => {
             <section className="ec-section">
               <h2>10. Legal Acceptance</h2>
               <p>
-                Continued use of TrusonXchanger constitutes acceptance of this
+                Continued use of Nexora constitutes acceptance of this
                 electronic communications framework and any subsequent updates.
               </p>
             </section>

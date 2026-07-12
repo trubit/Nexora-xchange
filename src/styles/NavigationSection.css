@@ -1,4 +1,4 @@
-.nav-section {
+﻿.nav-section {
   background-color: #080b0f;
   border-top: 1px solid rgba(137, 154, 168, 0.08);
   padding: clamp(64px, 8vw, 96px) 0 clamp(32px, 4vw, 48px);
@@ -18,7 +18,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(25, 218, 169, 0.3),
+    rgba(240, 185, 11, 0.3),
     transparent
   );
   z-index: 1;
@@ -62,8 +62,8 @@
 }
 
 .nav-logo-mark {
-  color: #19daa9;
-  text-shadow: 0 0 20px rgba(25, 218, 169, 0.3);
+  color: #f0b90b;
+  text-shadow: 0 0 20px rgba(240, 185, 11, 0.3);
 }
 
 .nav-logo-text {
@@ -85,9 +85,9 @@
 
 .nav-badge {
   background: rgba(15, 58, 101, 0.2);
-  border: 1px solid rgba(25, 218, 169, 0.2);
+  border: 1px solid rgba(240, 185, 11, 0.2);
   border-radius: 50px;
-  color: #19daa9;
+  color: #f0b90b;
   display: inline-flex;
   font-size: 0.75rem;
   font-weight: 600;
@@ -124,12 +124,12 @@
 }
 
 .nav-email-link i {
-  color: #19daa9;
+  color: #f0b90b;
   font-size: 1.1rem;
 }
 
 .nav-email-link:hover {
-  color: #19daa9;
+  color: #f0b90b;
   transform: translateY(-1px);
 }
 
@@ -150,7 +150,7 @@
 }
 
 .nav-link-item:hover {
-  color: #19daa9;
+  color: #f0b90b;
   transform: translateX(6px);
 }
 
@@ -176,11 +176,11 @@
 }
 
 .nav-community-box:hover {
-  background: rgba(25, 218, 169, 0.1);
-  border-color: rgba(25, 218, 169, 0.4);
-  color: #19daa9;
+  background: rgba(240, 185, 11, 0.1);
+  border-color: rgba(240, 185, 11, 0.4);
+  color: #f0b90b;
   transform: translateY(-4px);
-  box-shadow: 0 10px 20px -10px rgba(25, 218, 169, 0.3);
+  box-shadow: 0 10px 20px -10px rgba(240, 185, 11, 0.3);
 }
 
 .nav-community-icon {

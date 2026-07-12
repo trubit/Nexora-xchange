@@ -190,7 +190,7 @@ const Login = () => {
       <main className="tx-login-main">
         <article className="tx-login-card" aria-labelledby="tx-login-title">
           <header className="tx-login-head">
-            <h1 id="tx-login-title">Welcome Back to TrusonXchanger</h1>
+            <h1 id="tx-login-title">Welcome Back to Nexora</h1>
             <p>
               Secure access to your digital asset trading account
             </p>

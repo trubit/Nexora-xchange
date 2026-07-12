@@ -26,6 +26,9 @@ dist-ssr
 *.sln
 *.sw?
 
+# Test coverage reports — generated locally and in CI, never committed
+coverage/
+
 # Upload storage — files live outside the project at ../trusonx-uploads
 server/uploads/
 uploads/

@@ -11,7 +11,7 @@ import customerServiceIcon from "../assets/customer service.png";
 import secureIcon from "../assets/secure.png";
 
 const Contact = () => {
-  const supportEmail = "trusonxchanger@gmail.com";
+  const supportEmail = "nexora@gmail.com";
   const supportEmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(supportEmail)}`;
 
   const [formData, setFormData] = useState({

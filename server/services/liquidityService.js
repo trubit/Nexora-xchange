@@ -1,5 +1,5 @@
 /**
- * Liquidity Engine — TrusonXchanger
+ * Liquidity Engine — Nexora
  *
  * Keeps every trading pair's order book populated with realistic bid/ask depth.
  * Works by maintaining a dedicated "bot" user whose limit orders serve as
@@ -22,7 +22,7 @@ import { getLiveTicker } from "./tradeService.js";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const BOT_EMAIL    = "liquidity-bot@trusonxchanger.internal";
+const BOT_EMAIL    = "liquidity-bot@nexora.internal";
 const BOT_BALANCE  = 1_000_000_000; // 1 billion per asset — effectively unlimited
 const REFUND_AT    = 10_000;        // re-fund a wallet when available drops here
 

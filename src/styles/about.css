@@ -1,11 +1,11 @@
-:root {
+﻿:root {
   --about-bg: #070c11;
   --about-surface: #0b1219;
   --about-surface-soft: #0e1620;
   --about-border: rgba(140, 162, 178, 0.2);
   --about-text: #edf4f8;
   --about-muted: #aeb9c4;
-  --about-accent: #00c995;
+  --about-accent: #d99c00;
 }
 
 .about-hero {
@@ -14,8 +14,8 @@
   background:
     radial-gradient(
       900px 520px at 8% -6%,
-      rgba(0, 214, 160, 0.14),
-      rgba(0, 214, 160, 0) 64%
+      rgba(240, 185, 11, 0.14),
+      rgba(240, 185, 11, 0) 64%
     ),
     radial-gradient(
       880px 480px at 96% 8%,
@@ -37,7 +37,7 @@
   background:
     radial-gradient(
       circle at 18% 52%,
-      rgba(0, 184, 136, 0.22),
+      rgba(240, 185, 11, 0.22),
       transparent 52%
     ),
     linear-gradient(118deg, rgba(0, 133, 95, 0.2) 0%, transparent 42%);
@@ -111,7 +111,7 @@
   width: clamp(112px, 9vw, 168px);
   display: inline-block;
   margin-bottom: 0.5rem;
-  filter: drop-shadow(0 8px 18px rgba(0, 190, 136, 0.16));
+  filter: drop-shadow(0 8px 18px rgba(240, 185, 11, 0.16));
 }
 
 .about-hero__brand {
@@ -133,11 +133,11 @@
   line-height: 1.08;
   letter-spacing: -0.018em;
   color: var(--about-accent);
-  background: linear-gradient(90deg, #94f7d8 0%, #37e8b6 46%, #00c995 100%);
+  background: linear-gradient(90deg, #f8d33a 0%, #f0b90b 46%, #d99c00 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 12px 28px rgba(0, 190, 136, 0.16);
+  text-shadow: 0 12px 28px rgba(240, 185, 11, 0.2);
   white-space: nowrap;
 }
 
@@ -216,7 +216,7 @@
   background:
     radial-gradient(
       circle at 16% 25%,
-      rgba(0, 186, 133, 0.2),
+      rgba(240, 185, 11, 0.2),
       transparent 42%
     ),
     #05080c;
@@ -246,7 +246,7 @@
   overflow: hidden;
   border-radius: 2.2rem 0 0 2.2rem;
   background:
-    radial-gradient(circle at 50% 14%, rgba(0, 201, 149, 0.14), transparent 50%),
+    radial-gradient(circle at 50% 14%, rgba(240, 185, 11, 0.14), transparent 50%),
     linear-gradient(180deg, rgba(8, 14, 20, 0.85), rgba(8, 14, 20, 0.98));
   display: flex;
   align-items: flex-end;
@@ -559,9 +559,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light {
   --about-bg: #f5f7fa;

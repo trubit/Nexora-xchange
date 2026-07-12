@@ -48,7 +48,7 @@ const FeaturesSection = () => (
           <h2 className="tx-features-heading">
             Effortless Arbitrage
             <br />
-            Trading With TrusonXchanger
+            Trading With Nexora
           </h2>
         </div>
 
@@ -56,7 +56,7 @@ const FeaturesSection = () => (
           <Col xs={12} sm={6} lg={4} className="tx-col">
             <FeatureCard
               title="Instant Funding"
-              description="Deposit funds effortlessly using cards, bank transfers, or crypto wallets, ensuring seamless integration with TrusonXchanger."
+              description="Deposit funds effortlessly using cards, bank transfers, or crypto wallets, ensuring seamless integration with Nexora."
               iconSrc={iconFunding}
               imageSrc={imgFunding}
             />

@@ -492,7 +492,7 @@ const DashSecurity = () => {
           {activeTab === "api-keys" && (
             <div className="sec-content">
               <SectionHeader icon="bi-key" title="API Keys"
-                subtitle="Generate keys to access the TrusonXchanger API programmatically." />
+                subtitle="Generate keys to access the Nexora API programmatically." />
 
               <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:"0.75rem" }}>
                 <button className="sec-btn sec-btn--gold" onClick={() => setShowCreateKey(true)}>

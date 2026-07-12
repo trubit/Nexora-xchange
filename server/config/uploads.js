@@ -4,7 +4,7 @@
  * Uploads are stored OUTSIDE the project folder so they never
  * appear in the workspace, git status, or IDE file tree.
  *
- * Default location:  <project-parent>/trusonx-uploads/
+ * Default location:  <project-parent>/nexora-uploads/
  * Override via env:  UPLOADS_DIR=/absolute/path/to/uploads
  */
 
@@ -14,13 +14,13 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// One level above the project root  →  ../trusonx-uploads
+// One level above the project root  →  ../nexora-uploads
 const DEFAULT_UPLOADS_DIR = path.resolve(
   __dirname,       // server/config/
   "..",            // server/
   "..",            // project root
   "..",            // parent of project
-  "trusonx-uploads"
+  "nexora-uploads"
 );
 
 export const UPLOADS_ROOT = process.env.UPLOADS_DIR

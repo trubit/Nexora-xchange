@@ -69,7 +69,7 @@ const Subscription = () => {
             fullName: "Subscription Waitlist User",
             email: sanitizedEmail,
             subject: "Subscription Waitlist Request",
-            message: "Please add this email to the TrusonXchanger Subscription waitlist.",
+            message: "Please add this email to the Nexora Subscription waitlist.",
           });
         } else {
           throw error;
@@ -77,7 +77,7 @@ const Subscription = () => {
       }
       if (response.data?.success) {
         setSubmitStatus("success");
-        setStatusMessage("Thank you. You have been added to the TrusonXchanger Subscription waitlist.");
+        setStatusMessage("Thank you. You have been added to the Nexora Subscription waitlist.");
         setEmail("");
       } else {
         setSubmitStatus("error");
@@ -102,7 +102,7 @@ const Subscription = () => {
             </h1>
             <p className="sub-coming-soon">COMING SOON</p>
             <p className="sub-intro">
-              TrusonXchanger is preparing premium membership infrastructure to
+              Nexora is preparing premium membership infrastructure to
               support professional traders and institutions. Subscription
               services will unlock advanced platform capabilities, including
               reduced trading fees, VIP trading access, advanced analytics,
@@ -162,7 +162,7 @@ const Subscription = () => {
           </section>
 
           <p className="sub-footer-note">
-            TrusonXchanger Subscription Services are currently in development
+            Nexora Subscription Services are currently in development
             and will become available in an upcoming release.
           </p>
         </Container>

@@ -30,10 +30,10 @@ const About = () => {
             <Col xs={12} lg={11} className="text-center about-hero__content">
               <img
                 src={mainLogo}
-                alt="TrusonXchanger"
+                alt="Nexora"
                 className="about-hero__top-logo"
               />
-              <p className="about-hero__brand">TrusonXchanger</p>
+              <p className="about-hero__brand">Nexora</p>
               <h1 className="about-hero__headline">
                 Beyond Trading. Shaping The Future Of FinTech.
               </h1>

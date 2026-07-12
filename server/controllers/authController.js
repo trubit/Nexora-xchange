@@ -1,16 +1,17 @@
-﻿import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import multer from "multer";
 import { OAuth2Client } from "google-auth-library";
 import User from "../models/User.js";
-import { signToken, revokeToken } from "../utils/jwt.js";
+import { signToken, revokeToken, verifyToken, isTokenRevoked } from "../utils/jwt.js";
 import { sendEmail } from "../utils/email.js";
 import { clearAuthAnomaly, logAuthAnomaly } from "../middleware/security.js";
 import { recordLogin } from "../services/riskService.js";
 import { auditAuth } from "../services/auditService.js";
 import { createSession, isNewDevice } from "../services/securityService.js";
+import logger from "../config/logger.js";
 
 // ── Avatar upload ─────────────────────────────────────────────────────────────
 import { AVATAR_DIR, deleteUploadedFile } from "../config/uploads.js";
@@ -276,9 +277,9 @@ const createEmailVerifyCode = () => {
 // Send a reset link email (HTML + plain text).
 const sendPasswordResetEmail = async (user, token, frontendUrl = FRONTEND_URL) => {
   const resetUrl = buildResetUrl(token, frontendUrl);
-  const subject = "Reset your TrusonXchanger password";
+  const subject = "Reset your Nexora password";
   const text = [
-    "You requested a password reset for your TrusonXchanger account.",
+    "You requested a password reset for your Nexora account.",
     "",
     "Reset your password using this link:",
     resetUrl,
@@ -286,7 +287,7 @@ const sendPasswordResetEmail = async (user, token, frontendUrl = FRONTEND_URL) =
     "If you did not request this, you can ignore this message.",
   ].join("\n");
   const html = `
-    <p>You requested a password reset for your TrusonXchanger account.</p>
+    <p>You requested a password reset for your Nexora account.</p>
     <p>Use the button or copy/paste the full link below:</p>
     <p style="margin:16px 0;">
       <a href="${resetUrl}" style="display:inline-block;padding:12px 18px;background:#198754;color:#fff;text-decoration:none;border-radius:6px;">
@@ -302,9 +303,9 @@ const sendPasswordResetEmail = async (user, token, frontendUrl = FRONTEND_URL) =
 
 // Send a verification code email (HTML + plain text).
 const sendEmailVerificationEmail = async (user, code) => {
-  const subject = "Your TrusonXchanger verification code";
+  const subject = "Your Nexora verification code";
   const text = [
-    "Welcome to TrusonXchanger!",
+    "Welcome to Nexora!",
     "",
     "Use this verification code to confirm your email address:",
     code,
@@ -313,7 +314,7 @@ const sendEmailVerificationEmail = async (user, code) => {
     "If you did not create this account, you can ignore this message.",
   ].join("\n");
   const html = `
-    <p>Welcome to TrusonXchanger!</p>
+    <p>Welcome to Nexora!</p>
     <p>Use this verification code to confirm your email address:</p>
     <p style="font-size:24px;font-weight:700;letter-spacing:3px;margin:16px 0;">
       ${code}
@@ -382,7 +383,7 @@ export const register = async (req, res) => {
   });
 
   void sendEmailVerificationEmail(user, code).catch((error) => {
-    console.error("Email verification send failed:", error?.message || error);
+    logger.error({ err: error }, "Email verification send failed.");
   });
 
   // Return a safe version of the user (no password).
@@ -439,7 +440,7 @@ export const resendEmailVerification = async (req, res) => {
       clearAuthAnomaly(req);
     })
     .catch((error) => {
-      console.error("Email verification resend failed:", error?.message || error);
+      logger.error({ err: error }, "Email verification resend failed.");
     });
 
   return res.json({
@@ -553,8 +554,7 @@ export const googleAuth = async (req, res) => {
     const token = signToken({ sub: user.id, role: user.role });
     return res.json({ user: toSafeUser(user), token });
   } catch (error) {
-    // Token verification failed.
-    console.error("Google auth failed:", error?.message || error);
+    logger.error({ err: error }, "Google auth failed.");
     logAuthAnomaly(req, "google-verify-failed");
     const rawMessage = String(error?.message || "").toLowerCase();
     const hasAudienceIssue =
@@ -709,10 +709,7 @@ export const googleOAuthCallback = async (req, res) => {
       `${frontendUrl}/login?code=${encodeURIComponent(oauthCode)}&redirect=${encodeURIComponent("/Dashboard")}`,
     );
   } catch (error) {
-    console.error(
-      "Google OAuth callback failed:",
-      error?.response?.data || error?.message || error,
-    );
+    logger.error({ err: error }, "Google OAuth callback failed.");
     logAuthAnomaly(req, "google-callback-failed");
     const reason =
       error?.response?.data?.error ||
@@ -921,10 +918,7 @@ export const requestPasswordReset = async (req, res) => {
 
   // Send reset email in background to avoid blocking API response on SMTP latency.
   void sendPasswordResetEmail(user, token, safeFrontendUrl).catch((error) => {
-    console.error(
-      "Password reset email failed:",
-      error?.message || error,
-    );
+    logger.error({ err: error }, "Password reset email failed.");
   });
 
   // Always return the same success message.
@@ -1024,9 +1018,42 @@ export const resendEmailVerificationMe = async (req, res) => {
   await user.save();
 
   void sendEmailVerificationEmail(user, code).catch((err) => {
-    console.error("Email verification send failed:", err?.message || err);
+    logger.error({ err }, "Email verification send failed.");
   });
 
   return res.json({ message: "Verification code sent. Check your inbox." });
+};
+
+// POST /api/auth/refresh — exchange a valid token for a fresh one.
+// The client stores the access token under "refreshToken" key (there is no
+// separate refresh token in this system). We verify it, check it is not
+// revoked, and issue a replacement with a new jti.
+export const refreshToken = async (req, res) => {
+  const incoming = req.body?.refreshToken;
+  if (!incoming) {
+    return res.status(400).json({ message: "Refresh token is required." });
+  }
+
+  let decoded;
+  try {
+    decoded = verifyToken(incoming);
+  } catch {
+    return res.status(401).json({ message: "Invalid or expired token." });
+  }
+
+  if (await isTokenRevoked(decoded.jti)) {
+    return res.status(401).json({ message: "Token has been revoked." });
+  }
+
+  const user = await User.findById(decoded.sub).lean();
+  if (!user || user.status === "frozen") {
+    return res.status(401).json({ message: "Account is not active." });
+  }
+
+  // Invalidate the old token so it cannot be reused.
+  await revokeToken(decoded, "refresh");
+
+  const newToken = signToken({ sub: user._id, role: user.role });
+  return res.json({ token: newToken, refreshToken: newToken });
 };
 

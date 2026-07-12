@@ -1,4 +1,4 @@
-.sub-page {
+﻿.sub-page {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -6,8 +6,8 @@
   background:
     radial-gradient(
       900px 620px at 14% -12%,
-      rgba(0, 214, 160, 0.18),
-      rgba(0, 214, 160, 0) 66%
+      rgba(240, 185, 11, 0.18),
+      rgba(240, 185, 11, 0) 66%
     ),
     radial-gradient(
       820px 560px at 94% 12%,
@@ -33,7 +33,7 @@
   height: min(38vw, 520px);
   top: -170px;
   right: -130px;
-  background: rgba(0, 214, 160, 0.16);
+  background: rgba(240, 185, 11, 0.16);
   animation: subFloatGlowA 10s ease-in-out infinite alternate;
 }
 
@@ -42,7 +42,7 @@
   height: min(30vw, 400px);
   left: -90px;
   bottom: 9%;
-  background: rgba(0, 214, 160, 0.13);
+  background: rgba(240, 185, 11, 0.13);
   animation: subFloatGlowB 12s ease-in-out infinite alternate;
 }
 
@@ -78,7 +78,7 @@
   height: 1px;
   background: linear-gradient(
     90deg,
-    rgba(0, 214, 160, 0.53),
+    rgba(240, 185, 11, 0.53),
     rgba(255, 255, 255, 0)
   );
   pointer-events: none;
@@ -89,9 +89,9 @@
   margin: 0;
   padding: 0.32rem 0.78rem;
   border-radius: 999px;
-  border: 1px solid rgba(0, 214, 160, 0.35);
-  background: rgba(0, 214, 160, 0.1);
-  color: #9bf4d8;
+  border: 1px solid rgba(240, 185, 11, 0.35);
+  background: rgba(240, 185, 11, 0.1);
+  color: #f0b90b;
   font-size: 0.73rem;
   font-weight: 700;
   letter-spacing: 0.13em;
@@ -110,7 +110,7 @@
 
 .sub-coming-soon {
   margin: 0.8rem 0 0;
-  color: #00d6a0;
+  color: #f0b90b;
   font-size: clamp(0.84rem, 0.7vw + 0.6rem, 1rem);
   font-weight: 800;
   letter-spacing: 0.17em;
@@ -167,11 +167,11 @@
 
 .sub-feature-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(0, 214, 160, 0.45);
+  border-color: rgba(240, 185, 11, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 20px 38px rgba(0, 0, 0, 0.36),
-    0 0 30px rgba(0, 214, 160, 0.11);
+    0 0 30px rgba(240, 185, 11, 0.11);
 }
 
 .sub-feature-card h3 {
@@ -229,43 +229,37 @@
 }
 
 .sub-form input:focus-visible {
-  border-color: rgba(0, 214, 160, 0.62);
-  box-shadow: 0 0 0 3px rgba(0, 214, 160, 0.16);
+  border-color: rgba(240, 185, 11, 0.62);
+  box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.16);
   outline: none;
 }
 
 .sub-form button {
-  border: 1px solid rgba(0, 214, 160, 0.5);
+  border: 1px solid #f0b90b;
   border-radius: 12px;
   padding: 0.76rem 1.2rem;
-  color: #edfff8;
+  color: #0b0e11;
   font-weight: 700;
   letter-spacing: 0.01em;
-  background:
-    linear-gradient(140deg, rgba(0, 214, 160, 0.29), rgba(0, 214, 160, 0.2)),
-    rgba(6, 13, 18, 0.85);
-  box-shadow:
-    0 8px 20px rgba(0, 214, 160, 0.2),
-    inset 0 0 18px rgba(0, 214, 160, 0.18);
+  background: linear-gradient(135deg, #f0b90b 0%, #d99c00 100%);
+  box-shadow: 0 6px 18px rgba(240, 185, 11, 0.22);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
-    border-color 0.25s ease;
+    background 0.25s ease;
 }
 
 .sub-form button:hover {
   transform: translateY(-2px);
-  border-color: rgba(128, 252, 218, 0.76);
-  box-shadow:
-    0 13px 26px rgba(0, 214, 160, 0.26),
-    inset 0 0 24px rgba(0, 214, 160, 0.2);
+  background: linear-gradient(135deg, #f5ca2e 0%, #e6a800 100%);
+  box-shadow: 0 10px 24px rgba(240, 185, 11, 0.32);
 }
 
 .sub-form button:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 3px rgba(0, 214, 160, 0.2),
-    0 10px 24px rgba(0, 214, 160, 0.25);
+    0 0 0 3px rgba(240, 185, 11, 0.2),
+    0 10px 24px rgba(240, 185, 11, 0.25);
 }
 
 .sub-form button:disabled {
@@ -282,7 +276,7 @@
 }
 
 .sub-success {
-  color: #8ef2d1;
+  color: #0ecb81;
 }
 
 .sub-error {
@@ -371,9 +365,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .sub-page { background: #f5f7fa; color: #1e2329; }
 html.light .sub-page h1,

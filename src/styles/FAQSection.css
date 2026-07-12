@@ -1,12 +1,12 @@
-/* FAQSection.css — Premium fit with the homepage design language */
+﻿/* FAQSection.css â€” Premium fit with the homepage design language */
 
 .faq-section {
   scroll-margin-top: 100px;
   background:
     radial-gradient(
       820px 420px at 4% 4%,
-      rgba(0, 214, 160, 0.08),
-      rgba(0, 214, 160, 0) 66%
+      rgba(240, 185, 11, 0.08),
+      rgba(240, 185, 11, 0) 66%
     ),
     radial-gradient(
       720px 400px at 98% 96%,
@@ -105,18 +105,18 @@
 }
 
 .faq-item:hover {
-  border-color: rgba(0, 214, 160, 0.35);
+  border-color: rgba(240, 185, 11, 0.35);
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 214, 160, 0.1),
+    0 0 0 1px rgba(240, 185, 11, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .faq-item.faq-open {
-  border-color: rgba(0, 214, 160, 0.45);
+  border-color: rgba(240, 185, 11, 0.45);
   box-shadow:
     0 14px 34px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 214, 160, 0.15),
+    0 0 0 1px rgba(240, 185, 11, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -142,10 +142,10 @@
   align-items: center;
   background: linear-gradient(
     145deg,
-    rgba(0, 214, 160, 0.18),
-    rgba(0, 214, 160, 0.06)
+    rgba(240, 185, 11, 0.18),
+    rgba(240, 185, 11, 0.06)
   );
-  border: 1px solid rgba(0, 214, 160, 0.35);
+  border: 1px solid rgba(240, 185, 11, 0.35);
   border-radius: 10px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
   color: #00b894;

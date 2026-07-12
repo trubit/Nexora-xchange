@@ -1,4 +1,4 @@
-.tx-signup-page {
+﻿.tx-signup-page {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
@@ -9,9 +9,9 @@
   position: absolute;
   inset: -14%;
   background:
-    radial-gradient(42% 32% at 10% 8%, rgba(0, 255, 136, 0.16), rgba(0, 255, 136, 0)),
-    radial-gradient(34% 30% at 86% 18%, rgba(0, 255, 136, 0.11), rgba(0, 255, 136, 0)),
-    radial-gradient(48% 45% at 45% 95%, rgba(7, 84, 58, 0.21), rgba(7, 84, 58, 0)),
+    radial-gradient(42% 32% at 10% 8%, rgba(240, 185, 11, 0.16), rgba(240, 185, 11, 0)),
+    radial-gradient(34% 30% at 86% 18%, rgba(240, 185, 11, 0.11), rgba(240, 185, 11, 0)),
+    radial-gradient(48% 45% at 45% 95%, rgba(26, 20, 3, 0.21), rgba(26, 20, 3, 0)),
     linear-gradient(165deg, #05080d 0%, #090d13 44%, #0b1118 100%);
   animation: tx-signup-ambient 20s ease-in-out infinite alternate;
   pointer-events: none;
@@ -29,7 +29,7 @@
 .tx-signup-card {
   width: min(100%, 42rem);
   border-radius: 1.4rem;
-  border: 1px solid rgba(135, 180, 160, 0.28);
+  border: 1px solid rgba(180, 140, 0, 0.28);
   background:
     linear-gradient(155deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.01)),
     rgba(10, 16, 23, 0.78);
@@ -38,7 +38,7 @@
   box-shadow:
     0 36px 58px rgba(0, 0, 0, 0.46),
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    0 0 0 1px rgba(0, 255, 136, 0.08);
+    0 0 0 1px rgba(240, 185, 11, 0.08);
   padding: clamp(1.1rem, 2.4vw, 1.9rem);
   animation:
     tx-signup-fade 520ms ease-out,
@@ -73,13 +73,13 @@
 .tx-signup-page .google-auth-card {
   background:
     linear-gradient(145deg, rgba(19, 27, 34, 0.92), rgba(12, 20, 26, 0.92));
-  border: 1px solid rgba(101, 175, 145, 0.35);
+  border: 1px solid rgba(180, 140, 0, 0.35);
   border-radius: 0.95rem;
 }
 
 .tx-signup-page .google-auth-pill {
-  background: rgba(0, 255, 136, 0.18);
-  color: #dbfff0;
+  background: rgba(240, 185, 11, 0.18);
+  color: #f8d33a;
 }
 
 .tx-signup-page .google-auth-card-header,
@@ -104,7 +104,7 @@
   content: "";
   height: 1px;
   flex: 1;
-  background: linear-gradient(90deg, rgba(0, 255, 136, 0), rgba(0, 255, 136, 0.6), rgba(0, 255, 136, 0));
+  background: linear-gradient(90deg, rgba(240, 185, 11, 0), rgba(240, 185, 11, 0.6), rgba(240, 185, 11, 0));
 }
 
 .tx-signup-grid {
@@ -142,8 +142,8 @@
 }
 
 .tx-signup-group .form-control:focus {
-  border-color: rgba(0, 255, 136, 0.72);
-  box-shadow: 0 0 0 0.2rem rgba(0, 255, 136, 0.18);
+  border-color: rgba(240, 185, 11, 0.72);
+  box-shadow: 0 0 0 0.2rem rgba(240, 185, 11, 0.18);
   background: rgba(14, 22, 30, 0.94);
   color: #f3f9fd;
 }
@@ -164,8 +164,8 @@
 .tx-signup-password-toggle:hover,
 .tx-signup-password-toggle:focus-visible {
   background: rgba(16, 27, 35, 0.92);
-  color: #e4fdf2;
-  border-color: rgba(0, 255, 136, 0.58);
+  color: #fff8e0;
+  border-color: rgba(240, 185, 11, 0.58);
   box-shadow: none;
 }
 
@@ -200,7 +200,7 @@
 
 .tx-signup-strength-3 {
   width: 100%;
-  background: #00dc7f;
+  background: #0ecb81;
 }
 
 .tx-signup-strength-label {
@@ -222,8 +222,8 @@
 }
 
 .tx-signup-checks .form-check-input:checked {
-  background-color: #00ca72;
-  border-color: #00ca72;
+  background-color: #f0b90b;
+  border-color: #f0b90b;
 }
 
 .tx-signup-checks .form-check-label {
@@ -233,14 +233,14 @@
 }
 
 .tx-signup-link-inline {
-  color: #8fffd0;
+  color: #f8d33a;
   text-decoration: none;
   font-weight: 600;
 }
 
 .tx-signup-link-inline:hover,
 .tx-signup-link-inline:focus-visible {
-  color: #c7ffea;
+  color: #f8d33a;
   text-decoration: underline;
 }
 
@@ -253,29 +253,28 @@
 .tx-signup-submit {
   width: 100%;
   min-height: 2.95rem;
-  border: 1px solid rgba(0, 255, 136, 0.58);
+  border: 1px solid #f0b90b;
   border-radius: 0.9rem;
-  background: linear-gradient(145deg, rgba(0, 205, 117, 0.55), rgba(0, 155, 88, 0.4));
-  color: #f5fffb;
+  background: linear-gradient(135deg, #f0b90b 0%, #d99c00 100%);
+  color: #0b0e11;
   font-weight: 700;
   letter-spacing: 0.012em;
   box-shadow:
-    0 18px 32px rgba(1, 73, 45, 0.35),
+    0 8px 24px rgba(240, 185, 11, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition:
     transform 160ms ease,
     box-shadow 160ms ease,
-    border-color 160ms ease,
     filter 160ms ease;
 }
 
 .tx-signup-submit:hover,
 .tx-signup-submit:focus-visible {
   transform: translateY(-1px);
-  border-color: rgba(119, 255, 197, 0.9);
+  background: linear-gradient(135deg, #f5ca2e 0%, #e6a800 100%);
   box-shadow:
-    0 22px 34px rgba(1, 73, 45, 0.4),
-    0 0 22px rgba(0, 255, 136, 0.2);
+    0 12px 32px rgba(240, 185, 11, 0.35),
+    0 0 20px rgba(240, 185, 11, 0.2);
   filter: brightness(1.04);
 }
 
@@ -292,14 +291,14 @@
 }
 
 .tx-signup-footer a {
-  color: #92ffd2;
+  color: #f8d33a;
   text-decoration: none;
   font-weight: 600;
 }
 
 .tx-signup-footer a:hover,
 .tx-signup-footer a:focus-visible {
-  color: #d5ffef;
+  color: #f8d33a;
   text-decoration: underline;
 }
 
@@ -359,9 +358,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .tx-signup-page {
   background: linear-gradient(135deg, #f5f7fa 0%, #eef0f4 100%);
@@ -381,22 +380,22 @@ html.light .tx-signup-inp {
   color: #1e2329;
 }
 html.light .tx-signup-inp:focus {
-  border-color: #00d6a0;
+  border-color: #f0b90b;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(0,214,160,0.1);
+  box-shadow: 0 0 0 3px rgba(240,185,11,0.1);
 }
 html.light .tx-signup-inp::placeholder { color: #b7bdc6; }
 
 html.light .tx-signup-btn {
-  background: linear-gradient(135deg, #00d6a0 0%, #00b886 100%);
+  background: linear-gradient(135deg, #f0b90b 0%, #d99c00 100%);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(0,214,160,0.3);
+  box-shadow: 0 4px 14px rgba(240,185,11,0.3);
 }
-html.light .tx-signup-btn:hover { box-shadow: 0 6px 20px rgba(0,214,160,0.4); }
+html.light .tx-signup-btn:hover { box-shadow: 0 6px 20px rgba(240,185,11,0.4); }
 
 html.light .tx-signup-terms { color: #707a8a; }
-html.light .tx-signup-terms a { color: #00a872; }
-html.light .tx-signup-link  { color: #00a872; }
+html.light .tx-signup-terms a { color: #d99c00; }
+html.light .tx-signup-link  { color: #d99c00; }
 html.light .tx-signup-link:hover { color: #007d58; }
 
 html.light .tx-signup-strength-bar { background: #f0f1f2; }

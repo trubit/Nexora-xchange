@@ -1,6 +1,6 @@
-.anti-bribery-policy-page {
+﻿.anti-bribery-policy-page {
   background:
-    radial-gradient(980px 620px at 8% -10%, rgba(0, 214, 160, 0.16), rgba(0, 214, 160, 0) 66%),
+    radial-gradient(980px 620px at 8% -10%, rgba(240, 185, 11, 0.16), rgba(240, 185, 11, 0) 66%),
     radial-gradient(1020px 620px at 98% 8%, rgba(66, 97, 116, 0.23), rgba(66, 97, 116, 0) 72%),
     #05090d;
   min-height: 100vh;
@@ -33,7 +33,7 @@
   inset: 0 auto auto 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, rgba(0, 214, 160, 0.42), rgba(255, 255, 255, 0));
+  background: linear-gradient(90deg, rgba(240, 185, 11, 0.42), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
 
@@ -135,14 +135,14 @@
   }
 }
 
-/* ═══ LIGHT MODE ═══ */
+/* â•â•â• LIGHT MODE â•â•â• */
 html.light { background: #fafafa; color: #1e2329; }
 html.light .policy-page,
 html.light .legal-page,
 html.light .doc-page { background: #fafafa; color: #1e2329; }
 html.light h1, html.light h2, html.light h3, html.light h4 { color: #1e2329; }
 html.light p, html.light li { color: #474d57; }
-html.light a { color: #00a872; }
+html.light a { color: #d99c00; }
 html.light a:hover { color: #007d58; }
 html.light hr, html.light .divider { border-color: #eaecef; }
 html.light .section-card,

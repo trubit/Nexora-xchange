@@ -5,14 +5,14 @@ import "../../styles/FAQSection.css";
 
 const faqData = [
   {
-    question: "What is TrusonXchanger.io?",
+    question: "What is Nexora.io?",
     answer:
-      "TrusonXchanger is a modern cryptocurrency trading platform designed to help users buy, sell, and manage digital assets efficiently. It provides advanced trading tools, real-time market data, and seamless execution across multiple exchanges.",
+      "Nexora is a modern cryptocurrency trading platform designed to help users buy, sell, and manage digital assets efficiently. It provides advanced trading tools, real-time market data, and seamless execution across multiple exchanges.",
   },
   {
     question: "What fees should I expect on a cryptocurrency exchange?",
     answer:
-      "TrusonXchanger offers competitive and transparent fees, including low trading fees, minimal withdrawal charges, and no hidden costs. Fees may vary slightly depending on the transaction type and market conditions.",
+      "Nexora offers competitive and transparent fees, including low trading fees, minimal withdrawal charges, and no hidden costs. Fees may vary slightly depending on the transaction type and market conditions.",
   },
   {
     question: "How do I deposit and withdraw funds?",
@@ -22,37 +22,37 @@ const faqData = [
   {
     question: "How quickly are transactions processed on the exchange?",
     answer:
-      "Transactions on TrusonXchanger are processed in real-time or near-instantly, depending on network conditions and the selected asset. The platform is optimised for speed and efficiency.",
+      "Transactions on Nexora are processed in real-time or near-instantly, depending on network conditions and the selected asset. The platform is optimised for speed and efficiency.",
   },
   {
-    question: "Does TrusonXchanger offer customer support?",
+    question: "Does Nexora offer customer support?",
     answer:
-      "Yes, TrusonXchanger provides reliable customer support through multiple channels, including live chat and email, ensuring quick resolution of user issues and inquiries.",
+      "Yes, Nexora provides reliable customer support through multiple channels, including live chat and email, ensuring quick resolution of user issues and inquiries.",
   },
   {
-    question: "What types of cryptocurrencies can I trade on TrusonXchanger?",
+    question: "What types of cryptocurrencies can I trade on Nexora?",
     answer:
-      "TrusonXchanger supports a wide range of cryptocurrencies, including major coins like Bitcoin (BTC), Ethereum (ETH), and stablecoins, along with a growing list of altcoins.",
+      "Nexora supports a wide range of cryptocurrencies, including major coins like Bitcoin (BTC), Ethereum (ETH), and stablecoins, along with a growing list of altcoins.",
   },
   {
     question: "How do I ensure the security of my funds on the exchange?",
     answer:
-      "TrusonXchanger uses advanced security measures such as encryption, secure wallets, and authentication systems to protect user funds and data. Users are also encouraged to enable additional security features.",
+      "Nexora uses advanced security measures such as encryption, secure wallets, and authentication systems to protect user funds and data. Users are also encouraged to enable additional security features.",
   },
   {
     question: "What should I do if I have issues with my account?",
     answer:
-      "If you encounter any issues, you can contact the TrusonXchanger support team directly through the platform. The support team is available to assist with account access, transactions, and technical concerns.",
+      "If you encounter any issues, you can contact the Nexora support team directly through the platform. The support team is available to assist with account access, transactions, and technical concerns.",
   },
   {
-    question: "Are there trading limits on TrusonXchanger?",
+    question: "Are there trading limits on Nexora?",
     answer:
       "Trading limits may vary based on account level and verification status. Higher limits are available for verified users to support larger transactions.",
   },
   {
-    question: "Can I use TrusonXchanger from any country?",
+    question: "Can I use Nexora from any country?",
     answer:
-      "TrusonXchanger is accessible in many regions worldwide. However, availability may vary depending on local regulations and compliance requirements.",
+      "Nexora is accessible in many regions worldwide. However, availability may vary depending on local regulations and compliance requirements.",
   },
 ];
 

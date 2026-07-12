@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import LangCurrencyModal from "../common/LangCurrencyModal";
+import NexoraLogo from "../common/NexoraLogo";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../styles/mini-header.css";
 
@@ -26,10 +27,7 @@ const MiniHeader = ({ showBreadcrumb = true }) => {
             to="/"
             className="tx-mini-brand"
           >
-            <span className="tx-mini-brand-mark" aria-hidden="true">
-              TX
-            </span>
-            <span className="tx-mini-brand-text">TrusonXchanger</span>
+            <NexoraLogo size={28} />
           </Navbar.Brand>
 
           <Navbar.Toggle

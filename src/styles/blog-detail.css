@@ -1,4 +1,4 @@
-.blog-detail-page {
+﻿.blog-detail-page {
   background: radial-gradient(circle at top, #121821 0%, #0b0e11 45%, #080a0d 100%);
   color: #e7edf5;
   min-height: 100vh;
@@ -27,7 +27,7 @@
 .main-post::before {
   background: linear-gradient(
     135deg,
-    rgba(0, 214, 160, 0.22),
+    rgba(240, 185, 11, 0.22),
     rgba(126, 242, 184, 0.08),
     rgba(255, 255, 255, 0)
   );
@@ -99,14 +99,14 @@
 }
 
 .post-meta-chip i {
-  color: #00d6a0;
+  color: #f0b90b;
   font-size: 0.74rem;
 }
 
 .post-category.post-meta-chip {
-  background: rgba(0, 214, 160, 0.17) !important;
-  border: 1px solid rgba(0, 214, 160, 0.44);
-  color: #9df3d4;
+  background: rgba(240, 185, 11, 0.17) !important;
+  border: 1px solid rgba(240, 185, 11, 0.44);
+  color: #f0b90b;
   font-weight: 700;
   letter-spacing: 0.05em;
   padding: 6px 12px;
@@ -201,7 +201,7 @@
 }
 
 .post-bullet-list li::marker {
-  color: #00d6a0;
+  color: #f0b90b;
 }
 
 .post-numbered-list li::marker {
@@ -221,7 +221,7 @@
 }
 
 .post-content ul.checklist li::before {
-  color: #00d6a0;
+  color: #f0b90b;
   content: "\2713";
   font-weight: 700;
   left: 0;
@@ -480,9 +480,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LIGHT MODE OVERRIDES  (html.light)
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 html.light .blog-detail-page { background: #fafafa; color: #1e2329; }
 html.light .blog-detail-title { color: #1e2329; }
@@ -492,8 +492,8 @@ html.light .blog-detail-body p { color: #474d57; }
 html.light .blog-detail-body h2,
 html.light .blog-detail-body h3 { color: #1e2329; }
 html.light .blog-detail-body blockquote {
-  border-left-color: #00d6a0;
-  background: rgba(0,214,160,0.05);
+  border-left-color: #f0b90b;
+  background: rgba(240,185,11,0.05);
   color: #474d57;
 }
 html.light .blog-detail-body code {

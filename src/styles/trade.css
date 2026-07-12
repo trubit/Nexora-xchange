@@ -1,4 +1,4 @@
-.tx-trade-page {
+﻿.tx-trade-page {
   --tx-bg: #0b1018;
   --tx-panel: #121924;
   --tx-panel-soft: #181f2b;
@@ -509,7 +509,7 @@ html.light .tx-stat-val     { color: #474d57; }
 html.light .tx-ob-panel { background: #ffffff; border-color: rgba(0,0,0,0.1); }
 html.light .tx-ob-th    { color: #707a8a; border-bottom-color: rgba(0,0,0,0.08); }
 html.light .tx-ob-row:hover { background: rgba(0,0,0,0.03); }
-html.light .tx-ob-price-buy  { color: #0aab6b; }
+html.light .tx-ob-price-buy  { color: #0ecb81; }
 html.light .tx-ob-price-sell { color: #d93550; }
 html.light .tx-ob-spread { background: #f5f7fa; border-color: rgba(0,0,0,0.08); color: #474d57; }
 

@@ -1,4 +1,4 @@
-﻿import { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import MainLayout from "../layouts/MainLayout";

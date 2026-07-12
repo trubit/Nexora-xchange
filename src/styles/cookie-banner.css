@@ -1,5 +1,5 @@
-/*
-  Premium Cookie Banner Policy Page Styles for TrusonXchanger
+﻿/*
+  Premium Cookie Banner Policy Page Styles for Nexora
   ...existing code...
 */
 
@@ -7,8 +7,8 @@
   background:
     radial-gradient(
       980px 620px at 8% -12%,
-      rgba(0, 214, 160, 0.16),
-      rgba(0, 214, 160, 0) 66%
+      rgba(240, 185, 11, 0.16),
+      rgba(240, 185, 11, 0) 66%
     ),
     radial-gradient(
       1020px 620px at 98% 8%,
@@ -35,7 +35,7 @@
   border-radius: 24px;
   box-shadow:
     0 30px 62px rgba(0, 0, 0, 0.44),
-    0 0 32px 0 rgba(0, 214, 160, 0.08),
+    0 0 32px 0 rgba(240, 185, 11, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.055);
   padding: clamp(1.55rem, 3.4vw, 2.55rem) clamp(1.15rem, 3vw, 2.15rem)
     clamp(1.75rem, 3.8vw, 2.8rem);
@@ -50,7 +50,7 @@
   height: 1px;
   background: linear-gradient(
     90deg,
-    rgba(0, 214, 160, 0.45),
+    rgba(240, 185, 11, 0.45),
     rgba(255, 255, 255, 0)
   );
   pointer-events: none;
@@ -122,7 +122,7 @@
   background: rgba(10, 16, 22, 0.98);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 214, 160, 0.07);
+  box-shadow: 0 2px 12px rgba(240, 185, 11, 0.07);
 }
 
 .cookie-table th,
@@ -133,7 +133,7 @@
 }
 
 .cookie-table th {
-  background: rgba(0, 214, 160, 0.13);
+  background: rgba(240, 185, 11, 0.13);
   color: #f7fbff;
   font-weight: 700;
   font-size: 1.05rem;

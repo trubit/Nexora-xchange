@@ -8,12 +8,12 @@ const Terms = ({ showBreadcrumb = false }) => {
       <MiniHeader showBreadcrumb={showBreadcrumb} />
       <div className="container py-5">
         <div className="mx-auto" style={{ maxWidth: "920px" }}>
-          <h1 className="fw-bold mb-3">TrusonXchanger Terms and Conditions</h1>
+          <h1 className="fw-bold mb-3">Nexora Terms and Conditions</h1>
           <p className="text-muted mb-4">Effective date: March 7, 2026</p>
 
           <p>
             These Terms and Conditions ("Terms") govern your access to and use
-            of TrusonXchanger, including our websites, mobile applications, and
+            of Nexora, including our websites, mobile applications, and
             related services (collectively, the "Service"). By accessing or
             using the Service, you agree to be bound by these Terms.
           </p>
@@ -35,7 +35,7 @@ const Terms = ({ showBreadcrumb = false }) => {
 
           <h2 className="fw-semibold mt-4">3. Compliance, KYC, and AML</h2>
           <p>
-            TrusonXchanger may require identity verification and other
+            Nexora may require identity verification and other
             compliance checks to meet regulatory requirements. We may suspend or
             restrict your account if verification is incomplete or if we suspect
             unlawful activity.
@@ -77,7 +77,7 @@ const Terms = ({ showBreadcrumb = false }) => {
           <h2 className="fw-semibold mt-4">8. Intellectual Property</h2>
           <p>
             The Service and all associated content, trademarks, and logos are
-            the property of TrusonXchanger or its licensors. You may not copy,
+            the property of Nexora or its licensors. You may not copy,
             modify, or distribute any part of the Service without our prior
             written consent.
           </p>
@@ -98,7 +98,7 @@ const Terms = ({ showBreadcrumb = false }) => {
 
           <h2 className="fw-semibold mt-4">11. Limitation of Liability</h2>
           <p>
-            To the maximum extent permitted by law, TrusonXchanger will not be
+            To the maximum extent permitted by law, Nexora will not be
             liable for any indirect, incidental, special, or consequential
             damages, including loss of profits, data, or goodwill, arising from
             your use of the Service.
@@ -106,7 +106,7 @@ const Terms = ({ showBreadcrumb = false }) => {
 
           <h2 className="fw-semibold mt-4">12. Indemnification</h2>
           <p>
-            You agree to indemnify and hold harmless TrusonXchanger and its
+            You agree to indemnify and hold harmless Nexora and its
             affiliates from any claims, damages, losses, or expenses arising
             from your use of the Service or violation of these Terms.
           </p>

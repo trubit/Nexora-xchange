@@ -1,4 +1,4 @@
-﻿import { Container, Table } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import "../styles/whistleblowing-policy.css";
 import NewsletterSection from "../Components/home/NewsletterSection";
 import NavigationSection from "../Components/layout/NavigationSection";
@@ -17,7 +17,7 @@ const WhistleblowingPolicy = () => {
             <section className="whistleblowing-policy-section">
               <h2>1. Policy Statement</h2>
               <p>
-                TrusonXchanger FZCO ("TrusonXchanger" or the “Company”) is
+                Nexora FZCO ("Nexora" or the “Company”) is
                 committed to integrity, transparency and full compliance with
                 UAE law and Virtual Assets Regulatory Authority (VARA)
                 requirements. This Policy provides a confidential, secure path
@@ -31,7 +31,7 @@ const WhistleblowingPolicy = () => {
               <ul>
                 <li>
                   Encourage good-faith disclosure of misconduct that could harm
-                  clients, markets or TrusonXchanger.
+                  clients, markets or Nexora.
                 </li>
                 <li>
                   Ensure reports are assessed promptly, impartially and
@@ -54,7 +54,7 @@ const WhistleblowingPolicy = () => {
                 </li>
                 <li>
                   Consultants, vendors, influencers, volunteers and any person
-                  acting for, or on behalf of, TrusonXchanger, and it covers the
+                  acting for, or on behalf of, Nexora, and it covers the
                   following concerns (non-exhaustive):
                   <ul>
                     <li>Fraud, bribery, corruption or ABC breaches</li>
@@ -153,11 +153,11 @@ const WhistleblowingPolicy = () => {
                 <li>
                   Whistleblowing Officer/MLRO
                   <ol>
-                    <li>Email: report@trusonxchanger.io</li>
+                    <li>Email: report@nexora.io</li>
                   </ol>
                 </li>
                 <li>
-                  Board Chair: Compliance@trusonxchanger.io (if Officer
+                  Board Chair: Compliance@nexora.io (if Officer
                   implicated).
                 </li>
                 <li>

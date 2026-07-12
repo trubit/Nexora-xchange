@@ -154,7 +154,7 @@ const Signup = () => {
       <main className="tx-signup-main">
         <article className="tx-signup-card" aria-labelledby="tx-signup-title">
           <header className="tx-signup-head">
-            <h1 id="tx-signup-title">Create Your TrusonXchanger Account</h1>
+            <h1 id="tx-signup-title">Create Your Nexora Account</h1>
             <p>Join a secure and global digital trading ecosystem</p>
           </header>
 

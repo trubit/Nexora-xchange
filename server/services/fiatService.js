@@ -250,9 +250,9 @@ export const initiateDeposit = async (userId, { currency, amount }) => {
 
   // Simulated bank transfer instructions (replace with real gateway payload)
   const bankDetails = {
-    USD: { bank: "Chase Bank", accountName: "TrusonXchanger Ltd", accountNumber: "6781234567", routingNumber: "021000021" },
-    EUR: { bank: "Deutsche Bank", accountName: "TrusonXchanger Ltd", iban: "DE89 3704 0044 0532 0130 00", bic: "COBADEFFXXX" },
-    NGN: { bank: "Guaranty Trust Bank", accountName: "TrusonXchanger Ltd", accountNumber: "0123456789" },
+    USD: { bank: "Chase Bank", accountName: "Nexora Ltd", accountNumber: "6781234567", routingNumber: "021000021" },
+    EUR: { bank: "Deutsche Bank", accountName: "Nexora Ltd", iban: "DE89 3704 0044 0532 0130 00", bic: "COBADEFFXXX" },
+    NGN: { bank: "Guaranty Trust Bank", accountName: "Nexora Ltd", accountNumber: "0123456789" },
   }[currency];
 
   return {

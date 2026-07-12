@@ -25,7 +25,7 @@ const TradingExecutionSection = () => {
         <header className="txe-header">
           <p className="txe-label">ORDER TYPES</p>
           <h2 className="txe-main-title">
-            Optimal Trade Execution with TrusonXchanger
+            Optimal Trade Execution with Nexora
           </h2>
         </header>
 
@@ -36,7 +36,7 @@ const TradingExecutionSection = () => {
                 <p className="txe-label">COMPREHENSIVE</p>
                 <h3 className="txe-title">Cutting-edge Trading Tools</h3>
                 <p className="txe-text">
-                  TrusonXchanger provides robust strategies, technical analysis,
+                  Nexora provides robust strategies, technical analysis,
                   real-time data, and customisable alerts to help you stay ahead
                   in fast-moving markets.
                 </p>

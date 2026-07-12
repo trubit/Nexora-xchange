@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   TRUSONXCHANGER — Notification System  (nf- prefix)
+﻿/* ═══════════════════════════════════════════════════════════════
+   NEXORA — Notification System  (nf- prefix)
    ═══════════════════════════════════════════════════════════════ */
 
 /* ─── Bell button ────────────────────────────────────────────── */
@@ -483,7 +483,7 @@ html.light .nf-page-unread { background: rgba(240,185,11,0.1); color: #c89000; }
 html.light .nf-mark-all-page-btn {
   background: rgba(14,203,129,0.08);
   border-color: rgba(14,203,129,0.25);
-  color: #0aab6b;
+  color: #0ecb81;
 }
 
 html.light .nf-filters { border-bottom-color: #eaecef; }

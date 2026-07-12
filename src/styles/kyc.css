@@ -1,4 +1,4 @@
-/* ── KYC Page ──────────────────────────────────────────────────────────────── */
+﻿/* ── KYC Page ──────────────────────────────────────────────────────────────── */
 .kyc-page {
   min-height: 100vh;
   background: #0b0e11;
@@ -620,7 +620,7 @@ html.light .kyc-drop-icon { color: #b7bdc6; }
 
 /* Status badges */
 html.light .kyc-status-pending { background: rgba(240,185,11,0.1); color: #c89000; border-color: rgba(240,185,11,0.25); }
-html.light .kyc-status-approved { background: rgba(14,203,129,0.1); color: #0aab6b; border-color: rgba(14,203,129,0.25); }
+html.light .kyc-status-approved { background: rgba(14,203,129,0.1); color: #0ecb81; border-color: rgba(14,203,129,0.25); }
 html.light .kyc-status-rejected { background: rgba(246,70,93,0.1); color: #d93550; border-color: rgba(246,70,93,0.25); }
 
 /* Nav buttons */

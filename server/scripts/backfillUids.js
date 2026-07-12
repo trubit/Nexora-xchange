@@ -5,7 +5,7 @@ import "../env.js";
 import mongoose from "mongoose";
 import User from "../models/User.js";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/trusonxchanger";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/nexora";
 
 const generateUid = async () => {
   for (let i = 0; i < 20; i++) {

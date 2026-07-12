@@ -331,7 +331,7 @@ const DashKyc = () => {
         <div className="kyc-header">
           <Link to="/Dashboard/security" className="kyc-back-link"><i className="bi bi-arrow-left" /> Security Center</Link>
           <h1 className="kyc-title">Identity Verification</h1>
-          <p className="kyc-subtitle">KYC status for your TrusonXchanger account</p>
+          <p className="kyc-subtitle">KYC status for your Nexora account</p>
         </div>
         <KycStatusScreen profile={profile} onResubmit={() => { setShowForm(true); setStep(1); setDocuments({}); setErrors({}); }} />
       </div>
@@ -557,7 +557,7 @@ const DashKyc = () => {
               <i className="bi bi-shield-lock-fill kyc-consent-icon" />
               <p>
                 By submitting, I confirm that all information provided is accurate and the documents are genuine.
-                I consent to TrusonXchanger processing my data for identity verification purposes in accordance with applicable laws.
+                I consent to Nexora processing my data for identity verification purposes in accordance with applicable laws.
               </p>
             </div>
 

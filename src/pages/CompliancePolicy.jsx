@@ -12,7 +12,7 @@ const CompliancePolicy = () => {
           <article className="compliance-policy-card">
             <h1 className="compliance-policy-title">Compliance Policy</h1>
             <p className="compliance-policy-intro">
-              TrusonXchanger FZCO (&quot;TrusonXchanger,&quot; &quot;we,&quot;
+              Nexora FZCO (&quot;Nexora,&quot; &quot;we,&quot;
               &quot;us,&quot; or &quot;our&quot;) is committed to addressing and
               resolving client concerns in a fair, transparent, and timely
               manner. This policy outlines how you may submit complaints and how
@@ -29,11 +29,11 @@ const CompliancePolicy = () => {
               </p>
               <ul>
                 <li>
-                  The quality or delivery of TrusonXchanger&apos;s services or
+                  The quality or delivery of Nexora&apos;s services or
                   processes
                 </li>
                 <li>
-                  Conduct of an employee or representative of TrusonXchanger
+                  Conduct of an employee or representative of Nexora
                 </li>
                 <li>Our complaints handling process itself</li>
               </ul>
@@ -47,7 +47,7 @@ const CompliancePolicy = () => {
               <ul>
                 <li>
                   Email: Send a detailed description to
-                  support@trusonxchanger.io
+                  support@nexora.io
                 </li>
                 <li>
                   Support Portal: Please raise a ticket through our support
@@ -60,7 +60,7 @@ const CompliancePolicy = () => {
               <h2>3. Required Information</h2>
               <p>When submitting a complaint, please include:</p>
               <ol>
-                <li>Your full name and TrusonXchanger user ID;</li>
+                <li>Your full name and Nexora user ID;</li>
                 <li>Subject, department and priority;</li>
                 <li>Contact details (email and/or phone number);</li>
                 <li>A clear description of your concern;</li>
@@ -152,7 +152,7 @@ const CompliancePolicy = () => {
                     <li>Provide contact details of the recipient VASP, and</li>
                     <li>
                       Continue to manage any portions of the complaint that
-                      remain with TrusonXchanger.
+                      remain with Nexora.
                     </li>
                   </ul>
                 </li>
@@ -162,7 +162,7 @@ const CompliancePolicy = () => {
             <section className="compliance-section">
               <h2>7. Record Retention</h2>
               <p>
-                TrusonXchanger will retain all records related to your
+                Nexora will retain all records related to your
                 complaint&mdash;documentation, correspondence, and
                 resolution&mdash;for at least eight (8) years, in compliance
                 with regulatory and internal recordkeeping requirements.

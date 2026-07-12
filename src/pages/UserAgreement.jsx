@@ -6,8 +6,8 @@ import "../styles/UserAgreement.css";
 
 const brandize = (text) =>
   text
-    .replace(/XCHANGEON/g, "TRUSONXCHANGER")
-    .replace(/XchangeOn/g, "TrusonXchanger");
+    .replace(/XCHANGEON/g, "NEXORA")
+    .replace(/XchangeOn/g, "Nexora");
 
 const UserAgreement = () => {
   return (
@@ -20,10 +20,10 @@ const UserAgreement = () => {
                 <h1 className="user-agreement-title">User Agreement</h1>
 
                 <p className="agreement-intro">
-                  This User Agreement (&ldquo;Agreement&rdquo; or &ldquo;Terms&rdquo;) is a legally binding contract between you (&ldquo;User,&rdquo; &ldquo;you,&rdquo; or &ldquo;your&rdquo;) and TrusonXchanger FZCO, a limited liability company incorporated in, and operating under laws of the Emirate of Dubai, the rules and regulations of the Dubai World Trade Centre (DWTC), and the applicable laws and regulations of the United Arab Emirates (UAE), with its registered office address at CVT-FLR05-05.10, Convention Centre, DWTC, Dubai, UAE (&ldquo;TrusonXchanger,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), governing your access to and use of all services made available through our website (https://www.xchangeon.io), APIs, mobile applications, or any other sites and/or platforms (collectively, the &ldquo;Platform&rdquo;).
+                  This User Agreement (&ldquo;Agreement&rdquo; or &ldquo;Terms&rdquo;) is a legally binding contract between you (&ldquo;User,&rdquo; &ldquo;you,&rdquo; or &ldquo;your&rdquo;) and Nexora FZCO, a limited liability company incorporated in, and operating under laws of the Emirate of Dubai, the rules and regulations of the Dubai World Trade Centre (DWTC), and the applicable laws and regulations of the United Arab Emirates (UAE), with its registered office address at CVT-FLR05-05.10, Convention Centre, DWTC, Dubai, UAE (&ldquo;Nexora,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), governing your access to and use of all services made available through our website (https://www.xchangeon.io), APIs, mobile applications, or any other sites and/or platforms (collectively, the &ldquo;Platform&rdquo;).
                 </p>
                 <p className="agreement-intro">
-                  TrusonXchanger FZCO is duly licensed and regulated by the Dubai Virtual Assets Regulatory Authority (&quot;VARA&quot;) (License No.: XXXXXXXXXX), to provide Virtual Assets (VA) Exchange Services within and from the Emirate of Dubai, operating in full compliance with the Virtual Assets and Related Activities Regulations 2023, as may be amended from time to time (the &quot;VARA Regulations&quot;).
+                  Nexora FZCO is duly licensed and regulated by the Dubai Virtual Assets Regulatory Authority (&quot;VARA&quot;) (License No.: XXXXXXXXXX), to provide Virtual Assets (VA) Exchange Services within and from the Emirate of Dubai, operating in full compliance with the Virtual Assets and Related Activities Regulations 2023, as may be amended from time to time (the &quot;VARA Regulations&quot;).
                 </p>
                 <p className="agreement-intro">
                   Under the VARA Regulations, &ldquo;Exchange Services&rdquo; refers to any of the following:
@@ -52,7 +52,7 @@ const UserAgreement = () => {
                   to learn more about VA Exchange Services.
                 </p>
                 <p className="agreement-intro">
-                  Collectively, the VA Exchange Services we provide to you are referred to, in these Terms, as &ldquo;TrusonXchanger Services.&rdquo;
+                  Collectively, the VA Exchange Services we provide to you are referred to, in these Terms, as &ldquo;Nexora Services.&rdquo;
                 </p>
                 <p className="agreement-intro">
                   By creating an account, you must provide your full name, email address, and create a password. When presented with these Terms (and related policies such as the Privacy Policy, Electronic Communications Policy, Exchange Trading Rules, and any other terms or disclosures published on the Platform), click &ldquo;I Agree&rdquo; to confirm you have read, understood, and accepted all provisions. You will be recorded in our systems as the counterparty to these Terms.
@@ -80,7 +80,7 @@ const UserAgreement = () => {
                 </section>
 
                 <section className="agreement-section">
-                  <h2>5. TRUSONXCHANGER IS NOT A FIDUCIARY</h2>
+                  <h2>5. NEXORA IS NOT A FIDUCIARY</h2>
                   <p>{brandize("XchangeOn does not act as your broker, trustee, or in any other fiduciary capacity. Every trade you execute is matched automatically by our order-matching engine based solely on the instructions you submit. Our relationship is limited to providing virtual asset exchange services as an independent technology platform operator. You retain full responsibility for all trading decisions, investment strategies, and portfolio management activities conducted through our platform.")}</p>
                 </section>
 
