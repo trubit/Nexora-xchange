@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures.js";
 
 // Credentials that should NOT exist in any environment — used to trigger errors.
 const NONEXISTENT_EMAIL = `playwright-ghost-${Date.now()}@test-noreply.invalid`;
@@ -46,7 +46,7 @@ test.describe("Login page", () => {
 
   test("has a working link to the signup page", async ({ page }) => {
     const signupLink = page
-      .getByRole("link", { name: /sign.?up|register|create.+account/i })
+      .getByRole("link", { name: /sign.?up|register|create.+(one|account)/i })
       .first();
     await expect(signupLink).toBeVisible();
     await signupLink.click();
