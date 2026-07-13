@@ -63,7 +63,7 @@ jobs:
           LOG_LEVEL: silent
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage-report
@@ -105,7 +105,7 @@ jobs:
           VITE_WORK_EMAIL: contact@nexora.com
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
@@ -159,7 +159,7 @@ jobs:
           VITE_WORK_EMAIL: contact@nexora.com
 
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
@@ -167,7 +167,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Playwright traces & screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-artifacts
