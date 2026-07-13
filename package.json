@@ -74,10 +74,10 @@
     "pino-http": "^11.0.0",
     "prom-client": "^15.1.3",
     "qrcode.react": "^4.2.0",
-    "react": "^19.2.0",
+    "react": "^19.2.7",
     "react-bootstrap": "^2.10.10",
     "react-bootstrap-icons": "^1.11.6",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.2.7",
     "react-router-dom": "^7.12.0",
     "react-ts-tradingview-widgets": "^1.2.8",
     "recharts": "^3.7.0",
@@ -85,7 +85,7 @@
     "socket.io-client": "^4.8.3",
     "uuid": "^14.0.1",
     "ws": "^8.19.0",
-    "zustand": "^5.0.12"
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -93,7 +93,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.2.5",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.1.9",
