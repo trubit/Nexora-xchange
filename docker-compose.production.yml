@@ -1,6 +1,4 @@
-version: "3.9"
-
-services:
+﻿services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
@@ -18,13 +16,22 @@ services:
     depends_on:
       - redis
     ports:
-      - "5000:5000"
+      - "5001:5001"
+    restart: unless-stopped
 
   client:
     build:
       context: .
       dockerfile: Dockerfile.client
+      args:
+        - VITE_TRUSON_API_URL=${VITE_TRUSON_API_URL}
+        - VITE_COINGECKO_API_URL=${VITE_COINGECKO_API_URL}
+        - VITE_CURRENCY_API_URL=${VITE_CURRENCY_API_URL}
+        - VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID}
+        - VITE_WORK_EMAIL=${VITE_WORK_EMAIL}
+        - VITE_BLOG_ADMIN=${VITE_BLOG_ADMIN}
     depends_on:
       - server
     ports:
       - "80:80"
+    restart: unless-stopped

@@ -1,32 +1,32 @@
 name: Security Audit
 
-# ── When this runs ─────────────────────────────────────────────────────────────
-# • Every push / PR to main (catches newly introduced vulnerable packages)
-# • Every Monday at 08:00 UTC (weekly sweep even with no new code)
-# • Manually via "Run workflow" button in the Actions tab
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   schedule:
-    - cron: "0 8 * * 1"
+    - cron: "0 8 * * 1"   # every Monday at 08:00 UTC
   workflow_dispatch:
+
+# Prevent duplicate runs on rapid pushes to the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false   # let audits finish; don't skip security checks
 
 defaults:
   run:
     shell: bash
 
 jobs:
+  # ── npm dependency audit ─────────────────────────────────────────────────────
   audit:
     name: npm audit
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
@@ -34,13 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Fail on HIGH or CRITICAL vulnerabilities only.
-      # Moderate / low issues are reported but don't block merges.
-      - name: Run security audit
+      - name: Run security audit (high+)
         run: npm audit --audit-level=high
 
-      # Always produce a full JSON report so you can download it from the
-      # Artifacts tab even when the step above passes.
       - name: Generate full audit report
         if: always()
         run: npm audit --json > audit-report.json || true
@@ -52,3 +48,32 @@ jobs:
           name: npm-audit-report
           path: audit-report.json
           retention-days: 30
+
+  # ── CodeQL static analysis ───────────────────────────────────────────────────
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:${{ matrix.language }}

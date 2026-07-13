@@ -1,4 +1,4 @@
-FROM node:22-alpine
+﻿FROM node:22-alpine
 
 WORKDIR /app
 
@@ -6,8 +6,8 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 
 COPY server ./server
-COPY .env ./.env
 
-EXPOSE 5000
+# Port must match PORT env var (default 5001 in .env.example)
+EXPOSE 5001
 
 CMD ["node", "server/index.js"]
