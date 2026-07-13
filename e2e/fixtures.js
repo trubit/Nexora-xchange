@@ -5,7 +5,12 @@ import { test as base } from "@playwright/test";
 // else returns an empty 200 so the app boots without crashing or hanging.
 export const test = base.extend({
   page: async ({ page }, use) => {
-    await page.route("**/api/**", (route) => {
+    // Use a URL-predicate function instead of a glob pattern.
+    // The glob "**/api/**" also matches Vite JS module paths like
+    // /src/api/client.js, causing those files to return "{}" and
+    // preventing React from loading. The predicate checks only the
+    // pathname so only real backend endpoints (/api/...) are mocked.
+    await page.route((url) => url.pathname.startsWith("/api/"), (route) => {
       const url = route.request().url();
       const method = route.request().method();
 
