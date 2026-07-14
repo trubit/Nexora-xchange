@@ -6,8 +6,9 @@ const WRONG_PASSWORD = "wrong-password-12345";
 
 test.describe("Login page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/login");
-    await page.waitForLoadState("domcontentloaded");
+    await expect(async () => {
+      await page.goto("/login", { waitUntil: "domcontentloaded" });
+    }).toPass({ timeout: 15_000, intervals: [500, 1000] });
   });
 
   test("renders the login page without crashing", async ({ page }) => {
@@ -35,7 +36,10 @@ test.describe("Login page", () => {
   test("shows an error message when submitting invalid credentials", async ({ page }) => {
     await page.locator("input[type='email'], input[name='email']").first().fill(NONEXISTENT_EMAIL);
     await page.locator("input[type='password']").first().fill(WRONG_PASSWORD);
-    await page.getByRole("button", { name: /log.?in|sign.?in|submit/i }).first().click();
+    // Target the submit button directly — the Google auth button's aria-label also matches
+    // sign-in patterns and would navigate away from the page if clicked.
+    // force: true bypasses the CSS animation stability check on the login page.
+    await page.locator("button[type='submit']").first().click({ force: true });
 
     // Wait for server response — allow up to 10 s for the error to appear.
     const errorLocator = page
@@ -49,8 +53,10 @@ test.describe("Login page", () => {
       .getByRole("link", { name: /sign.?up|register|create.+(one|account)/i })
       .first();
     await expect(signupLink).toBeVisible();
-    await signupLink.click();
-    await expect(page).toHaveURL(/\/signup/);
+    // force: true bypasses Playwright's stability check so CSS animations on the
+    // login page don't prevent the click from firing.
+    await signupLink.click({ force: true });
+    await expect(page).toHaveURL(/\/signup/, { timeout: 10_000 });
   });
 
   test("has a forgot-password link", async ({ page }) => {
@@ -60,15 +66,16 @@ test.describe("Login page", () => {
 
   test("forgot-password link navigates to the forgot-password page", async ({ page }) => {
     const forgotLink = page.getByRole("link", { name: /forgot/i }).first();
-    await forgotLink.click();
-    await expect(page).toHaveURL(/\/forgot/);
+    await forgotLink.click({ force: true });
+    await expect(page).toHaveURL(/\/forgot/, { timeout: 10_000 });
   });
 });
 
 test.describe("Signup page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/signup");
-    await page.waitForLoadState("domcontentloaded");
+    await expect(async () => {
+      await page.goto("/signup", { waitUntil: "domcontentloaded" });
+    }).toPass({ timeout: 15_000, intervals: [500, 1000] });
   });
 
   test("renders without crashing", async ({ page }) => {
@@ -97,33 +104,27 @@ test.describe("Signup page", () => {
       .getByRole("link", { name: /log.?in|sign.?in|already.+account/i })
       .first();
     await expect(loginLink).toBeVisible();
-    await loginLink.click();
-    await expect(page).toHaveURL(/\/login/);
+    await loginLink.click({ force: true });
+    await expect(page).toHaveURL(/\/login/, { timeout: 10_000 });
   });
 
   test("shows a validation error when submitting empty form", async ({ page }) => {
-    const btn = page
-      .getByRole("button", { name: /sign.?up|register|create|submit/i })
-      .first();
-    await btn.click();
-
-    // Either HTML5 native validation or an app-level error should appear.
-    const emailInput = page.locator("input[type='email'], input[name='email']").first();
-    const isNativeInvalid = await emailInput.evaluate((el) => !el.validity.valid);
-    const hasErrorMsg = await page
-      .locator("[class*='error'], [role='alert']")
-      .first()
-      .isVisible()
-      .catch(() => false);
-
-    expect(isNativeInvalid || hasErrorMsg).toBe(true);
+    // The signup form uses noValidate and disables the submit button until all
+    // fields pass client-side validation — clicking an empty form is prevented
+    // at the UI level rather than showing a post-submit error message.
+    const btn = page.locator("button[type='submit']").first();
+    await expect(btn).toBeDisabled();
   });
 });
 
 test.describe("Forgot-password page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/forgot-password");
-    await page.waitForLoadState("domcontentloaded");
+    // Retry once on NS_ERROR_CONNECTION_REFUSED — Firefox can briefly refuse
+    // new connections while socket.io tears down after the previous test's page
+    // closes. expect().toPass() retries the whole goto on any thrown error.
+    await expect(async () => {
+      await page.goto("/forgot-password", { waitUntil: "domcontentloaded" });
+    }).toPass({ timeout: 15_000, intervals: [500, 1000] });
   });
 
   test("renders without crashing", async ({ page }) => {

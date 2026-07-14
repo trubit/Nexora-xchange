@@ -29,6 +29,15 @@ export const test = base.extend({
       }
     });
 
+    // Absorb socket.io requests at BOTH context and page levels.
+    // Context-level routes survive page teardown, so Firefox's socket.io
+    // connection cleanup after page.close() is also intercepted — preventing
+    // the reconnect storm from saturating Vite's event loop and causing
+    // NS_ERROR_CONNECTION_REFUSED on the next test's page.goto().
+    const absorbSocket = (route) => route.fulfill({ status: 400, body: "" });
+    await page.context().route((url) => url.pathname.startsWith("/socket.io"), absorbSocket);
+    await page.route((url) => url.pathname.startsWith("/socket.io"), absorbSocket);
+
     await use(page);
   },
 });
