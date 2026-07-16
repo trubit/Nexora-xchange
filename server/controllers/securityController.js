@@ -8,6 +8,9 @@ import {
 import { getOpenAlerts, reviewAlert, getUserComplianceSummary }
   from "../services/complianceService.js";
 import { auditSecurity, auditAdmin, auditCompliance } from "../services/auditService.js";
+import { securityOrchestrator } from "../services/securityOrchestrator.js";
+import { geoIpVerifier }        from "../services/geoIpVerifier.js";
+import logger                   from "../config/logger.js";
 
 // ══ API KEYS ══════════════════════════════════════════════════════════════════
 
@@ -167,4 +170,67 @@ export const adminUnfreezeUser = async (req, res) => {
   });
 
   res.json({ message: "Account reactivated.", user });
+};
+
+// ══ ZERO-TRUST SECURITY MODEL ══════════════════════════════════════════════════
+
+/** Full zero-trust trust evaluation for the current request / user. */
+export const getTrustEvaluation = async (req, res) => {
+  try {
+    const sessionId = req.headers["x-session-id"] || req.sessionId || "unknown";
+    const trust = await securityOrchestrator.evaluateTrust(req, req.user._id, sessionId);
+    res.json({ success: true, data: trust });
+  } catch (err) {
+    logger.error({ err: err.message }, "[Security] getTrustEvaluation failed");
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/** Issue a step-up authentication token for the current session. */
+export const issueStepUpToken = async (req, res) => {
+  try {
+    const sessionId = req.headers["x-session-id"] || req.sessionId || "unknown";
+    const { method = "totp" } = req.body;
+    const result = await securityOrchestrator.issueStepUpToken(req.user._id, sessionId, method);
+    res.json({ success: true, data: result });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/** Verify a step-up token to reduce session risk score. */
+export const verifyStepUpToken = async (req, res) => {
+  try {
+    const sessionId = req.headers["x-session-id"] || req.sessionId || "unknown";
+    const { token } = req.body;
+    if (!token) return res.status(400).json({ success: false, message: "token is required." });
+
+    const result = await securityOrchestrator.verifyStepUpToken(req.user._id, sessionId, token);
+    if (!result.valid) return res.status(401).json({ success: false, message: result.reason });
+
+    res.json({ success: true, message: "Step-up authentication verified." });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/** Geo-IP lookup for the caller's IP. */
+export const getGeoInfo = async (req, res) => {
+  try {
+    const ip  = req.query.ip || req.ip || "0.0.0.0";
+    const geo = await geoIpVerifier.lookup(ip);
+    res.json({ success: true, data: geo });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/** Platform-wide security health summary (admin only). */
+export const getSecurityHealth = async (req, res) => {
+  try {
+    const summary = await securityOrchestrator.getSecurityHealthSummary();
+    res.json({ success: true, data: summary });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 };

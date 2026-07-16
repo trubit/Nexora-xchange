@@ -5,6 +5,9 @@ import {
   getAmlAlerts, getAmlAlertById, reviewAmlAlert,
   getMySecuritySummary,
   adminFreezeUser, adminUnfreezeUser,
+  // Zero-trust additions
+  getTrustEvaluation, issueStepUpToken, verifyStepUpToken,
+  getGeoInfo, getSecurityHealth,
 } from "../controllers/securityController.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
 
@@ -32,5 +35,20 @@ router.patch("/aml/alerts/:id/review",     requireAuth, requireRole("admin"), re
 // Account freeze
 router.post("/users/:userId/freeze",       requireAuth, requireRole("admin"), adminFreezeUser);
 router.post("/users/:userId/unfreeze",     requireAuth, requireRole("admin"), adminUnfreezeUser);
+
+// ── Zero-Trust Security Model ─────────────────────────────────────────────────
+
+// Trust evaluation for current request
+router.get("/zero-trust/evaluate",         requireAuth, getTrustEvaluation);
+
+// Step-up authentication
+router.post("/zero-trust/step-up/issue",   requireAuth, issueStepUpToken);
+router.post("/zero-trust/step-up/verify",  requireAuth, verifyStepUpToken);
+
+// Geo-IP info
+router.get("/geo",                         requireAuth, getGeoInfo);
+
+// Admin health
+router.get("/health",                      requireAuth, requireRole("admin"), getSecurityHealth);
 
 export default router;

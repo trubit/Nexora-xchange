@@ -53,6 +53,13 @@ import {
   stopInfra,
 } from "./infra/index.js";
 import infraRoutes from "./routes/infra.js";
+import arbitrageRoutes from "./routes/arbitrage.js";
+import creditRiskRoutes from "./routes/creditRisk.js";
+import performanceRoutes from "./routes/performance.js";
+import globalSyncRoutes from "./routes/globalSync.js";
+import { arbitrageService }         from "./services/arbitrageService.js";
+import { performanceCoreService }   from "./services/performanceCoreService.js";
+import { globalSyncEngine }         from "./services/globalSyncEngine.js";
 import { startLiquidityEngine, stopLiquidityEngine } from "./services/liquidityService.js";
 import { startConditionalProcessor, stopConditionalProcessor } from "./services/conditionalOrderService.js";
 import { getLiveTicker } from "./services/tradeService.js";
@@ -238,6 +245,10 @@ app.use("/api/security",      securityRoutes);
 app.use("/api/transfer",      transferRoutes);
 app.use("/api/blockchain",    blockchainRoutes);
 app.use("/api/v1/infra",      infraRoutes);
+app.use("/api/arbitrage",     arbitrageRoutes);
+app.use("/api/credit-risk",   creditRiskRoutes);
+app.use("/api/performance",   performanceRoutes);
+app.use("/api/global-sync",   globalSyncRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -357,6 +368,27 @@ const startServer = async () => {
       logger.error({ err: err.message }, "[Settlement] Blockchain settlement layer failed to start.");
     }
 
+    // Stage 1: Arbitrage Detection & Execution System
+    try {
+      await arbitrageService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[Arbitrage] Service failed to start.");
+    }
+
+    // Stage 4: Performance optimization layer
+    try {
+      await performanceCoreService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[PerfCore] Performance service failed to start.");
+    }
+
+    // Stage 5: Global Market Synchronization Engine
+    try {
+      await globalSyncEngine.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[GlobalSync] Sync engine failed to start.");
+    }
+
     httpServer.listen(PORT, () => {
       logger.info(
         {
@@ -390,6 +422,9 @@ const startServer = async () => {
           notificationService.stop(),
           SettlementService.stop(),
           stopInfra(),
+          arbitrageService.stop(),
+          performanceCoreService.stop(),
+          globalSyncEngine.stop(),
           closeQueues(),
           closeRedisConnections(),
           mongoose.connection.close(),
