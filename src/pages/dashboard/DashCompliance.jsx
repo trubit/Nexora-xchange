@@ -51,14 +51,7 @@ export default function DashCompliance() {
     type: "DAILY", periodStart: "", periodEnd: "",
   });
 
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="ent-access-denied">
-        <h2>Access Denied</h2>
-        <p>Regulatory Compliance requires Administrator role.</p>
-      </div>
-    );
-  }
+  const isAdmin = Boolean(user && user.role === "admin");
 
   // ── Queries ──────────────────────────────────────────────────────────────
 
@@ -66,30 +59,31 @@ export default function DashCompliance() {
     queryKey: ["reg-compliance-stats"],
     queryFn: () => regulatoryComplianceApi.statistics().then((r) => r.data.stats),
     refetchInterval: 30000,
+    enabled: isAdmin,
   });
 
   const { data: sanctionsData, isLoading: sanctionsLoading } = useQuery({
     queryKey: ["reg-compliance-sanctions"],
     queryFn: () => regulatoryComplianceApi.getSanctionHits().then((r) => r.data),
-    enabled: tab === 1,
+    enabled: isAdmin && tab === 1,
   });
 
   const { data: trData, isLoading: trLoading } = useQuery({
     queryKey: ["reg-compliance-travel-rule"],
     queryFn: () => regulatoryComplianceApi.getTravelRuleRecords().then((r) => r.data),
-    enabled: tab === 2,
+    enabled: isAdmin && tab === 2,
   });
 
   const { data: sarData, isLoading: sarLoading } = useQuery({
     queryKey: ["reg-compliance-sars"],
     queryFn: () => regulatoryComplianceApi.getSars().then((r) => r.data),
-    enabled: tab === 3,
+    enabled: isAdmin && tab === 3,
   });
 
   const { data: rptData, isLoading: rptLoading } = useQuery({
     queryKey: ["reg-compliance-reports"],
     queryFn: () => regulatoryComplianceApi.getReports().then((r) => r.data),
-    enabled: tab === 4,
+    enabled: isAdmin && tab === 4,
   });
 
   // ── Mutations ─────────────────────────────────────────────────────────────
@@ -146,6 +140,15 @@ export default function DashCompliance() {
       setRptForm({ type: "DAILY", periodStart: "", periodEnd: "" });
     },
   });
+
+  if (!isAdmin) {
+    return (
+      <div className="ent-access-denied">
+        <h2>Access Denied</h2>
+        <p>Regulatory Compliance requires Administrator role.</p>
+      </div>
+    );
+  }
 
   // ── Render ────────────────────────────────────────────────────────────────
 

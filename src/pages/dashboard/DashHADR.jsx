@@ -43,14 +43,7 @@ export default function DashHADR() {
   // DR test form
   const [testForm, setTestForm] = useState({ planId: "", outcome: "pass", notes: "" });
 
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="ent-access-denied">
-        <h2>Access Denied</h2>
-        <p>High Availability & DR requires Administrator role.</p>
-      </div>
-    );
-  }
+  const isAdmin = Boolean(user && user.role === "admin");
 
   // ── Queries ──────────────────────────────────────────────────────────────
 
@@ -58,31 +51,32 @@ export default function DashHADR() {
     queryKey: ["hadr-stats"],
     queryFn: () => hadrApi.statistics().then((r) => r.data.stats),
     refetchInterval: 30000,
+    enabled: isAdmin,
   });
 
   const { data: healthData, isLoading: healthLoading } = useQuery({
     queryKey: ["hadr-health"],
     queryFn: () => hadrApi.getHealthChecks().then((r) => r.data),
-    enabled: tab === 1,
+    enabled: isAdmin && tab === 1,
     refetchInterval: 15000,
   });
 
   const { data: foData, isLoading: foLoading } = useQuery({
     queryKey: ["hadr-failover"],
     queryFn: () => hadrApi.getFailoverEvents().then((r) => r.data),
-    enabled: tab === 2,
+    enabled: isAdmin && tab === 2,
   });
 
   const { data: bkData, isLoading: bkLoading } = useQuery({
     queryKey: ["hadr-backups"],
     queryFn: () => hadrApi.getBackups().then((r) => r.data),
-    enabled: tab === 3,
+    enabled: isAdmin && tab === 3,
   });
 
   const { data: drData, isLoading: drLoading } = useQuery({
     queryKey: ["hadr-dr-plans"],
     queryFn: () => hadrApi.getDrPlans().then((r) => r.data),
-    enabled: tab === 4,
+    enabled: isAdmin && tab === 4,
   });
 
   // ── Mutations ─────────────────────────────────────────────────────────────
@@ -120,6 +114,15 @@ export default function DashHADR() {
       setTestForm({ planId: "", outcome: "pass", notes: "" });
     },
   });
+
+  if (!isAdmin) {
+    return (
+      <div className="ent-access-denied">
+        <h2>Access Denied</h2>
+        <p>High Availability & DR requires Administrator role.</p>
+      </div>
+    );
+  }
 
   // ── Render ────────────────────────────────────────────────────────────────
 

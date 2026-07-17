@@ -21,6 +21,28 @@ export default function DashAuditLedger() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tab, setTab] = useState("stats");
 
+  const isAdmin = isAuthenticated && user?.role === "admin";
+
+  const statsQ  = useQuery({ queryKey:["al-stats"],   queryFn: auditLedgerApi.stats,         refetchInterval:30_000, enabled: isAdmin });
+  const entriesQ= useQuery({ queryKey:["al-entries"],  queryFn: () => auditLedgerApi.entries(), enabled: isAdmin && tab==="entries" });
+  const chainQ  = useQuery({ queryKey:["al-chain"],    queryFn: auditLedgerApi.verifyChain,    enabled: isAdmin && tab==="integrity" });
+  const reportsQ= useQuery({ queryKey:["al-reports"],  queryFn: auditLedgerApi.reports,        enabled: isAdmin && tab==="reports" });
+  const reconQ  = useQuery({ queryKey:["al-recon"],    queryFn: auditLedgerApi.reconciliation, enabled: isAdmin && tab==="reconciliation" });
+
+  const reconMut = useMutation({
+    mutationFn: () => auditLedgerApi.runReconciliation({ type:"SPOT" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey:["al-recon"] }),
+  });
+
+  const reportMut = useMutation({
+    mutationFn: () => auditLedgerApi.generateReport({
+      type:"ON_DEMAND",
+      periodStart: new Date(Date.now()-86400000*30).toISOString(),
+      periodEnd:   new Date().toISOString(),
+    }),
+    onSuccess: () => qc.invalidateQueries({ queryKey:["al-reports"] }),
+  });
+
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   if (user?.role !== "admin") return (
     <div className="dash-root">
@@ -38,26 +60,6 @@ export default function DashAuditLedger() {
       </div>
     </div>
   );
-
-  const statsQ  = useQuery({ queryKey:["al-stats"],   queryFn: auditLedgerApi.stats,         refetchInterval:30_000 });
-  const entriesQ= useQuery({ queryKey:["al-entries"],  queryFn: () => auditLedgerApi.entries(), enabled: tab==="entries" });
-  const chainQ  = useQuery({ queryKey:["al-chain"],    queryFn: auditLedgerApi.verifyChain,    enabled: tab==="integrity" });
-  const reportsQ= useQuery({ queryKey:["al-reports"],  queryFn: auditLedgerApi.reports,        enabled: tab==="reports" });
-  const reconQ  = useQuery({ queryKey:["al-recon"],    queryFn: auditLedgerApi.reconciliation, enabled: tab==="reconciliation" });
-
-  const reconMut = useMutation({
-    mutationFn: () => auditLedgerApi.runReconciliation({ type:"SPOT" }),
-    onSuccess: () => qc.invalidateQueries({ queryKey:["al-recon"] }),
-  });
-
-  const reportMut = useMutation({
-    mutationFn: () => auditLedgerApi.generateReport({
-      type:"ON_DEMAND",
-      periodStart: new Date(Date.now()-86400000*30).toISOString(),
-      periodEnd:   new Date().toISOString(),
-    }),
-    onSuccess: () => qc.invalidateQueries({ queryKey:["al-reports"] }),
-  });
 
   const stats    = statsQ.data?.data    ?? statsQ.data    ?? {};
   const entries  = entriesQ.data?.data  ?? entriesQ.data  ?? [];

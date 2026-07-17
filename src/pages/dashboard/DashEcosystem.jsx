@@ -41,14 +41,7 @@ export default function DashEcosystem() {
   // Integration form
   const [intForm, setIntForm] = useState({ partnerId: "", type: "rest_pull", direction: "bidirectional" });
 
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="ent-access-denied">
-        <h2>Access Denied</h2>
-        <p>Global Ecosystem requires Administrator role.</p>
-      </div>
-    );
-  }
+  const isAdmin = Boolean(user && user.role === "admin");
 
   // ── Queries ──────────────────────────────────────────────────────────────
 
@@ -56,24 +49,25 @@ export default function DashEcosystem() {
     queryKey: ["ecosystem-stats"],
     queryFn: () => globalEcosystemApi.statistics().then((r) => r.data.stats),
     refetchInterval: 30000,
+    enabled: isAdmin,
   });
 
   const { data: partnerData, isLoading: partnerLoading } = useQuery({
     queryKey: ["ecosystem-partners"],
     queryFn: () => globalEcosystemApi.getPartners().then((r) => r.data),
-    enabled: tab === 1,
+    enabled: isAdmin && tab === 1,
   });
 
   const { data: payData, isLoading: payLoading } = useQuery({
     queryKey: ["ecosystem-payments"],
     queryFn: () => globalEcosystemApi.getPayments().then((r) => r.data),
-    enabled: tab === 2,
+    enabled: isAdmin && tab === 2,
   });
 
   const { data: intData, isLoading: intLoading } = useQuery({
     queryKey: ["ecosystem-integrations"],
     queryFn: () => globalEcosystemApi.getIntegrations().then((r) => r.data),
-    enabled: tab === 3,
+    enabled: isAdmin && tab === 3,
   });
 
   // ── Mutations ─────────────────────────────────────────────────────────────
@@ -116,6 +110,15 @@ export default function DashEcosystem() {
       setIntForm({ partnerId: "", type: "rest_pull", direction: "bidirectional" });
     },
   });
+
+  if (!isAdmin) {
+    return (
+      <div className="ent-access-denied">
+        <h2>Access Denied</h2>
+        <p>Global Ecosystem requires Administrator role.</p>
+      </div>
+    );
+  }
 
   // ── Render ────────────────────────────────────────────────────────────────
 

@@ -39,14 +39,7 @@ export default function DashAutoOps() {
   // Deployment form
   const [depForm, setDepForm] = useState({ service: "", version: "", previousVersion: "", type: "rolling", notes: "" });
 
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="ent-access-denied">
-        <h2>Access Denied</h2>
-        <p>Autonomous Operations requires Administrator role.</p>
-      </div>
-    );
-  }
+  const isAdmin = Boolean(user && user.role === "admin");
 
   // ── Queries ──────────────────────────────────────────────────────────────
 
@@ -54,25 +47,26 @@ export default function DashAutoOps() {
     queryKey: ["auto-ops-stats"],
     queryFn: () => autonomousOpsApi.statistics().then((r) => r.data.stats),
     refetchInterval: 30000,
+    enabled: isAdmin,
   });
 
   const { data: scaleData, isLoading: scaleLoading } = useQuery({
     queryKey: ["auto-ops-scaling"],
     queryFn: () => autonomousOpsApi.getScalingEvents().then((r) => r.data),
-    enabled: tab === 1,
+    enabled: isAdmin && tab === 1,
   });
 
   const { data: incData, isLoading: incLoading } = useQuery({
     queryKey: ["auto-ops-incidents"],
     queryFn: () => autonomousOpsApi.getIncidents().then((r) => r.data),
-    enabled: tab === 2,
+    enabled: isAdmin && tab === 2,
     refetchInterval: 15000,
   });
 
   const { data: depData, isLoading: depLoading } = useQuery({
     queryKey: ["auto-ops-deployments"],
     queryFn: () => autonomousOpsApi.getDeployments().then((r) => r.data),
-    enabled: tab === 3,
+    enabled: isAdmin && tab === 3,
   });
 
   // ── Mutations ─────────────────────────────────────────────────────────────
@@ -115,6 +109,15 @@ export default function DashAutoOps() {
     mutationFn: (id) => autonomousOpsApi.rollback(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["auto-ops-deployments"] }),
   });
+
+  if (!isAdmin) {
+    return (
+      <div className="ent-access-denied">
+        <h2>Access Denied</h2>
+        <p>Autonomous Operations requires Administrator role.</p>
+      </div>
+    );
+  }
 
   // ── Render ────────────────────────────────────────────────────────────────
 
