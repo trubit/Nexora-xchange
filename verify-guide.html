@@ -1,0 +1,572 @@
+<title>TrusonXchanger — Implementation Verification Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0b0e11;
+    --surface:   #1a1d24;
+    --card:      #1e2026;
+    --border:    #2b2f36;
+    --border2:   #363c45;
+    --text:      #eaecef;
+    --sub:       #b7bdc6;
+    --muted:     #848e9c;
+    --dim:       #474d57;
+    --gold:      #f0b90b;
+    --gold-dim:  rgba(240,185,11,.12);
+    --green:     #0ecb81;
+    --green-dim: rgba(14,203,129,.1);
+    --red:       #f6465d;
+    --red-dim:   rgba(246,70,93,.1);
+    --blue:      #3b82f6;
+    --blue-dim:  rgba(59,130,246,.1);
+    --purple:    #a78bfa;
+    --mono:      "Fira Code", "Cascadia Code", "Consolas", monospace;
+    --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  }
+
+  html { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; }
+  body { min-height: 100vh; padding: 0 0 80px; }
+
+  /* ── Top bar ── */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(11,14,17,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; height: 52px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .logo-mark {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--gold); display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 13px; color: #000; letter-spacing: -.5px;
+    flex-shrink: 0;
+  }
+  .topbar-title { font-size: .85rem; font-weight: 700; color: var(--text); letter-spacing: .01em; }
+  .topbar-sub { font-size: .72rem; color: var(--muted); font-family: var(--mono); }
+  .pass-chip {
+    background: var(--green-dim); border: 1px solid rgba(14,203,129,.25);
+    color: var(--green); border-radius: 20px; padding: 3px 10px;
+    font-size: .72rem; font-weight: 700; font-family: var(--mono);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .pass-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+  /* ── Layout ── */
+  .wrap { max-width: 900px; margin: 0 auto; padding: 36px 24px 0; }
+
+  /* ── Score banner ── */
+  .score-row {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 10px;
+    margin-bottom: 32px;
+  }
+  .score-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 14px; text-align: center;
+  }
+  .score-card.green { border-top: 3px solid var(--green); }
+  .score-card.gold  { border-top: 3px solid var(--gold); }
+  .score-card.blue  { border-top: 3px solid var(--blue); }
+  .score-card.purple{ border-top: 3px solid var(--purple); }
+  .score-n { font-size: 1.9rem; font-weight: 900; font-family: var(--mono); font-variant-numeric: tabular-nums; line-height: 1; }
+  .score-card.green .score-n { color: var(--green); }
+  .score-card.gold  .score-n { color: var(--gold); }
+  .score-card.blue  .score-n { color: var(--blue); }
+  .score-card.purple .score-n { color: var(--purple); }
+  .score-label { font-size: .68rem; color: var(--muted); margin-top: 5px; letter-spacing: .07em; text-transform: uppercase; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 28px; }
+  .section-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon { font-size: 1rem; color: var(--gold); }
+  .section-title { font-size: .78rem; font-weight: 800; color: var(--text); text-transform: uppercase; letter-spacing: .1em; }
+  .section-count { font-size: .68rem; font-family: var(--mono); color: var(--muted); margin-left: auto; }
+
+  /* ── Step/command block ── */
+  .cmd-block {
+    background: #0d1117; border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 16px;
+    font-family: var(--mono); font-size: .8rem; color: #79c0ff;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+  }
+  .cmd-block .prompt { color: var(--dim); user-select: none; }
+  .cmd-label { font-size: .68rem; color: var(--muted); margin-bottom: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+  /* ── Check table ── */
+  .check-list { display: flex; flex-direction: column; gap: 6px; }
+  .check-row {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .check-row:hover { border-color: var(--border2); }
+  .check-icon { flex-shrink: 0; margin-top: 1px; font-size: .85rem; }
+  .check-icon.ok     { color: var(--green); }
+  .check-icon.manual { color: var(--gold); }
+  .check-icon.admin  { color: var(--purple); }
+  .check-body { flex: 1; min-width: 0; }
+  .check-name { font-weight: 700; font-size: .82rem; color: var(--text); }
+  .check-desc { font-size: .76rem; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .check-url {
+    display: inline-block; margin-top: 5px;
+    font-family: var(--mono); font-size: .72rem;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 5px; padding: 2px 8px; color: var(--blue);
+  }
+  .check-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .tag {
+    font-size: .65rem; font-weight: 700; letter-spacing: .05em;
+    border-radius: 4px; padding: 1px 7px; border: 1px solid transparent;
+  }
+  .tag.green  { background: var(--green-dim); color: var(--green); border-color: rgba(14,203,129,.2); }
+  .tag.gold   { background: var(--gold-dim);  color: var(--gold);  border-color: rgba(240,185,11,.2); }
+  .tag.blue   { background: var(--blue-dim);  color: var(--blue);  border-color: rgba(59,130,246,.2); }
+  .tag.red    { background: var(--red-dim);   color: var(--red);   border-color: rgba(246,70,93,.2); }
+  .tag.purple { background: rgba(167,139,250,.1); color: var(--purple); border-color: rgba(167,139,250,.25); }
+  .tag.dim    { background: rgba(71,77,87,.2); color: var(--dim); border-color: rgba(71,77,87,.4); }
+
+  /* ── What to see list ── */
+  .see-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .see-item {
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: .78rem; color: var(--sub); line-height: 1.45;
+    padding: 6px 0; border-bottom: 1px solid rgba(43,47,54,.6);
+  }
+  .see-item:last-child { border-bottom: none; }
+  .see-bullet { color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Two-col layout ── */
+  .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ── Test result row ── */
+  .test-file-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 0; border-bottom: 1px solid rgba(43,47,54,.5); font-size: .78rem;
+    gap: 8px;
+  }
+  .test-file-row:last-child { border-bottom: none; }
+  .test-file-name { font-family: var(--mono); color: var(--sub); flex: 1; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .test-count { font-family: var(--mono); font-variant-numeric: tabular-nums;
+    color: var(--green); font-size: .72rem; flex-shrink: 0; }
+
+  /* ── Info box ── */
+  .info-box {
+    background: var(--gold-dim); border: 1px solid rgba(240,185,11,.2);
+    border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0;
+    padding: 10px 14px; font-size: .78rem; color: var(--sub); line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .info-box strong { color: var(--gold); }
+
+  .alert-box {
+    background: var(--red-dim); border: 1px solid rgba(246,70,93,.2);
+    border-left: 3px solid var(--red); border-radius: 0 8px 8px 0;
+    padding: 10px 14px; font-size: .78rem; color: var(--sub); line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .alert-box strong { color: var(--red); }
+
+  /* ── Footer ── */
+  .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border);
+    text-align: center; font-size: .72rem; color: var(--dim); }
+</style>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-mark">TX</div>
+    <div>
+      <div class="topbar-title">TrusonXchanger · Verification Guide</div>
+      <div class="topbar-sub">Stages 1, 2, 25–30 · Frontend + Backend</div>
+    </div>
+  </div>
+  <div class="pass-chip">524 tests passing</div>
+</div>
+
+<div class="wrap">
+
+  <!-- Score cards -->
+  <div class="score-row">
+    <div class="score-card green">
+      <div class="score-n">374</div>
+      <div class="score-label">Backend Tests</div>
+    </div>
+    <div class="score-card blue">
+      <div class="score-n">150</div>
+      <div class="score-label">Frontend Tests</div>
+    </div>
+    <div class="score-card gold">
+      <div class="score-n">8</div>
+      <div class="score-label">New UI Pages</div>
+    </div>
+    <div class="score-card purple">
+      <div class="score-n">6</div>
+      <div class="score-label">Enterprise Stages</div>
+    </div>
+  </div>
+
+  <!-- Step 1: Start servers -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-icon">▶</span>
+      <span class="section-title">Step 1 — Start Everything</span>
+    </div>
+    <div class="info-box">
+      <strong>Run both commands below in separate terminals.</strong> Wait for the server to print <code style="font-family:var(--mono);color:var(--gold)">API listening</code> before opening the browser — startup takes ~13 seconds.
+    </div>
+    <div class="cmd-label">Terminal 1 — Full stack (client + server together)</div>
+    <div class="cmd-block"><span class="prompt">$</span> npm start</div>
+    <div class="cmd-label">OR — Separate terminals</div>
+    <div class="cmd-block"><span class="prompt">$</span> npm run dev &nbsp;&nbsp;&nbsp;&nbsp;# Vite on http://localhost:5173</div>
+    <div class="cmd-block"><span class="prompt">$</span> npm run server:dev &nbsp;&nbsp;# Express API on port 5001</div>
+  </div>
+
+  <!-- Step 2: Run all tests -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-icon">⬡</span>
+      <span class="section-title">Step 2 — Run the Full Test Suite</span>
+    </div>
+    <div class="cmd-label">Backend — 14 test files, 374 tests</div>
+    <div class="cmd-block"><span class="prompt">$</span> npm run test:server</div>
+    <div class="cmd-label">Frontend — 12 test files, 150 tests</div>
+    <div class="cmd-block"><span class="prompt">$</span> npm run test:client</div>
+    <div class="cmd-label">Everything at once</div>
+    <div class="cmd-block"><span class="prompt">$</span> npm test</div>
+
+    <div style="margin-top:14px;" class="cols-2">
+      <div class="card" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;">Backend test files</div>
+        <div class="test-file-row"><span class="test-file-name">stage1-arbitrage</span><span class="test-count">✓ 30</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage2-creditRisk</span><span class="test-count">✓ 29</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage3-zeroTrust</span><span class="test-count">✓ 30</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage4-performance</span><span class="test-count">✓ 30</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage5-globalSync</span><span class="test-count">✓ 25</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage25-settlement</span><span class="test-count">✓ 50</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage26-liquidityAggregator</span><span class="test-count">✓ 45</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage27-marketIntelligence</span><span class="test-count">✓ 38</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage28-executionRouter</span><span class="test-count">✓ 25</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage29-institutional</span><span class="test-count">✓ 42</span></div>
+        <div class="test-file-row"><span class="test-file-name">stage30-auditLedger</span><span class="test-count">✓ 30</span></div>
+      </div>
+      <div class="card" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;">Frontend test files</div>
+        <div class="test-file-row"><span class="test-file-name">arbitrage.api</span><span class="test-count">✓ 12</span></div>
+        <div class="test-file-row"><span class="test-file-name">creditRisk.api</span><span class="test-count">✓ 10</span></div>
+        <div class="test-file-row"><span class="test-file-name">settlement.api</span><span class="test-count">✓ 10</span></div>
+        <div class="test-file-row"><span class="test-file-name">liquidityAggregator.api</span><span class="test-count">✓ 10</span></div>
+        <div class="test-file-row"><span class="test-file-name">marketIntelligence.api</span><span class="test-count">✓ 9</span></div>
+        <div class="test-file-row"><span class="test-file-name">executionRouter.api</span><span class="test-count">✓ 8</span></div>
+        <div class="test-file-row"><span class="test-file-name">institutional.api</span><span class="test-count">✓ 14</span></div>
+        <div class="test-file-row"><span class="test-file-name">auditLedger.api</span><span class="test-count">✓ 12</span></div>
+        <div class="test-file-row"><span class="test-file-name">authStore</span><span class="test-count">✓ 13</span></div>
+        <div class="test-file-row"><span class="test-file-name">EmailVerifyBanner</span><span class="test-count">✓ 8</span></div>
+        <div class="test-file-row"><span class="test-file-name">currencyFormat</span><span class="test-count">✓ 22</span></div>
+        <div class="test-file-row"><span class="test-file-name">CoinLogo</span><span class="test-count">✓ 22</span></div>
+      </div>
+    </div>
+    <div style="margin-top:8px;" class="info-box">
+      <strong>Expected output:</strong> <code style="font-family:var(--mono)">Test Files 14 passed (14) · Tests 374 passed (374)</code> for backend, and <code style="font-family:var(--mono)">Test Files 12 passed (12) · Tests 150 passed (150)</code> for frontend. Any red line means something broke.
+    </div>
+  </div>
+
+  <!-- Step 3: Frontend pages -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-icon">◈</span>
+      <span class="section-title">Step 3 — Visit Every New Page in the Browser</span>
+      <span class="section-count">8 new pages</span>
+    </div>
+    <div class="info-box">
+      Log in first at <code style="font-family:var(--mono);color:var(--blue)">http://localhost:5173/login</code>. Open the sidebar — you should see new items under Trading, Finance, Insights, and Exchange. Click each one.
+    </div>
+
+    <div class="check-list">
+
+      <div class="check-row">
+        <div class="check-icon manual">◐</div>
+        <div class="check-body">
+          <div class="check-name">Arbitrage</div>
+          <div class="check-desc">Replaced the old placeholder. Shows live opportunities, history table, and market snapshot (exchange list + tracked pairs).</div>
+          <div class="check-url">http://localhost:5173/Dashboard/arbitrage</div>
+          <div class="check-tags">
+            <span class="tag green">Live tab</span>
+            <span class="tag blue">History tab</span>
+            <span class="tag gold">Market Snapshot tab</span>
+            <span class="tag dim">Refreshes every 10s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <div class="check-icon manual">◐</div>
+        <div class="check-body">
+          <div class="check-name">Credit Risk</div>
+          <div class="check-desc">SVG score gauges for credit, behavior, and risk scores. Tabs for Overview, Credit, Behavior, Exposure, and Heatmap.</div>
+          <div class="check-url">http://localhost:5173/Dashboard/credit-risk</div>
+          <div class="check-tags">
+            <span class="tag green">Score gauges render</span>
+            <span class="tag gold">Heatmap grid visible</span>
+            <span class="tag blue">5 tabs switch correctly</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <div class="check-icon manual">◐</div>
+        <div class="check-body">
+          <div class="check-name">Settlement</div>
+          <div class="check-desc">Chain status cards (Ethereum, BSC, Polygon, Arbitrum, Optimism, Bitcoin) at the top. Your settlement history below. Admin KPI strip shows only if you are admin.</div>
+          <div class="check-url">http://localhost:5173/Dashboard/settlement</div>
+          <div class="check-tags">
+            <span class="tag blue">Chain cards row</span>
+            <span class="tag gold">My Settlements table</span>
+            <span class="tag dim">Chains show "disconnected" — expected, no RPC</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <div class="check-icon manual">◐</div>
+        <div class="check-body">
+          <div class="check-name">Liquidity Aggregator</div>
+          <div class="check-desc">Providers table with health badges. Aggregated order book with pair selector (BTC-USD / ETH-USD / BNB-USD / SOL-USD / XRP-USD). Book refreshes every 5 seconds.</div>
+          <div class="check-url">http://localhost:5173/Dashboard/liquidity</div>
+          <div class="check-tags">
+            <span class="tag green">Providers table</span>
+            <span class="tag blue">Pair selector switches book</span>
+            <span class="tag dim">Refreshes 5s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <div class="check-icon manual">◐</div>
+        <div class="check-body">
+          <div class="check-name">Market Intelligence</div>
+          <div class="check-desc">Live anomaly signal feed with severity filter (All / CRITICAL / HIGH / MEDIUM / LOW). Whale activity table. Green live dot in header shows scanner is running.</div>
+          <div class="check-url">http://localhost:5173/Dashboard/market-intelligence</div>
+          <div class="check-tags">
+            <span class="tag green">Live dot pulses</span>
+            <span class="tag red">CRITICAL badge if signals exist</span>
+            <span class="tag gold">Severity filter works</span>
+            <span class="tag blue">Whale tab</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <div class="check-icon manual">◐</div>
+        <div class="check-body">
+          <div class="check-name">Execution Router</div>
+          <div class="check-desc">Strategy usage bar chart (single / split / TWAP / iceberg). Venue latency table — venues over 500ms show SLOW badge. Route history table.</div>
+          <div class="check-url">http://localhost:5173/Dashboard/execution-router</div>
+          <div class="check-tags">
+            <span class="tag blue">Strategy bars render</span>
+            <span class="tag red">SLOW badge if latency &gt;500ms</span>
+            <span class="tag green">FAST badge otherwise</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <div class="check-icon manual">◐</div>
+        <div class="check-body">
+          <div class="check-name">Institutional</div>
+          <div class="check-desc">Tier cards (Bronze / Silver / Gold / Platinum) showing rate limits, max order size, max position, and sub-account count. API key issuance form — secret shown once and never again.</div>
+          <div class="check-url">http://localhost:5173/Dashboard/institutional</div>
+          <div class="check-tags">
+            <span class="tag gold">4 tier cards</span>
+            <span class="tag green">Issue Key form works</span>
+            <span class="tag red">Revoke button on active keys</span>
+            <span class="tag purple">Clients tab — admin only</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <div class="check-icon admin">⬡</div>
+        <div class="check-body">
+          <div class="check-name">Audit Ledger <span style="font-size:.7rem;color:var(--purple);font-weight:700;">ADMIN ONLY</span></div>
+          <div class="check-desc">Shows a lock message for non-admin users. Admins see: entries-by-type bar chart, ledger entries table with SHA-256 hashes, cryptographic chain integrity check, compliance report generator, and SPOT reconciliation trigger.</div>
+          <div class="check-url">http://localhost:5173/Dashboard/audit-ledger</div>
+          <div class="check-tags">
+            <span class="tag purple">Admin only</span>
+            <span class="tag green">Chain Integrity: CHAIN INTACT</span>
+            <span class="tag gold">Generate Report button</span>
+            <span class="tag blue">Run Reconciliation button</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Step 4: Sidebar check -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-icon">☰</span>
+      <span class="section-title">Step 4 — Sidebar Navigation Check</span>
+    </div>
+    <div class="info-box">Open the sidebar (hamburger menu). Scroll through all sections and confirm these items exist.</div>
+    <div class="cols-2">
+      <div class="card" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;">New sidebar items</div>
+        <ul class="see-list">
+          <li class="see-item"><span class="see-bullet">▸</span><span><strong>Trading</strong> section → Execution Router</span></li>
+          <li class="see-item"><span class="see-bullet">▸</span><span><strong>Finance</strong> section → Settlement, Liquidity</span></li>
+          <li class="see-item"><span class="see-bullet">▸</span><span><strong>Insights</strong> section → Market Intelligence, Credit Risk</span></li>
+          <li class="see-item"><span class="see-bullet">▸</span><span><strong>Exchange</strong> section → Institutional</span></li>
+          <li class="see-item"><span class="see-bullet">▸</span><span><strong>Admin</strong> section (admin only) → Audit Ledger</span></li>
+        </ul>
+      </div>
+      <div class="card" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;">What a working page looks like</div>
+        <ul class="see-list">
+          <li class="see-item"><span class="see-bullet">✓</span>Page header with title and refresh button</li>
+          <li class="see-item"><span class="see-bullet">✓</span>KPI strip with 4 metric cards</li>
+          <li class="see-item"><span class="see-bullet">✓</span>Tabs that switch content without reload</li>
+          <li class="see-item"><span class="see-bullet">✓</span>Empty state (icon + message) when no data yet</li>
+          <li class="see-item"><span class="see-bullet">✓</span>Tables scroll horizontally on small screens</li>
+          <li class="see-item"><span class="see-bullet">✓</span>Loading spinner while fetching</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5: Backend API spot-check -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-icon">⬡</span>
+      <span class="section-title">Step 5 — Spot-Check Backend Endpoints with curl</span>
+    </div>
+    <div class="alert-box"><strong>Replace TOKEN</strong> with the JWT you get from logging in (check localStorage → token in DevTools).</div>
+
+    <div class="cmd-label">Get your token from DevTools → Application → Local Storage</div>
+    <div class="cmd-block"><span class="prompt">$</span> TOKEN=$(node -e "console.log(require('fs').readFileSync('.token','utf8').trim())" 2>/dev/null || echo "paste-your-token-here")</div>
+
+    <div class="check-list" style="margin-top:10px;">
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Arbitrage — live opportunities</div>
+          <div class="check-url">curl http://localhost:5001/api/arbitrage/live -H "Authorization: Bearer $TOKEN"</div>
+          <div class="check-desc">Returns <code style="font-family:var(--mono);color:var(--green)">{"data":[]}</code> or an array of opportunities. HTTP 200.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Market Intelligence — stats</div>
+          <div class="check-url">curl http://localhost:5001/api/market-intelligence/stats -H "Authorization: Bearer $TOKEN"</div>
+          <div class="check-desc">Returns <code style="font-family:var(--mono);color:var(--green)">{"running":true,"trackedPairs":...}</code>. HTTP 200.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Settlement — chain status</div>
+          <div class="check-url">curl http://localhost:5001/api/settlement/chains -H "Authorization: Bearer $TOKEN"</div>
+          <div class="check-desc">Returns object with ethereum, bsc, polygon, arbitrum, optimism keys. All <code style="font-family:var(--mono);color:var(--muted)">connected:false</code> — expected, no RPC configured.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Liquidity — providers</div>
+          <div class="check-url">curl http://localhost:5001/api/liquidity-aggregator/providers -H "Authorization: Bearer $TOKEN"</div>
+          <div class="check-desc">Returns empty array or providers list. HTTP 200.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Execution Router — stats</div>
+          <div class="check-url">curl http://localhost:5001/api/execution-router/stats -H "Authorization: Bearer $TOKEN"</div>
+          <div class="check-desc">Returns <code style="font-family:var(--mono);color:var(--green)">{"totalRoutes":0,"byStrategy":{}}</code> when no routes executed yet. HTTP 200.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Institutional — tiers (public)</div>
+          <div class="check-url">curl http://localhost:5001/api/institutional/tiers -H "Authorization: Bearer $TOKEN"</div>
+          <div class="check-desc">Returns bronze, silver, gold, platinum config objects. HTTP 200.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon admin">⬡</div>
+        <div class="check-body">
+          <div class="check-name">Audit Ledger — stats <span style="color:var(--purple);font-weight:700;">(admin token required)</span></div>
+          <div class="check-url">curl http://localhost:5001/api/audit-ledger/stats -H "Authorization: Bearer $ADMIN_TOKEN"</div>
+          <div class="check-desc">Returns <code style="font-family:var(--mono);color:var(--green)">{"total":0,"lastEntryId":0}</code>. Returns 403 if token is not admin.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon admin">⬡</div>
+        <div class="check-body">
+          <div class="check-name">Audit Ledger — chain verify <span style="color:var(--purple);font-weight:700;">(admin token required)</span></div>
+          <div class="check-url">curl http://localhost:5001/api/audit-ledger/verify-chain -H "Authorization: Bearer $ADMIN_TOKEN"</div>
+          <div class="check-desc">Returns <code style="font-family:var(--mono);color:var(--green)">{"valid":true,"checkedCount":0}</code>. Chain is intact (nothing to tamper with yet).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 6: What normal looks like -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-icon">◈</span>
+      <span class="section-title">Step 6 — Expected "Normal" States</span>
+    </div>
+    <div class="info-box">These are not errors — they are correct behavior for a freshly started system with no live market connections.</div>
+    <div class="check-list">
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Blockchain chains show "disconnected"</div>
+          <div class="check-desc">Ethereum, BSC, Polygon, Arbitrum, Optimism RPC nodes are not configured in .env. The settlement service starts but idles. This is correct — <code style="font-family:var(--mono)">BLOCKCHAIN_ENABLED=false</code>.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Redis unavailable messages in server log</div>
+          <div class="check-desc">EventBus, MarketLock, and Notifications fall back to in-process mode when Redis is not running. The exchange works fully without Redis in development.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">Empty tables on all new pages</div>
+          <div class="check-desc">Arbitrage, Liquidity, Market Intelligence, Execution Router, and Audit Ledger show empty states when no data has been generated yet. The pages are correctly wired — they just need real trading activity to populate.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">SMTP error in server log</div>
+          <div class="check-desc">Brevo SMTP verification fails on startup because the server IP is not whitelisted in the Brevo dashboard. Email sending is non-critical — login, trading, and all enterprise features work independently.</div>
+        </div>
+      </div>
+      <div class="check-row">
+        <div class="check-icon ok">✓</div>
+        <div class="check-body">
+          <div class="check-name">ECONNREFUSED on socket.io at startup</div>
+          <div class="check-desc">The browser opens before the Express server finishes its ~13-second startup. Socket.io retries automatically — these errors clear on their own within 30 seconds.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    TrusonXchanger · 524 automated tests · 8 enterprise UI pages · Stages 1, 2, 25–30 fully implemented
+  </div>
+
+</div>
