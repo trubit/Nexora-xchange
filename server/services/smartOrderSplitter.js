@@ -128,7 +128,7 @@ export class SmartOrderSplitter {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function _estimateLegSlippage(levels, usdAmount, side) {
+function _estimateLegSlippage(levels, usdAmount, _side) {
   if (!levels.length) return 0;
   let remaining = usdAmount;
   let filledUsd = 0;

@@ -212,10 +212,8 @@ export class ArbitrageService extends EventEmitter {
     }
   }
 
-  _buildLegs(opp, tickers) {
-    const buyTicker  = tickers[opp.buyExchange];
-    const sellTicker = tickers[opp.sellExchange];
-    const qty        = DEFAULT_ORDER_SIZE_USD / (opp.buyPrice || 1);
+  _buildLegs(opp, _tickers) {
+    const qty = DEFAULT_ORDER_SIZE_USD / (opp.buyPrice || 1);
 
     return [
       {

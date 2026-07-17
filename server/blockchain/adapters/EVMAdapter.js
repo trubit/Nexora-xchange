@@ -18,7 +18,6 @@
  */
 
 import axios from "axios";
-import { getTokenConfig } from "../config/chains.js";
 
 // ERC-20 Transfer event topic
 const ERC20_TRANSFER_TOPIC =

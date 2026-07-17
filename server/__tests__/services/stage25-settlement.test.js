@@ -5,7 +5,7 @@
  *        BlockchainIndexerService (stats, address watcher, lifecycle)
  */
 
-import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 
 // ── Hoisted mocks (vi.hoisted runs before vi.mock factory) ───────────────────
 const {

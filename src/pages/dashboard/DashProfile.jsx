@@ -135,7 +135,7 @@ const DashProfile = () => {
   const [avatarPreview, setAvatarPreview]     = useState(null);
   const [avatarErr, setAvatarErr]             = useState("");
 
-  useEffect(() => { refreshUser(); }, []);
+  useEffect(() => { refreshUser(); }, [refreshUser]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

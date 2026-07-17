@@ -174,7 +174,6 @@ export class BatchExecutor {
     // Aggregate all debits/credits by (userId, asset) before writing.
     // Key format: `${userId}:${asset}`
     const credits  = new Map(); // key → amount
-    const debits   = new Map(); // key → amount
     const lockedOp = new Map(); // key → { locked: delta, balance: delta }
 
     const addTo = (m, key, amount) => m.set(key, (m.get(key) ?? 0) + amount);

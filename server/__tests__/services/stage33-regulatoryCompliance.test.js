@@ -125,7 +125,7 @@ describe("RegulatoryComplianceService", () => {
       const fakeHit = { hitId: "SHT-1", listName: "OFAC_SDN", status: "pending_review" };
       SanctionHit.create.mockResolvedValue(fakeHit);
 
-      const hits = await svc.screenEntity({ name: "ofac sdn match" });
+      await svc.screenEntity({ name: "ofac sdn match" });
       expect(SanctionHit.create).toHaveBeenCalled();
       expect(svc._stats.sanctionScreenings).toBe(1);
     });
@@ -134,7 +134,7 @@ describe("RegulatoryComplianceService", () => {
       const fakeHit = { hitId: "SHT-2", listName: "INTERNAL_BLACKLIST" };
       SanctionHit.create.mockResolvedValue(fakeHit);
 
-      const hits = await svc.screenEntity({ address: "0x0000abc" });
+      await svc.screenEntity({ address: "0x0000abc" });
       expect(SanctionHit.create).toHaveBeenCalledWith(
         expect.objectContaining({ listName: "INTERNAL_BLACKLIST", matchType: "address" })
       );

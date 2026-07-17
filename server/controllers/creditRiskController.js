@@ -116,8 +116,6 @@ export async function getLiquidityRisk(req, res) {
       snapshots = Object.entries(snapshot).map(([symbol, tickers]) => {
         const internal = Object.values(tickers)[0];
         if (!internal) return null;
-        const mid   = (internal.bid + internal.ask) / 2;
-        const half  = mid * 0.001;
         return {
           symbol,
           bids: [[internal.bid, (internal.volume || 1) * 0.5]],

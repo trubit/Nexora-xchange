@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { kycApi } from "../../services/api/kyc";
 import "../../styles/kyc.css";
@@ -221,7 +221,6 @@ const Row = ({ label, val }) => (
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 const DashKyc = () => {
-  const navigate = useNavigate();
   const { refreshUser } = useAuthStore();
 
   const [pageLoading, setPageLoading] = useState(true);
@@ -242,7 +241,7 @@ const DashKyc = () => {
       .then((data) => setProfile(data.profile))
       .catch(() => setProfile(null))
       .finally(() => setPageLoading(false));
-  }, []);
+  }, [refreshUser]);
 
   const requiresBack = docType === "national_id" || docType === "drivers_license";
 

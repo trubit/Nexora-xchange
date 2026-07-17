@@ -17,7 +17,6 @@ const STATUS_CLR = {
   executing: "#3b82f6", completed: "#0ecb81", failed: "#f6465d", cancelled: "#474d57",
 };
 
-const fmtUsd = (n) => "$" + Number(n ?? 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
 const fmt    = (n) => Number(n ?? 0).toLocaleString();
 
 const TABS = [

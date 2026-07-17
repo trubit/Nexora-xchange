@@ -199,7 +199,7 @@ describe("AuditLedgerService", () => {
 
     it("returns valid=true when hashes match", async () => {
       const genesis = "0".repeat(64);
-      const hash1   = "fakehash";
+      const _hash1  = "fakehash";
       // computeHash always returns "fakehash" in this suite
       const entries = [
         { entryId: 1, prevHash: genesis, hash: "fakehash",

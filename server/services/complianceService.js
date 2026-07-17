@@ -12,7 +12,6 @@ import User            from "../models/User.js";
 import AmlAlert        from "../models/AmlAlert.js";
 import ExecutedTrade   from "../models/ExecutedTrade.js";
 import Transaction     from "../models/Transaction.js";
-import { audit }       from "./auditService.js";
 import logger          from "../config/logger.js";
 
 // ── KYC helpers ────────────────────────────────────────────────────────────────

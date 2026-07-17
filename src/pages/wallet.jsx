@@ -434,13 +434,13 @@ const DepositModal = ({ initialAsset, assets, onClose }) => {
 
   // Dynamic map from backend: { ETH: [{network,label,confirmations}], USDT: [...], ... }
   const { data: assetChainMap = {} } = useAssetChainMap();
-  const chains = assetChainMap[asset] ?? [];
+  const chains = useMemo(() => assetChainMap[asset] ?? [], [assetChainMap, asset]);
 
   // When asset changes, auto-select the network if there's only one option
   useEffect(() => {
     setNetwork(chains.length === 1 ? chains[0] : null);
     setFb(null);
-  }, [asset, chains.length]);
+  }, [asset, chains]);
 
   useEffect(() => {
     const fn = (e) => e.key === "Escape" && onClose();
@@ -907,7 +907,6 @@ const RecentActivity = ({ assetMap }) => {
                   const dec = assetMap[tx.asset]?.decimals ?? 6;
                   const isTransfer = tx.type === "transfer";
                   const isIn  = isTransfer ? tx.direction === "in"  : tx.type === "deposit"  || tx.type === "trade_buy";
-                  const isOut = isTransfer ? tx.direction === "out" : tx.type === "withdrawal";
                   const isCredit = isIn;
                   const typeLabel = isTransfer
                     ? (tx.direction === "in" ? "Received" : "Sent")

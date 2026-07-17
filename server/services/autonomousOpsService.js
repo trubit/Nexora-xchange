@@ -97,7 +97,7 @@ export class AutonomousOpsService {
     return event;
   }
 
-  async triggerManualScale({ direction, service, toReplicas, initiatedBy = "admin" } = {}) {
+  async triggerManualScale({ direction, service, toReplicas, initiatedBy: _initiatedBy = "admin" } = {}) {
     if (!["scale_out", "scale_in"].includes(direction)) {
       throw new Error("direction must be scale_out or scale_in.");
     }

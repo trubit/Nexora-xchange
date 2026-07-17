@@ -3,7 +3,7 @@
  * Tests: DeviceFingerprintEngine, GeoIpVerifier, ContinuousAuthEngine
  */
 
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi } from "vitest";
 
 vi.mock("../../config/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() },

@@ -105,9 +105,7 @@ export async function cachedFetch(cacheKey, ttlMs, fetchFn) {
   if (l2 && Date.now() - l2.ts < ttlMs) return l2.data;
 
   // Cache miss — fetch
-  const start = Date.now();
   const data  = await fetchFn();
-  const ms    = Date.now() - start;
 
   // Store in both layers
   L2_CACHE.set(cacheKey, { data, ts: Date.now() });

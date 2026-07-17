@@ -66,7 +66,6 @@ import { aggregatedOrderBookEngine }   from "./services/aggregatedOrderBookEngin
 import marketIntelligenceRoutes        from "./routes/marketIntelligence.js";
 import { marketIntelligenceCore }      from "./services/marketIntelligenceCore.js";
 import executionRouterRoutes           from "./routes/executionRouter.js";
-import { executionRouterService }      from "./services/executionRouterService.js";
 import institutionalRoutes             from "./routes/institutional.js";
 import auditLedgerRoutes               from "./routes/auditLedger.js";
 import { auditLedgerService }          from "./services/auditLedgerService.js";

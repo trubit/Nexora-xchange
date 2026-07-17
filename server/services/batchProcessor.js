@@ -96,7 +96,7 @@ export class BatchProcessor extends EventEmitter {
 
   // ── Internal flush ────────────────────────────────────────────────────────────
 
-  async _flush(q, immediate = false) {
+  async _flush(q, _immediate = false) {
     if (q.timer) { clearTimeout(q.timer); q.timer = null; }
     if (q.items.length === 0) return;
 

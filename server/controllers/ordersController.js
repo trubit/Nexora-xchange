@@ -3,7 +3,6 @@ import { cancelUserOrder, placeOCOOrder, placeSpotOrder } from "../services/trad
 import {
   emitOrderCancelled,
   emitOrderCreated,
-  emitOrderUpdated,
 } from "../socket/orderEvents.js";
 import { redisClients } from "../config/redis.js";
 import { notificationService } from "../notifications/NotificationService.js";

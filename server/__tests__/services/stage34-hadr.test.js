@@ -253,7 +253,7 @@ describe("HADRService", () => {
       BackupSnapshot.create.mockResolvedValue({ snapshotId: "BK-manual-1", type: "differential" });
       BackupSnapshot.findOneAndUpdate.mockResolvedValue({});
 
-      const result = await svc.triggerManualBackup({ type: "differential" });
+      await svc.triggerManualBackup({ type: "differential" });
       expect(BackupSnapshot.create).toHaveBeenCalledWith(
         expect.objectContaining({ type: "differential" })
       );
@@ -316,7 +316,7 @@ describe("HADRService", () => {
       DisasterRecoveryPlan.findOne.mockReturnValue({ lean: vi.fn().mockResolvedValue(plan) });
       DisasterRecoveryPlan.findOneAndUpdate.mockReturnValue({ lean: vi.fn().mockResolvedValue(updated) });
 
-      const result = await svc.recordDrTest("DRP-1", { outcome: "pass", notes: "Successful" });
+      await svc.recordDrTest("DRP-1", { outcome: "pass", notes: "Successful" });
       expect(DisasterRecoveryPlan.findOneAndUpdate).toHaveBeenCalledWith(
         { planId: "DRP-1" },
         expect.objectContaining({ $push: expect.objectContaining({ testResults: expect.any(Object) }) }),

@@ -53,7 +53,7 @@ export class SessionAnomalyDetector {
 
   // ── Rapid IP Switching ─────────────────────────────────────────────────────────
 
-  async _detectRapidIpSwitch(uid, currentIp, sessionId) {
+  async _detectRapidIpSwitch(uid, currentIp, _sessionId) {
     const redis = redisClients.cache;
     if (!redis) return null;
 
@@ -170,7 +170,7 @@ export class SessionAnomalyDetector {
 
   // ── Concurrent Suspicious Sessions ────────────────────────────────────────────
 
-  async _detectConcurrentAnomalies(uid, currentIp) {
+  async _detectConcurrentAnomalies(uid, _currentIp) {
     try {
       const sessions = await DeviceSession.find(
         { userId: uid, isActive: true },
@@ -208,7 +208,7 @@ export class SessionAnomalyDetector {
     return ip.split(":").slice(0, 3).join(":");
   }
 
-  async _updateIpHistory(uid, ip) {
+  async _updateIpHistory(_uid, _ip) {
     // Already handled inline in _detectRapidIpSwitch and _detectImpossibleTravel
   }
 

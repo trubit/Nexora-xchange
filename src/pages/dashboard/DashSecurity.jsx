@@ -307,7 +307,7 @@ const DashSecurity = () => {
   const { isAuthenticated, user, logout, refreshUser } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab]     = useState("overview");
-  useEffect(() => { refreshUser(); }, []);
+  useEffect(() => { refreshUser(); }, [refreshUser]);
   const [showCreateKey, setShowCreateKey] = useState(false);
   const [revealedKey,  setRevealedKey]    = useState(null);
   const [revealedMeta, setRevealedMeta]   = useState(null);

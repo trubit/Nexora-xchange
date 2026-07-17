@@ -106,7 +106,7 @@ describe("ClientManagementService.updateClientTier", () => {
     const svc = new ClientManagementService();
     const result = await svc.updateClientTier("c1", "gold");
     expect(result.tier).toBe("gold");
-    const [id, payload] = mockInstClient.findByIdAndUpdate.mock.calls[0];
+    const [, payload] = mockInstClient.findByIdAndUpdate.mock.calls[0];
     expect(payload.rateLimitRpm).toBe(TIER_LIMITS.gold.rateLimitRpm);
   });
 

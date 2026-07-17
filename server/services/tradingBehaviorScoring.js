@@ -224,7 +224,7 @@ export class TradingBehaviorScoring {
 
   _detectAnomalies(data) {
     const anomalies = [];
-    const { orders, trades } = data;
+    const { orders } = data;
 
     // 1. Wash trading: same symbol buy + sell within 60s
     const sorted = [...orders].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));

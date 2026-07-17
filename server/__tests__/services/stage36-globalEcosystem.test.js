@@ -273,7 +273,7 @@ describe("GlobalEcosystemService", () => {
       const int = { integrationId: "INT-1", callCount: 5, status: "active" };
       EcosystemIntegration.findOneAndUpdate.mockReturnValue({ lean: vi.fn().mockResolvedValue(int) });
 
-      const result = await svc.recordIntegrationCall("INT-1", { success: true });
+      await svc.recordIntegrationCall("INT-1", { success: true });
       expect(EcosystemIntegration.findOneAndUpdate).toHaveBeenCalledWith(
         { integrationId: "INT-1" },
         expect.objectContaining({ $inc: { callCount: 1 }, status: "active" }),

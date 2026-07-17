@@ -11,8 +11,6 @@ const client = process.env.ANTHROPIC_API_KEY
 const cache = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
 
-const round = (v, p = 2) => Number(Number(v || 0).toFixed(p));
-
 // ── AI narrative via Claude Haiku ─────────────────────────────────────────────
 
 const callClaude = async (prompt) => {

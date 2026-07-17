@@ -13,7 +13,6 @@
 
 import crypto     from "crypto";
 import ApiKey     from "../models/ApiKey.js";
-import logger     from "../config/logger.js";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 

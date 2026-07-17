@@ -29,7 +29,6 @@ const USD = new Intl.NumberFormat("en-US", {
   style: "currency", currency: "USD",
   minimumFractionDigits: 2, maximumFractionDigits: 2,
 });
-const fmtUSD  = (n) => USD.format(n ?? 0);
 const fmtN    = (n, d = 6) => Number.isFinite(+n) ? (+n).toFixed(d) : "—";
 const fmtPct  = (n) => { const v = Number(n ?? 0); return `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`; };
 const fmtDate = (d) => {
@@ -647,8 +646,8 @@ const DtChart = ({ symbol }) => (
 // ── Order Book ────────────────────────────────────────────────────────────────
 
 const DtOrderBook = ({ marketState, symbol }) => {
-  const bids = marketState?.orderBook?.bids ?? [];
-  const asks = marketState?.orderBook?.asks ?? [];
+  const bids = useMemo(() => marketState?.orderBook?.bids ?? [], [marketState]);
+  const asks = useMemo(() => marketState?.orderBook?.asks ?? [], [marketState]);
   const ticker = marketState?.ticker || {};
   const lastPrice = ticker.lastPrice ?? ticker.price ?? 0;
 

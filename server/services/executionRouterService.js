@@ -188,7 +188,7 @@ export class ExecutionRouterService extends EventEmitter {
 
   _buildTwapLegs(pair, side, quantity, slices) {
     const sliceQty = quantity / slices;
-    return Array.from({ length: slices }, (_, i) => ({
+    return Array.from({ length: slices }, (_) => ({
       venue:    "internal",
       side,
       quantity: +sliceQty.toFixed(8),

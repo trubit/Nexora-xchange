@@ -190,7 +190,7 @@ const UsersPanel = () => {
   const [saving, setSaving]     = useState(null);
 
   const { data, isLoading } = useQuery({ queryKey: ["adm-users"], queryFn: api.users, staleTime: 60_000 });
-  const users = data?.users || [];
+  const users = useMemo(() => data?.users || [], [data]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -201,6 +201,7 @@ const UsersPanel = () => {
       return true;
     });
   }, [users, search, roleFilter, statusFilter]);
+
 
   const toggle = async (u, field, val) => {
     setSaving(u.id + field);
@@ -813,7 +814,7 @@ const CoinsPanel = () => {
   const [cgLoading, setCgLoading] = useState(false);
   const [cgError,   setCgError]   = useState("");
   const [form,      setForm]      = useState(EMPTY_FORM);
-  const [formOpen,  setFormOpen]  = useState(false);
+  const [, setFormOpen]  = useState(false);
   const [saving,    setSaving]    = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadErr, setUploadErr] = useState("");
@@ -1352,15 +1353,6 @@ const SEC_SEVERITY_COLOR = { info:"#848e9c", warning:"#f59e0b", critical:"#f6465
 const SEC_SEVERITY_BG    = { info:"rgba(132,142,156,0.1)", warning:"rgba(245,158,11,0.1)", critical:"rgba(246,70,93,0.1)" };
 
 const fmtDateSec = (d) => d ? new Date(d).toLocaleString([], { dateStyle:"medium", timeStyle:"short" }) : "—";
-const fmtRelSec  = (d) => {
-  if (!d) return "Never";
-  const diff = Date.now() - new Date(d);
-  if (diff < 60_000)    return "Just now";
-  if (diff < 3_600_000) return `${Math.floor(diff/60_000)}m ago`;
-  if (diff < 86_400_000)return `${Math.floor(diff/3_600_000)}h ago`;
-  return `${Math.floor(diff/86_400_000)}d ago`;
-};
-
 const SecurityPanel = () => {
   const qc = useQueryClient();
   const [secTab,     setSecTab]     = useState("alerts");

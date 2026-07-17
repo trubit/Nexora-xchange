@@ -61,7 +61,6 @@ const USD = new Intl.NumberFormat("en-US", {
 });
 const fmtUSD    = (n) => USD.format(n ?? 0);
 const fmtCrypto = (n, dec = 6) => Number.isFinite(+n) ? (+n).toFixed(Math.min(dec, 8)) : "—";
-const fmtPct    = (n) => { const v = Number(n ?? 0); return `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`; };
 const fmtDate   = (d) => {
   try { return new Date(d).toLocaleString([], { dateStyle: "short", timeStyle: "short" }); }
   catch { return "—"; }
@@ -159,7 +158,7 @@ const WelcomeBar = ({ user, socketStatus, isLoading }) => {
 
 // ── Portfolio hero card ───────────────────────────────────────────────────────
 
-const PortfolioHero = ({ portfolio, wallets, isLoading, onNavigate, tickers }) => {
+const PortfolioHero = ({ portfolio, wallets, isLoading, tickers }) => {
   const [hidden, setHidden] = useState(false);
   const total   = portfolio?.totalBalanceUsdt ?? 0;
   const wCount  = portfolio?.walletCount      ?? wallets.length;
@@ -244,7 +243,7 @@ const PortfolioHero = ({ portfolio, wallets, isLoading, onNavigate, tickers }) =
 
 // ── Stat cards ────────────────────────────────────────────────────────────────
 
-const StatGrid = ({ portfolio, user, tickers, wallets, isLoading }) => {
+const StatGrid = ({ portfolio, user, wallets, isLoading }) => {
   const total = portfolio?.totalBalanceUsdt ?? 0;
 
   // compute available USD from wallet data
@@ -313,7 +312,7 @@ const StatGrid = ({ portfolio, user, tickers, wallets, isLoading }) => {
 
 // ── Asset balances table ──────────────────────────────────────────────────────
 
-const AssetTable = ({ wallets, isLoading, onNavigate }) => {
+const AssetTable = ({ wallets, isLoading }) => {
   const [q, setQ] = useState("");
   const visible = useMemo(() => {
     const lq = q.toLowerCase();
@@ -547,7 +546,7 @@ const RecentTransactions = ({ transactions, isLoading }) => (
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user: authUser, logout, isAuthenticated, refreshUser } = useAuthStore();
-  useEffect(() => { refreshUser(); }, []);
+  useEffect(() => { refreshUser(); }, [refreshUser]);
 
   // ── All hooks before any conditional return ───────────────────────────────
   const [sidebarOpen, setSidebarOpen] = useState(false);

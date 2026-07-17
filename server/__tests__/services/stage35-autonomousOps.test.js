@@ -203,7 +203,7 @@ describe("AutonomousOpsService", () => {
       OperationsIncident.findOne.mockReturnValue({ lean: vi.fn().mockResolvedValue(inc) });
       OperationsIncident.findOneAndUpdate.mockReturnValue({ lean: vi.fn().mockResolvedValue(updated) });
 
-      const result = await svc.updateIncident("INC-1", { status: "investigating", message: "Looking into it" });
+      await svc.updateIncident("INC-1", { status: "investigating", message: "Looking into it" });
       expect(OperationsIncident.findOneAndUpdate).toHaveBeenCalledWith(
         { incidentId: "INC-1" },
         expect.objectContaining({ $push: expect.any(Object) }),

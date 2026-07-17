@@ -172,7 +172,7 @@ describe("CustodyVaultService — lockVault / unlockVault", () => {
 
   test("unlockVault updates status to active", async () => {
     VaultAccount.findOneAndUpdate.mockReturnValue({ lean: vi.fn().mockResolvedValue(mockVault({ status: "active" })) });
-    const vault = await svc.unlockVault("VAULT-001");
+    await svc.unlockVault("VAULT-001");
     expect(VaultAccount.findOneAndUpdate).toHaveBeenCalledWith(
       { vaultId: "VAULT-001", status: "locked" },
       { status: "active" },

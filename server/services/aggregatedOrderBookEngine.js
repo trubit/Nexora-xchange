@@ -105,15 +105,6 @@ export class AggregatedOrderBookEngine {
   // ── Internal ───────────────────────────────────────────────────────────────
 
   _rebuildAll() {
-    const knownPairs = new Set();
-    for (const state of liquidityAggregatorService.getProviders()) {
-      // can't call getProviders() to get pairs — use aggregator's books
-    }
-    // Collect all unique pairs from provider books
-    const allPairs = new Set();
-    for (const p of liquidityAggregatorService.getProviders()) {
-      // re-route: get from aggregator's internal state
-    }
     // Build directly from aggregator
     this._rebuildFromAggregator();
   }
@@ -153,14 +144,12 @@ export class AggregatedOrderBookEngine {
 function _walkBook(levels, usdAmount, side) {
   if (!levels.length) return null;
   let remaining = usdAmount;
-  let totalCost = 0;
   let filledUsd = 0;
   const weightedPrices = [];
 
   for (const level of levels) {
     const levelUsd = level.price * level.quantity;
     const taken    = Math.min(remaining, levelUsd);
-    totalCost += taken;
     filledUsd += taken;
     weightedPrices.push({ price: level.price, usd: taken });
     remaining -= taken;

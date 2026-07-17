@@ -14,7 +14,6 @@
  */
 
 import { EventEmitter } from "events";
-import { v4 as uuidv4 }  from "uuid";
 import SettlementRecord   from "../models/SettlementRecord.js";
 import BlockchainTx       from "../models/BlockchainTx.js";
 import { CHAINS, BLOCKCHAIN_ENABLED } from "../blockchain/config/chains.js";

@@ -55,7 +55,7 @@ export class MarketIntelligenceCore extends EventEmitter {
   // ── Public ingestion API ──────────────────────────────────────────────────────
 
   /** Feed a new price/volume candle for a pair. */
-  ingestCandle(pair, { open, close, volume, timestamp }) {
+  ingestCandle(pair, { close, volume }) {
     if (!this._windows.has(pair)) this._windows.set(pair, { prices: [], volumes: [], trades: [] });
     const w = this._windows.get(pair);
     w.prices.push(close);

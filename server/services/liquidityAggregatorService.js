@@ -137,7 +137,7 @@ export class LiquidityAggregatorService extends EventEmitter {
         state.config.healthy = true;
         await LiquidityProvider.findByIdAndUpdate(state.config._id, { healthy: true, failCount: 0 });
       }
-    } catch (err) {
+    } catch {
       state.failCount = (state.failCount ?? 0) + 1;
       this._stats.failures++;
       if (state.failCount >= MAX_FAILS) {

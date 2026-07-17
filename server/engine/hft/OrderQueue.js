@@ -21,7 +21,6 @@
  */
 
 import { HFTConfig } from "./HFTConfig.js";
-import { hftMetrics } from "./metrics.js";
 
 // ── SymbolQueue ───────────────────────────────────────────────────────────────
 

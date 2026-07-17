@@ -169,7 +169,7 @@ export class PortfolioRiskHeatmap {
     return Math.min(100, base + sizePenalty);
   }
 
-  _correlationHeat(pos, positions) {
+  _correlationHeat(pos, _positions) {
     // Correlation with BTC (the dominant risk factor)
     const corrWithBtc = CORR["BTC/USDT"]?.[pos.symbol] ||
                         CORR[pos.symbol]?.["BTC/USDT"] || 0.5;

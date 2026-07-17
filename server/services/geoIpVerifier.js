@@ -17,7 +17,6 @@
 
 import { redisClients }   from "../config/redis.js";
 import { auditSecurity }  from "../services/auditService.js";
-import logger             from "../config/logger.js";
 
 // Simplified country block list — extend as needed for compliance/regulatory reasons
 const BLOCKED_COUNTRIES = new Set(["KP", "IR", "CU", "SY"]);

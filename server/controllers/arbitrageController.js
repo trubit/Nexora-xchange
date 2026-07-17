@@ -153,7 +153,7 @@ export const getExchanges = async (_req, res) => {
   try {
     const exchanges = marketFeedAggregator.getExchanges();
     res.json({ ok: true, exchanges });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -163,7 +163,7 @@ export const getTrackedSymbols = async (_req, res) => {
   try {
     const symbols = marketFeedAggregator.getSymbols();
     res.json({ ok: true, symbols, count: symbols.length });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: "Internal server error" });
   }
 };

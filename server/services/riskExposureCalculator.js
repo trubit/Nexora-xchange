@@ -37,7 +37,7 @@ export class RiskExposureCalculator {
       import("../models/Transaction.js").then((m) => m.default),
     ]);
 
-    const [orders, transactions] = await Promise.all([
+    const [orders, _transactions] = await Promise.all([
       Order.find({ user: userId, status: { $in: ["open", "partially_filled"] } }).lean(),
       Transaction.find({ user: userId, status: "completed" }).lean(),
     ]);
@@ -315,7 +315,7 @@ export class RiskExposureCalculator {
     return recs.length ? recs : [`${symbol} market risk is within normal parameters.`];
   }
 
-  _buildAlerts(riskScore, exposure, varMetrics) {
+  _buildAlerts(riskScore, exposure, _varMetrics) {
     const alerts = [];
     if (riskScore >= 80) alerts.push({ level: "CRITICAL", message: "Risk score exceeds critical threshold." });
     else if (riskScore >= 60) alerts.push({ level: "HIGH", message: "Elevated risk detected." });

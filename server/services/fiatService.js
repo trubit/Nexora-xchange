@@ -226,7 +226,7 @@ export const initiateDeposit = async (userId, { currency, amount }) => {
   const wallet        = await FiatWallet.findOne({ user: userId });
   const balanceBefore = round2(wallet?.balances?.[currency] ?? 0);
 
-  const tx = await FiatTransaction.create({
+  await FiatTransaction.create({
     txId,
     user: userId,
     type: "deposit",
@@ -347,7 +347,7 @@ export const requestWithdrawal = async (userId, { bankAccountId, currency, amoun
   const fee = round2(calcWithdrawalFee(currency, amount));
   const txId = genTxId();
 
-  const { tx } = await debitWallet(userId, currency, amount, fee, {
+  await debitWallet(userId, currency, amount, fee, {
     txId,
     type: "withdrawal",
     bankAccountId: bankAccount._id,
