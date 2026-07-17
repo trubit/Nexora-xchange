@@ -3,10 +3,13 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore }    from "../../store/authStore";
 import { requestWithRetry } from "../../api/client.js";
-import DashNavbar  from "../../Components/layout/DashNavbar";
-import CoinLogo    from "../../Components/common/CoinLogo";
+import DashNavbar     from "../../Components/layout/DashNavbar";
+import CoinLogo       from "../../Components/common/CoinLogo";
+import BlogUpdateForm from "../../Components/common/BlogUpdateForm";
+import { useBlogPostsQuery } from "../../hooks/queries/useBlogPostsQuery";
 import "../../styles/dashboard.css";
 import "../../styles/admin.css";
+import "../../styles/blogs.css";
 
 // ── API helpers ───────────────────────────────────────────────────────────────
 
@@ -1681,16 +1684,83 @@ const SecurityPanel = () => {
   );
 };
 
+// ── Blog Posts panel ─────────────────────────────────────────────────────────
+
+const BlogPanel = () => {
+  const blogQuery = useBlogPostsQuery({ limit: 50, sort: "-updatedAt" });
+  const posts        = blogQuery.posts        || [];
+  const visiblePosts = blogQuery.visiblePosts || [];
+  const activePost   = visiblePosts[0] ?? null;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      <BlogUpdateForm
+        posts={posts}
+        visiblePosts={visiblePosts}
+        activePost={activePost}
+        onSaveSuccess={blogQuery.refetch}
+      />
+
+      <div className="dash-section">
+        <div className="dash-section-head">
+          <span className="dash-section-title">
+            <i className="bi bi-newspaper" style={{ marginRight: 7, color: "#f0b90b" }} />
+            Published Posts
+          </span>
+          <span style={{ fontSize: "0.75rem", color: "#848e9c" }}>{visiblePosts.length} post{visiblePosts.length !== 1 ? "s" : ""}</span>
+        </div>
+
+        {blogQuery.isLoading ? (
+          <div className="adm-loading"><div className="adm-spinner" /></div>
+        ) : visiblePosts.length === 0 ? (
+          <div className="adm-empty">
+            <i className="bi bi-newspaper" />
+            <p>No blog posts yet. Use the form above to add one.</p>
+          </div>
+        ) : (
+          <div className="adm-table-wrap">
+            <table className="adm-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Tag</th>
+                  <th>Date</th>
+                  <th>Has Image</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visiblePosts.map((p) => (
+                  <tr key={p.id}>
+                    <td style={{ fontWeight: 600, maxWidth: 320, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.title}</td>
+                    <td>{p.tag ? <span className="adm-pill adm-pill--gold">{p.tag}</span> : <span style={{ color: "#474d57" }}>—</span>}</td>
+                    <td className="adm-td-muted">{p.date || "—"}</td>
+                    <td>
+                      {p.image
+                        ? <span className="adm-pill adm-pill--green"><i className="bi bi-check" /> Yes</span>
+                        : <span className="adm-pill adm-pill--gray">No</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // ── NAV ───────────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { id: "overview", label: "Overview",  icon: "bi-grid-1x2-fill"         },
-  { id: "users",    label: "Users",     icon: "bi-people-fill"           },
-  { id: "kyc",      label: "KYC Queue", icon: "bi-person-vcard-fill"     },
-  { id: "support",  label: "Support",   icon: "bi-headset"               },
-  { id: "risk",     label: "Risk",      icon: "bi-shield-exclamation"    },
-  { id: "coins",    label: "Coins",     icon: "bi-coin"                  },
-  { id: "security", label: "Security",  icon: "bi-shield-fill-check"     },
+  { id: "overview", label: "Overview",   icon: "bi-grid-1x2-fill"         },
+  { id: "users",    label: "Users",      icon: "bi-people-fill"           },
+  { id: "kyc",      label: "KYC Queue",  icon: "bi-person-vcard-fill"     },
+  { id: "support",  label: "Support",    icon: "bi-headset"               },
+  { id: "risk",     label: "Risk",       icon: "bi-shield-exclamation"    },
+  { id: "coins",    label: "Coins",      icon: "bi-coin"                  },
+  { id: "security", label: "Security",   icon: "bi-shield-fill-check"     },
+  { id: "blog",     label: "Blog Posts", icon: "bi-newspaper"             },
 ];
 
 // ── Main page ─────────────────────────────────────────────────────────────────
@@ -1715,7 +1785,8 @@ const AdminDashboard = () => {
     support:  { title: "Support Tickets",   sub: "Handle user support requests" },
     risk:     { title: "Risk Management",   sub: "Monitor and act on flagged accounts" },
     coins:    { title: "Coin Management",   sub: "Add verified coins from CoinGecko or manually" },
-    security: { title: "Security Center",  sub: "AML alerts, immutable audit log, and account controls" },
+    security: { title: "Security Center",   sub: "AML alerts, immutable audit log, and account controls" },
+    blog:     { title: "Blog Posts",        sub: "Create, edit, and delete blog content" },
   };
 
   return (
@@ -1771,6 +1842,7 @@ const AdminDashboard = () => {
           {active === "risk"     && <RiskPanel />}
           {active === "coins"    && <CoinsPanel />}
           {active === "security" && <SecurityPanel />}
+          {active === "blog"     && <BlogPanel />}
         </main>
       </div>
     </div>

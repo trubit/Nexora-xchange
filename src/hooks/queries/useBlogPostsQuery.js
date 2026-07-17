@@ -14,19 +14,11 @@ const getSortValue = (post) => {
 };
 
 export const getVisiblePosts = (posts = []) => {
-  const blockedTitles = new Set(
-    [
-      "Arbitrage Bot: Never Miss a Risk-Free Spread Again",
-      "Nexora Golden XBot: Powering Smarter Trades with 50+ Trading Pair Signals",
-    ].map((title) => title.toLowerCase()),
-  );
-
   const filtered = posts.filter(
     (post) =>
       post &&
       post.title &&
       post.title.trim() &&
-      !blockedTitles.has(post.title.toLowerCase()) &&
       post.description &&
       post.description.trim(),
   );

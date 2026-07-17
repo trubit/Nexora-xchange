@@ -17,8 +17,10 @@ const createExcerpt = (value, limit = 120) => {
 
 // Homepage section showing the latest blog updates.
 const SecondSectionHomePage = () => {
-  const { visiblePosts } = useBlogPosts();
+  const { visiblePosts, loading } = useBlogPosts();
   const latestPosts = visiblePosts.slice(0, 4);
+
+  if (loading || latestPosts.length === 0) return <ExchangesSection />;
 
   return (
     <>

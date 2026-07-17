@@ -54,7 +54,7 @@ const arbitrageOpportunitySchema = new mongoose.Schema(
     simulation:            simulationSchema,
     marketConditions:      marketConditionsSchema,
     detectedAt:            { type: Date, default: Date.now, index: true },
-    expiresAt:             { type: Date, index: true },
+    expiresAt:             { type: Date },
   },
   { timestamps: true },
 );

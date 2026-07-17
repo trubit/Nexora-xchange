@@ -57,6 +57,31 @@ import arbitrageRoutes from "./routes/arbitrage.js";
 import creditRiskRoutes from "./routes/creditRisk.js";
 import performanceRoutes from "./routes/performance.js";
 import globalSyncRoutes from "./routes/globalSync.js";
+import settlementRoutes from "./routes/settlement.js";
+import { multiChainSettlementService } from "./services/multiChainSettlementService.js";
+import { blockchainIndexerService }    from "./services/blockchainIndexerService.js";
+import liquidityAggregatorRoutes       from "./routes/liquidityAggregator.js";
+import { liquidityAggregatorService }  from "./services/liquidityAggregatorService.js";
+import { aggregatedOrderBookEngine }   from "./services/aggregatedOrderBookEngine.js";
+import marketIntelligenceRoutes        from "./routes/marketIntelligence.js";
+import { marketIntelligenceCore }      from "./services/marketIntelligenceCore.js";
+import executionRouterRoutes           from "./routes/executionRouter.js";
+import { executionRouterService }      from "./services/executionRouterService.js";
+import institutionalRoutes             from "./routes/institutional.js";
+import auditLedgerRoutes               from "./routes/auditLedger.js";
+import { auditLedgerService }          from "./services/auditLedgerService.js";
+import clearingRoutes                  from "./routes/clearing.js";
+import { clearingHouseService }        from "./services/clearingHouseService.js";
+import custodyVaultRoutes              from "./routes/custodyVault.js";
+import { custodyVaultService }         from "./services/custodyVaultService.js";
+import regulatoryComplianceRoutes      from "./routes/regulatoryCompliance.js";
+import { regulatoryComplianceService } from "./services/regulatoryComplianceService.js";
+import hadrRoutes                      from "./routes/hadr.js";
+import { hadrService }                 from "./services/hadrService.js";
+import autonomousOpsRoutes             from "./routes/autonomousOps.js";
+import { autonomousOpsService }        from "./services/autonomousOpsService.js";
+import globalEcosystemRoutes           from "./routes/globalEcosystem.js";
+import { globalEcosystemService }      from "./services/globalEcosystemService.js";
 import { arbitrageService }         from "./services/arbitrageService.js";
 import { performanceCoreService }   from "./services/performanceCoreService.js";
 import { globalSyncEngine }         from "./services/globalSyncEngine.js";
@@ -249,6 +274,18 @@ app.use("/api/arbitrage",     arbitrageRoutes);
 app.use("/api/credit-risk",   creditRiskRoutes);
 app.use("/api/performance",   performanceRoutes);
 app.use("/api/global-sync",   globalSyncRoutes);
+app.use("/api/settlement",    settlementRoutes);
+app.use("/api/liquidity-aggregator", liquidityAggregatorRoutes);
+app.use("/api/market-intelligence", marketIntelligenceRoutes);
+app.use("/api/execution-router",   executionRouterRoutes);
+app.use("/api/institutional",      institutionalRoutes);
+app.use("/api/audit-ledger",       auditLedgerRoutes);
+app.use("/api/clearing",           clearingRoutes);
+app.use("/api/vault",              custodyVaultRoutes);
+app.use("/api/reg-compliance",     regulatoryComplianceRoutes);
+app.use("/api/hadr",               hadrRoutes);
+app.use("/api/autonomous-ops",     autonomousOpsRoutes);
+app.use("/api/ecosystem",          globalEcosystemRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -389,6 +426,82 @@ const startServer = async () => {
       logger.error({ err: err.message }, "[GlobalSync] Sync engine failed to start.");
     }
 
+    // Stage 27: Autonomous Market Intelligence Core
+    try {
+      await marketIntelligenceCore.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[MIC] Market intelligence core failed to start.");
+    }
+
+    // Stage 26: Global Liquidity Aggregation Network
+    try {
+      await liquidityAggregatorService.start();
+      aggregatedOrderBookEngine.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[LAggr] Liquidity aggregator failed to start.");
+    }
+
+    // Stage 30: Global Financial Audit + Immutable Ledger
+    try {
+      await auditLedgerService.initialize();
+    } catch (err) {
+      logger.error({ err: err.message }, "[AuditLedger] Failed to initialize.");
+    }
+
+    // Phase 31: Global Clearing House & Settlement System
+    try {
+      await clearingHouseService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[ClearingHouse] Failed to start.");
+    }
+
+    // Phase 32: Global Digital Asset Custody & Vault System
+    try {
+      await custodyVaultService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[Vault] Failed to start.");
+    }
+
+    // Phase 33: Global Regulatory Compliance Platform
+    try {
+      await regulatoryComplianceService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[RegCompliance] Failed to start.");
+    }
+
+    // Phase 34: High Availability & Disaster Recovery Platform
+    try {
+      await hadrService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[HADR] Failed to start.");
+    }
+
+    // Phase 35: Autonomous Infrastructure & Operations Platform
+    try {
+      await autonomousOpsService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[AutoOps] Failed to start.");
+    }
+
+    // Phase 36: Global Financial Ecosystem Platform
+    try {
+      await globalEcosystemService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[Ecosystem] Failed to start.");
+    }
+
+    // Stage 25: Multi-Chain Native Settlement Layer
+    try {
+      await multiChainSettlementService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[MCSS] Multi-chain settlement service failed to start.");
+    }
+    try {
+      await blockchainIndexerService.start();
+    } catch (err) {
+      logger.error({ err: err.message }, "[Indexer] Blockchain indexer failed to start.");
+    }
+
     httpServer.listen(PORT, () => {
       logger.info(
         {
@@ -425,6 +538,17 @@ const startServer = async () => {
           arbitrageService.stop(),
           performanceCoreService.stop(),
           globalSyncEngine.stop(),
+          multiChainSettlementService.stop(),
+          blockchainIndexerService.stop(),
+          clearingHouseService.stop(),
+          custodyVaultService.stop(),
+          regulatoryComplianceService.stop(),
+          hadrService.stop(),
+          autonomousOpsService.stop(),
+          globalEcosystemService.stop(),
+          liquidityAggregatorService.stop(),
+          aggregatedOrderBookEngine.stop(),
+          marketIntelligenceCore.stop(),
           closeQueues(),
           closeRedisConnections(),
           mongoose.connection.close(),

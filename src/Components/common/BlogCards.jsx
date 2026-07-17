@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import NexoraBot from "../../assets/truson-x-bot.png";
 
 // Blog display variants used on the blogs page.
 export const BlogCarousel = ({ posts, activeIndex, onSelectIndex }) => {
@@ -26,11 +27,7 @@ export const BlogCarousel = ({ posts, activeIndex, onSelectIndex }) => {
                 <article className="blogs-feature-card">
                   <div
                     className="blogs-feature-media"
-                    style={{
-                      "--media-image": post.image
-                        ? `url(${post.image})`
-                        : "linear-gradient(135deg, #1b1f27, #101318)",
-                    }}
+                    style={{ "--media-image": `url(${post.image || NexoraBot})` }}
                   />
                   <div className="blogs-feature-body">
                     {post.tag ? (
@@ -87,11 +84,7 @@ export const BlogGrid = ({ posts }) => {
           <article className="blogs-grid-card">
             <div
               className="blogs-grid-media"
-              style={{
-                "--media-image": post.image
-                  ? `url(${post.image})`
-                  : "linear-gradient(135deg, #1b1f27, #101318)",
-              }}
+              style={{ "--media-image": `url(${post.image || NexoraBot})` }}
             >
               {post.tag ? (
                 <span className="blogs-grid-tag">{post.tag}</span>

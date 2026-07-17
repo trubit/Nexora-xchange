@@ -12,31 +12,43 @@ const NAV = [
   {
     section: "Trading",
     items: [
-      { to: "/Dashboard/trade",     icon: "bi-graph-up-arrow",       label: "Trade" },
-      { to: "/Dashboard/spot",      icon: "bi-currency-exchange",    label: "Spot" },
-      { to: "/Dashboard/futures",   icon: "bi-lightning-charge-fill",label: "Futures" },
-      { to: "/Dashboard/arbitrage", icon: "bi-shuffle",              label: "Arbitrage" },
+      { to: "/Dashboard/trade",            icon: "bi-graph-up-arrow",        label: "Trade" },
+      { to: "/Dashboard/spot",             icon: "bi-currency-exchange",     label: "Spot" },
+      { to: "/Dashboard/futures",          icon: "bi-lightning-charge-fill", label: "Futures" },
+      { to: "/Dashboard/arbitrage",        icon: "bi-shuffle",               label: "Arbitrage" },
+      { to: "/Dashboard/execution-router", icon: "bi-diagram-3-fill",        label: "Execution Router" },
     ],
   },
   {
     section: "Finance",
     items: [
-      { to: "/wallet",              icon: "bi-wallet2",              label: "Crypto Wallet" },
-      { to: "/Dashboard/fiat",      icon: "bi-cash-stack",           label: "Fiat Wallet" },
-      { to: "/Dashboard/markets",   icon: "bi-bar-chart-line-fill",  label: "Markets" },
+      { to: "/wallet",               icon: "bi-wallet2",             label: "Crypto Wallet" },
+      { to: "/Dashboard/fiat",       icon: "bi-cash-stack",          label: "Fiat Wallet" },
+      { to: "/Dashboard/markets",    icon: "bi-bar-chart-line-fill", label: "Markets" },
+      { to: "/Dashboard/settlement", icon: "bi-link-45deg",          label: "Settlement" },
+      { to: "/Dashboard/liquidity",  icon: "bi-droplet-fill",        label: "Liquidity" },
+      { to: "/Dashboard/clearing",       icon: "bi-bank2",               label: "Clearing House" },
+      { to: "/Dashboard/custody",        icon: "bi-safe2",               label: "Custody Vault"  },
+      { to: "/Dashboard/reg-compliance", icon: "bi-shield-check",         label: "Reg Compliance" },
+      { to: "/Dashboard/hadr",           icon: "bi-shield-shaded",         label: "HA & DR" },
+      { to: "/Dashboard/auto-ops",       icon: "bi-cpu",                    label: "Auto Ops" },
+      { to: "/Dashboard/ecosystem",      icon: "bi-globe2",                 label: "Ecosystem" },
     ],
   },
   {
     section: "Insights",
     items: [
-      { to: "/Dashboard/analytics", icon: "bi-stars",             label: "Analytics"       },
-      { to: "/Dashboard/security",  icon: "bi-shield-fill-check", label: "Security Center" },
+      { to: "/Dashboard/analytics",           icon: "bi-stars",             label: "Analytics"          },
+      { to: "/Dashboard/security",            icon: "bi-shield-fill-check", label: "Security Center"    },
+      { to: "/Dashboard/market-intelligence", icon: "bi-radar",             label: "Market Intelligence"},
+      { to: "/Dashboard/credit-risk",         icon: "bi-person-badge-fill", label: "Credit Risk"        },
     ],
   },
   {
     section: "Exchange",
     items: [
-      { to: "/Dashboard/p2p",       icon: "bi-people-fill",          label: "P2P" },
+      { to: "/Dashboard/p2p",          icon: "bi-people-fill", label: "P2P"         },
+      { to: "/Dashboard/institutional", icon: "bi-bank",        label: "Institutional"},
     ],
   },
   {
@@ -146,6 +158,17 @@ const DashSidebar = ({ open, onClose, onLogout }) => {
                   <i className="bi bi-shield-fill-check" />
                 </span>
                 <span className="dsb-link-label">Admin Panel</span>
+                <span className="dsb-admin-badge">ADMIN</span>
+              </Link>
+              <Link
+                to="/Dashboard/audit-ledger"
+                onClick={onClose}
+                className={`dsb-link dsb-link--gold${isActive("/Dashboard/audit-ledger") ? " dsb-link--active" : ""}`}
+              >
+                <span className="dsb-link-icon">
+                  <i className="bi bi-journal-lock" />
+                </span>
+                <span className="dsb-link-label">Audit Ledger</span>
                 <span className="dsb-admin-badge">ADMIN</span>
               </Link>
             </div>

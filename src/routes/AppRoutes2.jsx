@@ -29,7 +29,6 @@ const FeeSchedule = lazy(() => import("../pages/FeeSchedule"));
 const Terms = lazy(() => import("../pages/terms"));
 const Dashborad = lazy(() => import("../pages/Dashboard"));
 const Blogs = lazy(() => import("../pages/blogs/blogs"));
-const BlogUpdate = lazy(() => import("../Components/common/BlogUpdate"));
 const Spot = lazy(() => import("../Components/trade/Spot"));
 const Futures = lazy(() => import("../Components/trade/Futures"));
 const Support = lazy(() => import("../Components/common/Support"));
@@ -48,8 +47,21 @@ const DashP2P           = lazy(() => import("../pages/dashboard/DashP2P"));
 const DashFiatWallet    = lazy(() => import("../pages/dashboard/DashFiatWallet"));
 const DashKyc           = lazy(() => import("../pages/dashboard/DashKyc"));
 const DashSecurity      = lazy(() => import("../pages/dashboard/DashSecurity"));
-const DashAnalytics     = lazy(() => import("../pages/dashboard/DashAnalytics"));
-const AdminDashboard    = lazy(() => import("../pages/admin/AdminDashboard"));
+const DashAnalytics        = lazy(() => import("../pages/dashboard/DashAnalytics"));
+const DashCreditRisk       = lazy(() => import("../pages/dashboard/DashCreditRisk"));
+const DashSettlement       = lazy(() => import("../pages/dashboard/DashSettlement"));
+const DashLiquidity        = lazy(() => import("../pages/dashboard/DashLiquidity"));
+const DashMarketIntelligence = lazy(() => import("../pages/dashboard/DashMarketIntelligence"));
+const DashExecutionRouter  = lazy(() => import("../pages/dashboard/DashExecutionRouter"));
+const DashInstitutional    = lazy(() => import("../pages/dashboard/DashInstitutional"));
+const DashAuditLedger      = lazy(() => import("../pages/dashboard/DashAuditLedger"));
+const DashClearing         = lazy(() => import("../pages/dashboard/DashClearing"));
+const DashCustody          = lazy(() => import("../pages/dashboard/DashCustody"));
+const DashCompliance       = lazy(() => import("../pages/dashboard/DashCompliance"));
+const DashHADR             = lazy(() => import("../pages/dashboard/DashHADR"));
+const DashAutoOps          = lazy(() => import("../pages/dashboard/DashAutoOps"));
+const DashEcosystem        = lazy(() => import("../pages/dashboard/DashEcosystem"));
+const AdminDashboard       = lazy(() => import("../pages/admin/AdminDashboard"));
 
 const RouteLoader = () => (
   <div className="container py-4 text-center">Loading page...</div>
@@ -86,7 +98,6 @@ const AppRoutes = () => (
         <Route path="/fee-schedule" element={<FeeSchedule />} />
         <Route path="/blog" element={<Blogs />} />
         <Route path="/Blogs" element={<Blogs />} />
-        <Route path="/BlogUpdate" element={<BlogUpdate />} />
         <Route path="/blogs/:id" element={<BlogDetail />} />
         <Route path="/Spot" element={<Spot />} />
         <Route path="/Futures" element={<Futures />} />
@@ -107,8 +118,21 @@ const AppRoutes = () => (
         <Route path="/Dashboard/fiat"          element={<DashFiatWallet />} />
         <Route path="/Dashboard/kyc"           element={<DashKyc />} />
         <Route path="/Dashboard/security"      element={<DashSecurity />} />
-        <Route path="/Dashboard/analytics"     element={<DashAnalytics />} />
-        <Route path="/admin"                   element={<AdminDashboard />} />
+        <Route path="/Dashboard/analytics"           element={<DashAnalytics />} />
+        <Route path="/Dashboard/credit-risk"        element={<DashCreditRisk />} />
+        <Route path="/Dashboard/settlement"         element={<DashSettlement />} />
+        <Route path="/Dashboard/liquidity"          element={<DashLiquidity />} />
+        <Route path="/Dashboard/market-intelligence" element={<DashMarketIntelligence />} />
+        <Route path="/Dashboard/execution-router"   element={<DashExecutionRouter />} />
+        <Route path="/Dashboard/institutional"      element={<DashInstitutional />} />
+        <Route path="/Dashboard/audit-ledger"       element={<DashAuditLedger />} />
+        <Route path="/Dashboard/clearing"           element={<DashClearing />} />
+        <Route path="/Dashboard/custody"            element={<DashCustody />} />
+        <Route path="/Dashboard/reg-compliance"     element={<DashCompliance />} />
+        <Route path="/Dashboard/hadr"               element={<DashHADR />} />
+        <Route path="/Dashboard/auto-ops"           element={<DashAutoOps />} />
+        <Route path="/Dashboard/ecosystem"           element={<DashEcosystem />} />
+        <Route path="/admin"                        element={<AdminDashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

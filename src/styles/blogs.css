@@ -85,8 +85,8 @@
   right: 12px;
   padding: 0.25rem 0.7rem;
   border-radius: 999px;
-  background: #2fe6a4;
-  color: #0b1311;
+  background: #f0b90b;
+  color: #0b0e11;
   font-size: 0.62rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -178,8 +178,8 @@
   align-self: flex-start;
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
-  background: #2fe6a4;
-  color: #0b1311;
+  background: #f0b90b;
+  color: #0b0e11;
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -290,7 +290,7 @@
 }
 
 .blogs-card-link:focus-visible {
-  outline: 2px solid #2fe6a4;
+  outline: 2px solid rgba(240, 185, 11, 0.6);
   outline-offset: 4px;
   border-radius: 24px;
 }
@@ -346,12 +346,12 @@
 
 .blogs-dot.active {
   width: 24px;
-  background: #2fe6a4;
+  background: #f0b90b;
   box-shadow: 0 0 8px rgba(240, 185, 11, 0.6);
 }
 
 .blogs-dot:focus-visible {
-  outline: 2px solid #2fe6a4;
+  outline: 2px solid rgba(240, 185, 11, 0.6);
   outline-offset: 2px;
 }
 
@@ -586,16 +586,8 @@
   }
 }
 
-.blogs-feature-link {
-  color: #7ed6b7;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .blogs-grid-link-text {
-  color: #7ed6b7;
+  color: #f0b90b;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
